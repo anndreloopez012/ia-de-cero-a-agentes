@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>C4·P1 · Distinguir workflow y agente</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared/teacher.css" />
+    <script src="shared/teacher.js"></script>
+    <style>
+      /* Pizarra: a la izquierda la ruta fija del workflow; a la derecha el agente decide dentro de una cerca */
+      #board .frame > .say { font-size: 26px; }
+      #wf { left: 0; top: 18px; width: 610px; height: 452px; }
+      .rail-line { stroke: var(--cyan) !important; }
+      .st { position: absolute; left: 96px; width: 486px; height: 96px; display: flex; align-items: center; gap: 18px; padding: 0 22px; border-radius: 22px; border: 2px solid rgba(91, 220, 255, .55); background: linear-gradient(155deg, rgba(25, 38, 56, .95), rgba(10, 12, 19, .95)); }
+      .st i { flex: none; display: grid; place-items: center; width: 50px; height: 50px; border-radius: 14px; background: var(--cyan); color: #04202a; font-style: normal; font-family: "Bricolage"; font-weight: 800; font-size: 28px; }
+      .st h3 { font-family: "Bricolage"; font-weight: 700; font-size: 34px; line-height: 1.05; }
+      .st p { font-family: "JetMono", monospace; font-size: 26px; color: var(--ink-soft); margin-top: 4px; }
+      #st1 { top: 56px; } #st2 { top: 166px; } #st3 { top: 276px; }
+      #wf-dot { position: absolute; left: 26px; top: 84px; width: 40px; height: 40px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 6px rgba(91, 220, 255, .25), 0 0 30px rgba(91, 220, 255, .8); z-index: 7; }
+      #wf-ex { left: 18px; top: 394px; }
+
+      #fence-lbl { left: 688px; top: -4px; padding: 0 14px; background: var(--void); font-size: 26px; text-transform: uppercase; letter-spacing: .1em; color: var(--lavender); z-index: 3; }
+      .fence-line { stroke: var(--lavender); }
+      .posts { stroke: var(--lavender); stroke-width: 5 !important; opacity: .6 !important; }
+      #goal { left: 700px; top: 52px; width: 740px; height: 76px; padding: 0 24px; gap: 16px; border-radius: 22px; }
+      #goal h3 { font-size: 34px; }
+      #goal p { font-size: 28px; color: var(--ink); }
+      #agent { left: 700px; top: 152px; width: 214px; height: 184px; justify-content: center; padding: 18px; gap: 6px; }
+      #agent h3 { font-size: 36px; }
+      #agent p { font-size: 26px; }
+      #op1 { left: 1000px; top: 152px; } #op2 { left: 1000px; top: 216px; } #op3 { left: 1000px; top: 280px; }
+      #op2 b { font-weight: 700; color: var(--ink-mute); margin-left: 6px; }
+      #state { left: 700px; top: 358px; width: 740px; height: 92px; padding: 0 22px; gap: 18px; border-radius: 22px; }
+      #state h3 { font-size: 34px; margin-right: 6px; }
+      #state .tag { position: relative; height: 52px; font-size: 26px; padding: 0 18px; }
+      #pick { left: 1376px; top: 140px; }
+
+      #outside { left: 1510px; top: 18px; width: 266px; height: 256px; padding: 22px 22px; gap: 8px; }
+      #outside h3 { font-size: 34px; }
+      #outside ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+      #outside li { font-size: 27px; font-weight: 700; color: #ffc0cc; }
+      #nomark { left: 1440px; top: 236px; }
+      #limits { left: 1510px; top: 290px; width: 266px; height: 180px; padding: 20px 22px; gap: 6px; }
+      #limits h3 { font-size: 34px; }
+      #limits p { font-size: 26px; color: var(--ink); }
+
+      #rule { left: 0; top: 496px; width: 1440px; height: 92px; padding: 0 28px; gap: 22px; border-radius: 24px; }
+      #rule h3 { font-size: 36px; flex: 1; }
+      #rule .tag { position: relative; height: 56px; font-size: 27px; }
+      #note-wf { left: 300px; top: 420px; max-width: 300px; }
+
+      /* Analogía: el tren en su vía y el taxi con GPS dentro de una zona */
+      .an-lane { position: absolute; left: 40px; right: 40px; top: 34px; height: 236px; border-radius: 30px; background: rgba(91, 220, 255, .07); border: 2px solid rgba(91, 220, 255, .35); }
+      .an-lane .lbl, .an-zone .lbl { position: absolute; left: 26px; top: 18px; font-weight: 800; font-size: 28px; color: #c4f2ff; }
+      .an-lane .rails { position: absolute; left: 34px; right: 34px; top: 150px; height: 18px; border-top: 5px solid #8fb7c9; border-bottom: 5px solid #8fb7c9; background: repeating-linear-gradient(90deg, transparent 0 22px, rgba(143, 183, 201, .55) 22px 30px); }
+      .an-stop { position: absolute; top: 182px; font-weight: 750; font-size: 26px; color: var(--ink-soft); }
+      .an-stop::before { content: ""; position: absolute; left: 50%; top: -30px; width: 16px; height: 16px; margin-left: -8px; border-radius: 50%; background: var(--cyan); }
+      .an-train { position: absolute; left: 40px; top: 96px; width: 170px; height: 58px; border-radius: 18px 30px 10px 10px; background: linear-gradient(180deg, #5bdcff, #1f7fa6); box-shadow: 0 10px 24px rgba(0, 0, 0, .45); }
+      .an-train::before { content: ""; position: absolute; left: 16px; top: 12px; width: 108px; height: 18px; border-radius: 6px; background: repeating-linear-gradient(90deg, #dff7ff 0 26px, transparent 26px 36px); }
+      .an-zone { position: absolute; left: 40px; right: 40px; top: 300px; height: 290px; border-radius: 30px; border: 4px dashed rgba(185, 151, 255, .7); background: rgba(122, 60, 255, .08); }
+      .an-zone .lbl { color: var(--lavender); }
+      .an-map { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; }
+      .an-map path { fill: none; stroke: #3a3150; stroke-width: 26; stroke-linecap: round; }
+      .an-map .route { stroke: var(--yellow); stroke-width: 7; stroke-dasharray: 1; stroke-dashoffset: 1; }
+      .an-taxi { position: absolute; left: 58px; top: 210px; width: 74px; height: 44px; border-radius: 12px; background: var(--yellow); box-shadow: 0 8px 18px rgba(0, 0, 0, .5); }
+      .an-taxi::before { content: ""; position: absolute; left: 12px; top: 8px; width: 50px; height: 14px; border-radius: 4px; background: #2a1b00; opacity: .6; }
+      .an-pin { position: absolute; left: 556px; top: 64px; width: 44px; height: 44px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--green); box-shadow: 0 0 24px rgba(69, 224, 168, .7); }
+      .an-closed { position: absolute; left: 96px; top: 92px; height: 48px; padding: 0 16px; border-radius: 24px; display: flex; align-items: center; background: rgba(255, 92, 120, .2); border: 2px solid var(--red); color: #ffc0cc; font-weight: 800; font-size: 26px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="c4p1" data-start="0" data-duration="44" data-width="1920" data-height="1080" data-fps="30">
+      <div id="board">
+        <svg class="wires" viewBox="0 0 1776 600">
+          <path class="rail-line" pathLength="1" d="M46 92V336" />
+          <path class="fence-line" pathLength="1" d="M690 18H1450Q1480 18 1480 48V440Q1480 470 1450 470H690Q660 470 660 440V48Q660 18 690 18Z" />
+          <path class="posts" pathLength="1" d="M1470 120v20M1470 260v20M1470 400v20M760 460v20M900 460v20M1040 460v20M1180 460v20M1320 460v20M650 120v20M650 260v20M650 400v20" />
+          <path class="w-o1 green" pathLength="1" d="M914 230C958 230 958 180 1000 180" />
+          <path class="w-o2" pathLength="1" d="M914 244H1000" />
+          <path class="w-o3 yellow" pathLength="1" d="M914 258C958 258 958 308 1000 308" />
+        </svg>
+
+        <div class="frame hide" id="wf"><span class="say">Workflow · ruta fija</span></div>
+        <div class="st hide" id="st1"><i>1</i><div><h3>Leer el nombre</h3><p>foto_0912.jpg</p></div></div>
+        <div class="st hide" id="st2"><i>2</i><div><h3>Aplicar la regla</h3><p>fecha + tema</p></div></div>
+        <div class="st hide" id="st3"><i>3</i><div><h3>Guardar</h3><p>2026-09-12_viaje.jpg</p></div></div>
+        <div class="hide" id="wf-dot"></div>
+        <span class="tag cyan hide" id="wf-ex" data-icon="copy">Ej.: renombrar fotos con una regla</span>
+
+        <span class="say hide" id="fence-lbl">Agente · elige dentro de la cerca</span>
+        <div class="card row accent hide" id="goal"><span data-icon="target" data-icon-class="ic"></span><h3>Objetivo:</h3><p>responder la consulta de Ana</p></div>
+        <div class="card center solid hide" id="agent"><span data-icon="brain" data-icon-class="ic"></span><h3>Agente</h3><p>elige el paso</p></div>
+        <span class="tag green hide" id="op1" data-icon="search">Investigar en fuentes</span>
+        <span class="tag hide" id="op2" data-icon="pencil">Redactar <b>(después)</b></span>
+        <span class="tag yellow hide" id="op3" data-icon="user">Preguntar a una persona</span>
+        <div class="card row hide" id="state"><h3>Estado:</h3>
+          <span class="tag green" data-icon="check">Leyó la consulta</span>
+          <span class="tag yellow" data-icon="question">Faltan hechos</span></div>
+        <div class="okmark hide" id="pick"><svg viewBox="0 0 100 100"><path d="M18 52l21 21 44-49"/></svg></div>
+
+        <div class="card red hide" id="outside"><h3>Fuera de la cerca</h3>
+          <ul><li>Enviar correos</li><li>Borrar archivos</li><li>Hacer pagos</li></ul></div>
+        <div class="nomark hide" id="nomark"><svg viewBox="0 0 100 100"><path d="M24 24l52 52M76 24L24 76"/></svg></div>
+        <div class="card cyan hide" id="limits"><h3>Límites</h3><p>Máximo 4 ciclos</p><p>Salida: terminar o escalar</p></div>
+
+        <div class="card row yellow hide" id="rule"><span data-icon="question" data-icon-class="ic"></span><h3>¿Alguna decisión cambia según el estado?</h3>
+          <span class="tag cyan">No → workflow</span><span class="tag accent">Sí → agente</span></div>
+      </div>
+    </div>
+    <script>
+      const T = Teacher.setup({
+        cls: 4, point: 1,
+        title: "¿Esto necesita un <em>agente</em> o basta un <em>workflow</em>?",
+        headTitle: "Distinguir workflow y agente",
+        question: "Que una tarea tenga varios pasos no la convierte en agente. La clave está en quién decide el siguiente paso.",
+        analogy: {
+          art: `<div class="an-lane"><span class="lbl">Tren: siempre la misma vía</span><div class="rails"></div>
+              <span class="an-stop" style="left:70px">Salida</span><span class="an-stop" style="left:300px">Centro</span><span class="an-stop" style="left:540px">Final</span>
+              <div class="an-train"></div></div>
+            <div class="an-zone"><span class="lbl">Taxi con GPS: zona permitida</span>
+              <svg class="an-map" viewBox="0 0 680 290"><path d="M60 232H620M60 116H620M200 116V232M440 116V232M620 70V232"/>
+                <path class="route" pathLength="1" d="M95 232H440V116H578V92"/></svg>
+              <span class="an-closed">Calle cerrada</span><div class="an-pin"></div><div class="an-taxi"></div></div>`,
+          title: "¿Tren o taxi con GPS?",
+          text: "El tren <em>no decide</em>: recorre siempre la misma vía. El taxi elige la calle según el tráfico, pero <em>no sale de la zona</em> que le marcaron.",
+        },
+        steps: [
+          { label: "Ruta fija", caption: "Un workflow sigue una <em>secuencia fija</em>: los mismos pasos, en el mismo orden, siempre." },
+          { label: "Objetivo", caption: "Un agente recibe un <em>objetivo</em>, no una lista de pasos: él decide cuál sigue." },
+          { label: "Estado", caption: "Mira el <em>estado</em>: ya leyó la consulta y faltan hechos. Por eso elige investigar." },
+          { label: "Cerca y límites", caption: "Autonomía no es hacer todo: elige entre pasos <em>permitidos</em>, con límite y salida." },
+          { label: "¿Cuál uso?", caption: "Varios pasos no bastan. Si ninguna decisión depende del estado, usa un <em>workflow</em>." },
+        ],
+        takeaway: {
+          title: "Workflow: ruta fija. Agente: <em>decide</em> dentro de una <em>cerca</em>.",
+          text: "Agrega autonomía solo si una decisión real depende del estado. Si no, es riesgo sin valor.",
+        },
+      });
+
+      const s = T.stepAt;
+      // Analogía: el tren avanza por su vía; el taxi elige la calle abierta dentro de la zona
+      T.slide("@.an-lane", T.analogyAt(.3), { y: 24 });
+      T.to("@.an-train", T.analogyAt(1), { x: 440, duration: 3.4, ease: "power1.inOut" });
+      T.slide("@.an-zone", T.analogyAt(1.6), { y: 24 });
+      T.pop("@.an-closed", T.analogyAt(2.6));
+      T.tl.to(".an-map .route", { strokeDashoffset: 0, duration: 1.4, ease: "power1.inOut" }, T.analogyAt(3.2));
+      T.tl.to(".an-taxi", { keyframes: [
+        { x: 340, duration: 1.4, ease: "power1.inOut" },
+        { y: -116, duration: .8, ease: "power1.inOut" },
+        { x: 420, duration: .8, ease: "power1.inOut" },
+      ] }, T.analogyAt(4.4));
+      T.pulse("@.an-pin", T.analogyAt(7.5), 1.25);
+
+      T.tl.set(".wires path", { strokeDasharray: 1, strokeDashoffset: 1 }, 0);
+
+      // Paso 1 · Ruta fija
+      T.fadeIn("#wf", s(0, .1));
+      T.draw(".rail-line", s(0, .3), .7);
+      T.slide(".st", s(0, .5), { x: -30, y: 0, stagger: .25 });
+      T.pop("#wf-dot", s(0, 1.4));
+      T.to("#wf-dot", s(0, 1.9), { y: 110, duration: .6 });
+      T.to("#wf-dot", s(0, 2.6), { y: 220, duration: .6 });
+      T.pop("#wf-ex", s(0, 3.2));
+
+      // Paso 2 · Objetivo
+      T.draw(".fence-line", s(1, .05), 1.1);
+      T.fadeIn("#fence-lbl", s(1, .4));
+      T.draw(".posts", s(1, .7), .6);
+      T.slide("#goal", s(1, 1.1), { y: 20 });
+      T.pop("#agent", s(1, 1.9));
+      T.pulse("#agent", s(1, 3.1), 1.06);
+
+      // Paso 3 · Estado: según lo que ya ocurrió, elige el siguiente paso
+      T.slide("#state", s(2, .1), { y: 20 });
+      T.draw(".w-o1, .w-o2, .w-o3", s(2, .8), .5, .1);
+      T.slide("#op1, #op2, #op3", s(2, 1.0), { x: -24, y: 0, stagger: .15 });
+      T.pulse("#state .tag.yellow", s(2, 1.9), 1.08);
+      T.fadeOut("#op2, #op3, .w-o2, .w-o3", s(2, 2.6), .35);
+      T.glow("#op1", s(2, 2.6), "#45e0a8");
+      T.check("#pick", s(2, 2.9));
+
+      // Paso 4 · Cerca y límites
+      T.pop("#outside", s(3, .2));
+      T.tl.to("#board .fence-line", { stroke: "#ff5c78", duration: .3, yoyo: true, repeat: 1 }, s(3, 1.1));
+      T.check("#nomark", s(3, 1.2));
+      T.pop("#limits", s(3, 2.0));
+      T.pulse("#limits", s(3, 3.2), 1.05);
+
+      // Paso 5 · ¿Cuál uso?
+      T.slide("#rule", s(4, .1), { y: 30 });
+      T.glow("#rule .tag.cyan", s(4, 1.3), "#5bdcff");
+      T.glow("#wf", s(4, 1.4), "#5bdcff");
+      T.glow("#rule .tag.accent", s(4, 2.4), "#ff7ab6");
+      T.pulse("#agent", s(4, 2.5), 1.08);
+
+      window.__timelines["c4p1"] = T.tl;
+    </script>
+  </body>
+</html>

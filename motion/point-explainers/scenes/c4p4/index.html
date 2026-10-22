@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>C4·P4 · Contratos de delegación y handoff</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared/teacher.css" />
+    <script src="shared/teacher.js"></script>
+    <style>
+      /* Pizarra: Coordinador → contrato (6 campos) → puerta del traspaso → Investigador */
+      #coord { left: 0; top: 150px; width: 300px; height: 300px; }
+      #coord .tag { position: relative; margin-top: 6px; height: 50px; font-size: 26px; }
+      #note-enc { left: 0; top: 18px; max-width: 300px; }
+
+      /* El contrato: una etiqueta de envío que se llena campo por campo */
+      #pkg { position: absolute; left: 350px; top: 0; width: 830px; height: 520px; border-radius: 30px; background: #f6f2ff; color: #1b1426; box-shadow: 0 26px 60px rgba(0, 0, 0, .5); overflow: hidden; z-index: 4; }
+      .pkg-head { display: flex; align-items: center; gap: 16px; height: 72px; padding: 0 28px; background: linear-gradient(120deg, #8a55ff, #4a1fb0); color: #fff; }
+      .pkg-head .ic { width: 42px; height: 42px; color: #fff; }
+      .pkg-head strong { font-family: "Bricolage"; font-weight: 750; font-size: 34px; letter-spacing: -.01em; }
+      .pkg-head em { margin-left: auto; font-style: normal; font-weight: 800; font-size: 26px; color: #e9ddff; }
+      .fields { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 1fr); gap: 14px; height: 448px; padding: 20px 22px 22px; }
+      .f { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 12px 18px; border-radius: 18px; border: 3px dashed rgba(122, 60, 255, .35); background: rgba(122, 60, 255, .05); }
+      .f b { font-weight: 850; font-size: 26px; color: #6a2cf0; }
+      .f .v { font-size: 27px; line-height: 1.18; font-weight: 650; color: #1b1426; padding-right: 40px; }
+      .f .ck { position: absolute; right: 12px; top: 12px; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; background: var(--green); color: #062418; }
+      .f .ck svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 13; stroke-linecap: round; stroke-linejoin: round; }
+      .f.esc { border-color: rgba(255, 92, 120, .6); }
+      .f.esc b { color: #d0234a; }
+      .stamp { position: absolute; left: 250px; top: 210px; width: 330px; height: 118px; display: grid; place-items: center; border: 7px solid #e8264f; border-radius: 18px; color: #e8264f; font-family: "Bricolage"; font-weight: 800; font-size: 60px; letter-spacing: .12em; background: rgba(255, 255, 255, .55); }
+
+      /* Puerta del traspaso */
+      #door { position: absolute; left: 1215px; top: 70px; width: 130px; height: 390px; border: 8px solid var(--lavender); border-bottom: 0; border-radius: 16px 16px 0 0; background: linear-gradient(180deg, rgba(185, 151, 255, .14), rgba(185, 151, 255, .02)); z-index: 3; }
+      #door::after { content: ""; position: absolute; left: -26px; right: -26px; bottom: -8px; height: 8px; border-radius: 4px; background: var(--lavender); }
+      #door-tag { left: 1166px; top: 4px; width: 228px; justify-content: center; }
+
+      #inv { left: 1385px; top: 92px; width: 391px; height: 330px; }
+      #inv .tag { position: relative; margin-top: 8px; height: 50px; font-size: 26px; }
+
+      #parcel { left: 1238px; top: 218px; }
+      #rtok { left: 1545px; top: 395px; width: 70px; height: 70px; border-radius: 20px; }
+
+      /* Registro del handoff */
+      #log { position: absolute; left: 0; top: 548px; width: 1460px; height: 56px; display: flex; align-items: center; gap: 20px; padding: 0 12px 0 8px; border-radius: 18px; background: rgba(255, 122, 182, .08); border: 2px solid rgba(255, 122, 182, .55); font-size: 26px; font-weight: 650; color: var(--ink); white-space: nowrap; }
+      #log .tag { position: relative; height: 42px; font-size: 24px; padding: 0 18px; }
+      #log i { font-style: normal; color: var(--accent); font-weight: 800; }
+
+      /* Retorno del Investigador: el formato pactado, ya lleno */
+      #ret { left: 350px; top: 0; width: 830px; height: 452px; padding: 26px 34px; gap: 8px; }
+      #ret .rr { display: grid; grid-template-columns: 210px 1fr; align-items: center; width: 100%; height: 56px; border-bottom: 2px solid rgba(185, 151, 255, .14); }
+      #ret .rr code { font-family: "JetMono", monospace; font-size: 26px; font-weight: 700; color: var(--lavender); }
+      #ret .rr span { font-size: 28px; font-weight: 650; color: var(--ink); }
+      #ret .rr.doubt span { color: #ffe2ad; }
+      #ret .tag { position: relative; margin-top: 12px; height: 54px; }
+
+
+      /* Analogía: la orden de trabajo que recibe el electricista */
+      .board-wood { position: absolute; left: 120px; top: 44px; width: 520px; height: 540px; border-radius: 30px; background: linear-gradient(160deg, #7a5634, #4b321c); box-shadow: 0 30px 60px rgba(0, 0, 0, .5); }
+      .board-wood .clamp { position: absolute; left: 170px; top: -18px; width: 180px; height: 58px; border-radius: 16px; background: linear-gradient(180deg, #d9d4e6, #8f86a3); box-shadow: 0 6px 14px rgba(0, 0, 0, .4); z-index: 2; }
+      .wo { position: absolute; left: 28px; top: 30px; right: 28px; bottom: 26px; border-radius: 14px; background: #fbf8ff; color: #1b1426; padding: 40px 28px 20px; }
+      .wo h4 { font-family: "Bricolage"; font-weight: 800; font-size: 32px; letter-spacing: -.01em; color: #4a1fb0; white-space: nowrap; }
+      .wo .to { margin-top: 4px; font-size: 26px; font-weight: 700; color: #5a5068; }
+      .wo ul { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; }
+      .wo li { list-style: none; display: flex; align-items: flex-start; gap: 14px; font-size: 26px; line-height: 1.2; font-weight: 650; }
+      .wo li i { flex: none; width: 34px; height: 34px; margin-top: 2px; border-radius: 9px; border: 3px solid #b7a9d6; }
+      .wo li b { color: #6a2cf0; }
+      .wo li.stop b { color: #d0234a; }
+      .wo-stamp { position: absolute; right: 22px; bottom: 30px; padding: 6px 18px; border: 5px solid #1f9e6e; border-radius: 12px; color: #1f9e6e; font-family: "Bricolage"; font-weight: 800; font-size: 32px; letter-spacing: .1em; background: rgba(255, 255, 255, .7); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="c4p4" data-start="0" data-duration="44" data-width="1920" data-height="1080" data-fps="30">
+      <div id="board">
+        <svg class="wires" viewBox="0 0 1776 600">
+          <path class="w1" pathLength="1" d="M300 300H350" />
+          <path class="w2" pathLength="1" d="M1180 260H1215" />
+          <path class="w3" pathLength="1" d="M1345 260H1385" />
+          <path class="w4 yellow dash" pathLength="1" d="M1580 422V500H150V450" />
+        </svg>
+
+        <div class="card" id="coord"><span data-icon="gear"></span><h3>Coordinador</h3><p>Reparte la misión y revisa</p>
+          <span class="tag yellow" id="coord-tag" data-icon="scale" data-icon-class="ic">Le toca decidir</span></div>
+        <div class="note" id="note-enc">«Encárgate» no es un contrato.</div>
+
+        <div id="pkg" data-layout-allow-overlap>
+          <div class="pkg-head"><span data-icon="box"></span><strong>Contrato de delegación</strong><em>Para: Investigador</em></div>
+          <div class="fields">
+            <div class="f" id="f1"><b>1 · Contexto mínimo</b><span class="v">Solo las 2 fuentes entregadas</span><span class="ck" data-icon="check" data-icon-class=""></span></div>
+            <div class="f" id="f2"><b>2 · Tarea y calidad</b><span class="v">Resumir; cada dato con su fuente</span><span class="ck" data-icon="check" data-icon-class=""></span></div>
+            <div class="f" id="f3"><b>3 · Herramientas</b><span class="v">Leer las 2 fuentes. Nada más</span><span class="ck" data-icon="check" data-icon-class=""></span></div>
+            <div class="f" id="f4"><b>4 · Formato</b><span class="v">afirmación | evidencia | fuente | duda</span><span class="ck" data-icon="check" data-icon-class=""></span></div>
+            <div class="f" id="f5"><b>5 · Devuelve</b><span class="v">Evidencia, dudas y estado</span><span class="ck" data-icon="check" data-icon-class=""></span></div>
+            <div class="f esc" id="f6"><b>6 · Escala si…</b><span class="v">Las fuentes se contradicen</span><span class="ck" data-icon="check" data-icon-class=""></span></div>
+          </div>
+          <div class="stamp" id="stamp">SELLADO</div>
+        </div>
+
+        <span class="tag" id="door-tag" data-icon="door" data-icon-class="ic">Traspaso</span>
+        <div id="door"></div>
+
+        <div class="card cyan" id="inv"><span data-icon="search"></span><h3>Investigador</h3><p>Subagente 1 · solo lectura</p>
+          <span class="tag green" id="inv-tag" data-icon="check" data-icon-class="ic">Misión recibida</span></div>
+
+        <div class="token" id="parcel"><span data-icon="box" data-icon-class="ic"></span></div>
+        <div class="token yellow" id="rtok"><span data-icon="return" data-icon-class="ic sm"></span></div>
+
+        <div id="log"><span class="tag accent">Handoff</span><span>Coordinador <i>→</i> Investigador · Qué: Misión 1 · Falta: nada · Permiso: <i>solo lectura</i></span></div>
+
+        <div class="card yellow" id="ret">
+          <h3>Retorno del Investigador</h3>
+          <div class="rr"><code>afirmación</code><span>El equipo ahorra 5 h por semana</span></div>
+          <div class="rr"><code>evidencia</code><span>Entrevista, minuto 12</span></div>
+          <div class="rr"><code>fuente</code><span>Fuente B</span></div>
+          <div class="rr doubt"><code>duda</code><span>La Fuente A dice 2 h, no 5 h</span></div>
+          <span class="tag yellow" id="ret-tag" data-icon="return" data-icon-class="ic">Estado: escalado, no elige cuál fuente vale</span>
+        </div>
+      </div>
+    </div>
+    <script>
+      const T = Teacher.setup({
+        cls: 4, point: 4,
+        title: "¿Cómo se <em>delega</em> sin perder el control?",
+        headTitle: "Contratos de delegación y handoff",
+        question: "Si a un subagente solo le dices «encárgate», ¿cómo sabe qué puede usar, qué entregar y cuándo parar?",
+        analogy: {
+          art: `<div class="board-wood"><div class="clamp"></div><div class="wo">
+            <h4>Orden de trabajo n.º 214</h4><p class="to">Para: electricista</p>
+            <ul><li><i></i><span><b>Qué:</b> cambiar 3 tomas de la cocina</span></li>
+            <li><i></i><span><b>Con qué:</b> material de bodega</span></li>
+            <li><i></i><span><b>Entrega:</b> foto del trabajo</span></li>
+            <li class="stop"><i></i><span><b>Si hay humedad:</b> para y llama</span></li></ul>
+            <div class="wo-stamp">FIRMADA</div></div></div>`,
+          title: "Una orden de trabajo, no un «encárgate»",
+          text: "En la obra nadie le dice al electricista «arregla la casa». Recibe una <em>orden escrita</em>: qué hacer, con qué, cómo entregar y <em>cuándo parar</em>.",
+        },
+        steps: [
+          { label: "Contexto y tarea", caption: "Primero: el <em>contexto mínimo</em> que necesita y la <em>tarea exacta</em> con su criterio de calidad." },
+          { label: "Límites y formato", caption: "Después, los límites: qué <em>herramientas</em> puede usar y en qué <em>formato</em> debe responder." },
+          { label: "Retorno y escalada", caption: "Y el retorno: qué <em>evidencia</em> devuelve y cuándo debe <em>detenerse y escalar</em>." },
+          { label: "Handoff de ida", caption: "El <em>handoff</em> sella el paquete y registra quién entrega, quién recibe y qué permiso sigue." },
+          { label: "Handoff de vuelta", caption: "Vuelve con <em>evidencia y dudas</em>. Si las fuentes chocan, no elige: <em>escala</em> al coordinador." },
+        ],
+        takeaway: {
+          title: "Delegar es entregar un <em>contrato</em>, no decir «encárgate».",
+          text: "Contexto, tarea, herramientas, formato, evidencia y condición para escalar. Cada traspaso queda registrado.",
+        },
+      });
+
+      const s = T.stepAt;
+      // Analogía: la orden se llena línea por línea y se firma
+      T.slide("@.wo h4, .wo .to", T.analogyAt(.6), { y: 16, stagger: .2 });
+      T.slide("@.wo li", T.analogyAt(1.4), { x: -26, y: 0, stagger: .55 });
+      T.tl.to(".wo li i", { backgroundColor: "#45e0a8", borderColor: "#45e0a8", duration: .25, stagger: .55 }, T.analogyAt(1.8));
+      T.pulse("@.wo li.stop", T.analogyAt(4.2), 1.05);
+      T.tl.fromTo(".wo-stamp", { opacity: 0, scale: 2, rotation: -26 }, { opacity: 1, scale: 1, rotation: -8, duration: .5, ease: "back.out(2)" }, T.analogyAt(5));
+
+      // Estados iniciales
+      T.tl.set(["#board .card", "#pkg", "#door", "#door-tag", "#note-enc", "#parcel", "#rtok", "#log", "#coord-tag", "#inv-tag", "#stamp"], { opacity: 0 }, 0);
+      T.tl.set(["#pkg .f .v", "#pkg .f .ck"], { opacity: 0 }, 0);
+
+      // Paso 1 · Contexto y tarea
+      T.pop("#coord", s(0, .1));
+      T.pop("#inv", s(0, .3));
+      T.fadeIn("#door", s(0, .45)).slide("#door-tag", s(0, .5), { y: -16 });
+      T.slide("#pkg", s(0, .8), { y: 30 });
+      T.draw(".w1", s(0, 1.1), .4);
+      T.pop("#note-enc", s(0, 1.3));
+      T.slide("#f1 .v", s(0, 2.0), { x: -20, y: 0 }).check("#f1 .ck", s(0, 2.4));
+      T.slide("#f2 .v", s(0, 3.0), { x: -20, y: 0 }).check("#f2 .ck", s(0, 3.4));
+
+      // Paso 2 · Límites y formato
+      T.slide("#f3 .v", s(1, .4), { x: -20, y: 0 }).check("#f3 .ck", s(1, .8));
+      T.slide("#f4 .v", s(1, 1.8), { x: -20, y: 0 }).check("#f4 .ck", s(1, 2.2));
+      T.pulse("#f4", s(1, 3.0), 1.04);
+
+      // Paso 3 · Retorno y escalada
+      T.slide("#f5 .v", s(2, .4), { x: -20, y: 0 }).check("#f5 .ck", s(2, .8));
+      T.slide("#f6 .v", s(2, 1.7), { x: -20, y: 0 }).check("#f6 .ck", s(2, 2.1));
+      T.pulse("#f6", s(2, 2.8), 1.05);
+      T.pulse("#pkg", s(2, 3.6), 1.02);
+
+      // Cada campo marcado queda lleno: verde, y el de escalada en rojo
+      [["#f1", s(0, 2.4)], ["#f2", s(0, 3.4)], ["#f3", s(1, .8)], ["#f4", s(1, 2.2)], ["#f5", s(2, .8)]].forEach(([f, t]) =>
+        T.to(f, t, { borderColor: "#1fb985", backgroundColor: "rgba(69,224,168,.13)", duration: .35 }));
+      T.to("#f6", s(2, 2.1), { borderColor: "#e8264f", backgroundColor: "rgba(255,92,120,.12)", duration: .35 });
+
+      // Paso 4 · Handoff de ida: se sella, cruza la puerta y queda registrado
+      T.tl.fromTo("#stamp", { opacity: 0, scale: 2.2, rotation: -24 }, { opacity: 1, scale: 1, rotation: -8, duration: .45, ease: "back.out(2)" }, s(3, .15));
+      T.draw(".w2", s(3, .7), .3).draw(".w3", s(3, .8), .3);
+      T.to("#pkg", s(3, 1.0), { x: 515, scale: .1, opacity: 0, duration: .8, ease: "power2.in", transformOrigin: "50% 50%" });
+      T.pop("#parcel", s(3, 1.6));
+      T.to("#parcel", s(3, 2.1), { x: 300, duration: .7 });
+      T.to("#parcel", s(3, 2.8), { opacity: 0, scale: .5, duration: .3 });
+      T.pop("#inv-tag", s(3, 2.8));
+      T.glow("#inv", s(3, 2.9), "#5bdcff");
+      T.slide("#log", s(3, 3.1), { y: 20 });
+
+      // Paso 5 · Handoff de vuelta: evidencia y duda, y escala
+      T.pop("#ret", s(4, .15));
+      T.slide("#ret .rr", s(4, .45), { x: -24, y: 0, stagger: .25 });
+      T.pop("#ret-tag", s(4, 1.4));
+      T.draw(".w4", s(4, 1.4), .5);
+      T.pop("#rtok", s(4, 1.5));
+      T.to("#rtok", s(4, 2.05), { y: 70, duration: .3, ease: "power1.in" });
+      T.to("#rtok", s(4, 2.35), { x: -1430, duration: .75, ease: "power1.inOut" });
+      T.to("#rtok", s(4, 3.1), { y: 30, opacity: 0, duration: .3 });
+      T.glow("#coord", s(4, 3.1), "#ffc45a");
+      T.pop("#coord-tag", s(4, 3.2));
+
+      window.__timelines["c4p4"] = T.tl;
+    </script>
+  </body>
+</html>

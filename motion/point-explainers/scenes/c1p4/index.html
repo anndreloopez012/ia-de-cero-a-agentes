@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>C1·P4 · Vocabulario del taller: de prompt a agente</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared/teacher.css" />
+    <script src="shared/teacher.js"></script>
+    <style>
+      /* Pizarra: mapa de conceptos. Cuatro piezas alrededor y el agente al centro que las usa todas */
+      .node { width: 560px; height: 216px; padding: 22px 26px; gap: 8px; }
+      .node .hd { display: flex; align-items: center; gap: 16px; }
+      .node p { font-size: 27px; color: var(--ink); font-weight: 600; }
+      .node .ex { position: relative; padding: 10px 16px; border-radius: 14px; font-family: "Figtree", sans-serif; font-weight: 650; font-size: 26px; line-height: 1.3; box-shadow: none; }
+      #nP { left: 0; top: 0; } #nC { left: 0; top: 300px; }
+      #nH { left: 1216px; top: 0; } #nS { left: 1216px; top: 300px; }
+      #board .tag.obra { z-index: 7; background: #33260e; }
+      #oP { left: 24px; top: 192px; } #oC { left: 24px; top: 492px; }
+      #oH { left: 1240px; top: 192px; } #oS { left: 1240px; top: 492px; }
+      #oA { left: 700px; top: 476px; }
+      .rel { font-size: 27px; font-weight: 800; color: var(--lavender); }
+      #rPC { left: 518px; top: 240px; }
+      #rHS { left: 1532px; top: 250px; width: 170px; text-align: right; }
+
+      #hub { left: 640px; top: 20px; width: 496px; height: 480px; padding: 24px 30px; gap: 12px; }
+      #hub h3 { font-size: 42px; }
+      #hub p { font-size: 27px; color: var(--ink); font-weight: 600; }
+      .loop { position: relative; width: 436px; height: 150px; margin-top: 4px; }
+      .loop svg { position: absolute; inset: 0; width: 436px; height: 150px; overflow: visible; }
+      .loop svg path { fill: none; stroke: var(--accent); stroke-width: 5; stroke-linecap: round; }
+      .loop .st { position: absolute; width: 196px; height: 56px; display: grid; place-items: center; border-radius: 16px; background: #10291f; border: 2px solid var(--accent); font-weight: 800; font-size: 27px; color: #d9fff0; }
+      .st.a { left: 0; top: 0; } .st.b { left: 240px; top: 0; } .st.c { left: 240px; top: 94px; } .st.d { left: 0; top: 94px; }
+      .loop .spin { position: absolute; left: 196px; top: 53px; width: 44px; height: 44px; color: var(--accent); }
+      .loop .spin .ic { width: 44px; height: 44px; }
+      #limit { position: relative; }
+      #ghost { left: 640px; top: 20px; width: 496px; height: 480px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; text-align: center; color: var(--lavender); }
+      #ghost .ic { width: 84px; height: 84px; stroke-width: 5; opacity: .7; }
+      #ghost .gq { width: 380px; font-family: "Bricolage"; font-weight: 700; font-size: 36px; line-height: 1.15; color: var(--ink-soft); }
+
+      /* Analogía: una obra con su orden, su terreno, sus herramientas, su manual y su equipo */
+      .site { position: absolute; inset: 0; }
+      .site .ground { position: absolute; left: 0; right: 0; top: 468px; bottom: 0; background: repeating-linear-gradient(135deg, rgba(255, 196, 90, .16) 0 14px, rgba(255, 196, 90, .05) 14px 28px); border-top: 4px solid rgba(255, 196, 90, .7); }
+      .site .lb { position: absolute; font-weight: 800; font-size: 27px; color: var(--ink); }
+      .site .lb.t { left: 30px; top: 540px; color: #ffe2ad; }
+      .site .wall { position: absolute; left: 262px; top: 316px; width: 252px; height: 152px; }
+      .site .brick { position: absolute; width: 78px; height: 34px; border-radius: 5px; background: #c25a3d; border: 2px solid #7a2d1c; }
+      .site .clip { position: absolute; left: 36px; top: 228px; width: 196px; height: 220px; border-radius: 14px; background: #f6f2ff; color: #1b1426; padding: 34px 18px 14px; font-weight: 800; font-size: 26px; line-height: 1.25; }
+      .site .clip::before { content: ""; position: absolute; left: 62px; top: -12px; width: 72px; height: 28px; border-radius: 8px; background: #8f86a3; }
+      .site .clip i { display: block; height: 6px; margin-top: 14px; border-radius: 3px; background: rgba(122, 60, 255, .35); }
+      .site .box { position: absolute; left: 548px; top: 344px; width: 176px; height: 124px; border-radius: 14px; background: #3a2c10; border: 3px solid var(--yellow); display: flex; justify-content: center; align-items: center; gap: 10px; color: var(--yellow); }
+      .site .box .ic { width: 56px; height: 56px; }
+      .site .book { position: absolute; left: 562px; top: 132px; width: 150px; height: 118px; border-radius: 8px 14px 14px 8px; background: linear-gradient(90deg, #4a1fb0 0 14px, #7a3cff 14px); display: grid; place-items: center; font-weight: 800; font-size: 27px; color: #fff; }
+      .site .crew { position: absolute; left: 304px; top: 96px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+      .site .crew .hat { width: 112px; height: 112px; border-radius: 50%; display: grid; place-items: center; background: #24182f; border: 4px solid var(--yellow); color: var(--yellow); }
+      .site .crew .hat .ic { width: 66px; height: 66px; }
+      .site .bub { position: absolute; left: 270px; top: 24px; padding: 8px 16px; border-radius: 16px 16px 16px 4px; background: var(--lavender); color: #1d0f3b; font-weight: 800; font-size: 26px; white-space: nowrap; }
+      .lb.l1 { left: 36px; top: 184px; } .lb.l3 { left: 548px; top: 300px; } .lb.l5 { left: 314px; top: 216px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="c1p4" data-start="0" data-duration="44" data-width="1920" data-height="1080" data-fps="30">
+      <div id="board">
+        <svg class="wires" viewBox="0 0 1776 600">
+          <path class="wPC" pathLength="1" d="M500 216V300" />
+          <path class="wHS" pathLength="1" d="M1716 216V300" />
+          <path class="wA" pathLength="1" d="M560 108C600 108 600 170 640 170" />
+          <path class="wA" pathLength="1" d="M560 408C600 408 600 360 640 360" />
+          <path class="wA" pathLength="1" d="M1216 108C1176 108 1176 170 1136 170" />
+          <path class="wA" pathLength="1" d="M1216 408C1176 408 1176 360 1136 360" />
+        </svg>
+
+        <div class="card node" id="nP"><div class="hd"><span data-icon="chat"></span><h3>Prompt</h3></div>
+          <p>La orden puntual que le das.</p>
+          <div class="paper ex">“Resume este texto en 5 puntos.”</div></div>
+        <div class="card node" id="nC"><div class="hd"><span data-icon="map"></span><h3>Contexto</h3></div>
+          <p>Lo que cambia cómo se entiende.</p>
+          <div class="paper ex">“Es para padres de familia.”</div></div>
+        <div class="card node" id="nH"><div class="hd"><span data-icon="wrench"></span><h3>Herramienta</h3></div>
+          <p>Le permite buscar, leer o calcular.</p>
+          <div class="paper ex">buscar web · leer PDF · calculadora</div></div>
+        <div class="card node" id="nS"><div class="hd"><span data-icon="list"></span><h3>Skill</h3></div>
+          <p>Un procedimiento que se reutiliza.</p>
+          <div class="paper ex">“Acta de reunión en 3 pasos”</div></div>
+
+        <span class="tag yellow obra" id="oP" data-icon="home" data-icon-class="ic">Obra: la orden de trabajo</span>
+        <span class="tag yellow obra" id="oC" data-icon="home" data-icon-class="ic">Obra: el terreno</span>
+        <span class="tag yellow obra" id="oH" data-icon="home" data-icon-class="ic">Obra: taladro y regla</span>
+        <span class="tag yellow obra" id="oS" data-icon="home" data-icon-class="ic">Obra: el manual de uso</span>
+        <span class="say rel" id="rPC">orienta</span>
+        <span class="say rel" id="rHS">la usa bien</span>
+
+        <div class="frame" id="ghost"><span data-icon="question"></span><b class="gq">¿Quién combina las cuatro piezas?</b></div>
+        <div class="card accent" id="hub"><div class="node-hd" style="display:flex;align-items:center;gap:16px"><span data-icon="loop"></span><h3>Agente</h3></div>
+          <p>Persigue un objetivo en ciclos, con herramientas y límites.</p>
+          <div class="loop">
+            <svg viewBox="0 0 436 150"><path class="lp" pathLength="1" d="M98 28H338V122H98Z" /></svg>
+            <div class="st a">Planear</div><div class="st b">Actuar</div><div class="st c">Observar</div><div class="st d">Ajustar</div>
+            <div class="spin" data-icon="loop"></div>
+          </div>
+          <span class="tag red" id="limit" data-icon="fence" data-icon-class="ic">Dentro de límites</span>
+        </div>
+        <span class="tag yellow obra" id="oA" data-icon="home" data-icon-class="ic">Obra: el equipo que decide</span>
+      </div>
+    </div>
+    <script>
+      const T = Teacher.setup({
+        cls: 1, point: 4,
+        title: "¿Prompt, skill o <em>agente</em>?",
+        headTitle: "Vocabulario del taller: de prompt a agente",
+        question: "Vas a escuchar estas palabras en todo el taller. Si las confundes, eliges mal el recurso.",
+        analogy: {
+          art: `<div class="site">
+            <div class="ground"></div><span class="lb t">Terreno</span>
+            <div class="wall">
+              <div class="brick" style="left:0;top:114px"></div><div class="brick" style="left:86px;top:114px"></div><div class="brick" style="left:172px;top:114px"></div>
+              <div class="brick" style="left:43px;top:76px"></div><div class="brick" style="left:129px;top:76px"></div>
+              <div class="brick" style="left:86px;top:38px"></div>
+            </div>
+            <span class="lb l1">Orden</span><div class="clip">Muro de 2 m<i></i><i></i><i></i></div>
+            <span class="lb l3">Herramientas</span><div class="box"><span data-icon="wrench"></span><span data-icon="ruler"></span></div>
+            <div class="book">Manual</div>
+            <div class="crew"><div class="hat"><span data-icon="users"></span></div></div><span class="lb l5">Equipo</span>
+            <div class="bub">¿Siguiente paso?</div>
+          </div>`,
+          title: "Una obra con su equipo",
+          text: "La <em>orden</em> dice qué hacer y el <em>terreno</em> cambia cómo. Herramientas y manual ayudan. El <em>equipo</em> decide el siguiente paso.",
+        },
+        steps: [
+          { label: "Prompt", caption: "Un <em>prompt</em> es la orden puntual: qué quieres, para qué y en qué formato." },
+          { label: "Contexto", caption: "El <em>contexto</em> cambia cómo se entiende: el mismo resumen, distinto para padres." },
+          { label: "Herramienta", caption: "Una <em>herramienta</em> le da manos: buscar, leer un archivo, calcular o actuar." },
+          { label: "Skill", caption: "Una <em>skill</em> guarda el procedimiento para repetir bien una tarea que vuelve." },
+          { label: "Agente", caption: "Un <em>agente</em> combina todo: decide el siguiente paso en ciclos y dentro de límites." },
+        ],
+        takeaway: {
+          title: "Cada palabra es una pieza distinta: <em>no las intercambies</em>.",
+          text: "Prompt pide, contexto orienta, herramienta actúa, skill repite y agente decide.",
+        },
+      });
+
+      const s = T.stepAt;
+      const tl = T.tl;
+
+      // Analogía: la obra se arma pieza por pieza y el muro sube
+      tl.set([".site .lb", ".site .clip", ".site .box", ".site .book", ".site .crew", ".site .bub", ".site .brick"], { opacity: 0 }, 0);
+      T.fadeIn("@.site .lb.t", T.analogyAt(.6));
+      T.slide("@.site .clip, @.site .lb.l1", T.analogyAt(1.0), { x: -30, y: 0 });
+      T.pop("@.site .brick", T.analogyAt(1.8), .22);
+      T.slide("@.site .box, @.site .lb.l3", T.analogyAt(3.2), { x: 30, y: 0 });
+      T.slide("@.site .book", T.analogyAt(3.9), { y: -24 });
+      T.pop("@.site .crew, @.site .lb.l5", T.analogyAt(4.6));
+      T.pop("@.site .bub", T.analogyAt(5.4));
+      T.pulse("@.site .crew", T.analogyAt(6.6), 1.08);
+
+      // Estados iniciales de la pizarra
+      tl.set(["#board .node", "#board .node .ex", "#board .obra", "#board .rel", "#ghost", "#hub", "#hub .st", "#hub .spin", "#limit"], { opacity: 0 }, 0);
+
+      // Paso 1 · Prompt
+      T.pop("#nP", s(0, .1));
+      T.slide("#nP .ex", s(0, .8), { x: -20, y: 0 });
+      T.slide("#oP", s(0, 1.6), { y: 16 });
+      T.fadeIn("#ghost", s(0, 2.4), .6);
+      T.pulse("#nP .ex", s(0, 3.0), 1.05);
+
+      // Paso 2 · Contexto: el mismo pedido se entiende distinto
+      T.pop("#nC", s(1, .1));
+      T.draw(".wPC", s(1, .7), .5);
+      T.slide("#rPC", s(1, 1.0), { x: -16, y: 0 });
+      T.slide("#nC .ex", s(1, 1.3), { x: -20, y: 0 });
+      T.slide("#oC", s(1, 2.0), { y: 16 });
+      T.glow("#nC .ex", s(1, 2.8), "#5bdcff");
+      T.pulse("#nP .ex", s(1, 3.1), 1.05);
+
+      // Paso 3 · Herramienta
+      T.pop("#nH", s(2, .1));
+      T.slide("#nH .ex", s(2, .8), { x: 20, y: 0 });
+      T.slide("#oH", s(2, 1.6), { y: 16 });
+      T.pulse("#nH", s(2, 2.8), 1.04);
+
+      // Paso 4 · Skill
+      T.pop("#nS", s(3, .1));
+      T.draw(".wHS", s(3, .7), .5);
+      T.slide("#rHS", s(3, 1.0), { x: 16, y: 0 });
+      T.slide("#nS .ex", s(3, 1.3), { x: 20, y: 0 });
+      T.slide("#oS", s(3, 2.0), { y: 16 });
+      T.pulse("#nS .ex", s(3, 3.0), 1.05);
+
+      // Paso 5 · Agente: usa las cuatro piezas en un ciclo con límites
+      T.fadeOut("#ghost", s(4, 0), 0, .3);
+      T.pop("#hub", s(4, .1));
+      T.draw(".wA", s(4, .5), .6, .15);
+      T.pop("#hub .st", s(4, 1.1), .3);
+      T.draw(".lp", s(4, 1.2), 1.2);
+      T.fadeIn("#hub .spin", s(4, 2.2), .3);
+      T.fromTo("#hub .spin", s(4, 2.2), { rotation: 0 }, { rotation: 360, duration: 1.6, ease: "power1.inOut" });
+      T.pop("#limit", s(4, 2.6));
+      T.slide("#oA", s(4, 2.9), { y: 16 });
+      T.glow("#hub", s(4, 3.3));
+
+      window.__timelines["c1p4"] = T.tl;
+    </script>
+  </body>
+</html>

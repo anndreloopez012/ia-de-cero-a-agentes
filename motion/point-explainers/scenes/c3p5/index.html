@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>C3·P5 · Probar, corregir y versionar</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared/teacher.css" />
+    <script src="shared/teacher.js"></script>
+    <style>
+      /* Pizarra: banco de pruebas con cuatro carriles y la versión a la derecha */
+      .colh { position: absolute; top: 0; font-weight: 800; font-size: 22px; letter-spacing: .12em; text-transform: uppercase; color: var(--lavender); }
+      #h1 { left: 22px; } #h2 { left: 310px; } #h3 { left: 720px; } #h4 { left: 1140px; }
+      .lane { position: absolute; left: 0; width: 1430px; height: 112px; border-radius: 22px; border: 2px solid var(--line); background: linear-gradient(155deg, rgba(37, 27, 56, .9), rgba(13, 10, 19, .9)); }
+      #ln1 { top: 44px; } #ln2 { top: 170px; } #ln3 { top: 296px; } #ln4 { top: 422px; }
+      .lane .ty { position: absolute; left: 18px; top: 0; height: 108px; display: flex; align-items: center; gap: 16px; }
+      .lane .ty i { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-family: "Bricolage"; font-weight: 800; font-size: 24px; background: var(--accent); color: var(--void); }
+      .lane .ty b { font-family: "Bricolage"; font-weight: 700; font-size: 31px; white-space: nowrap; }
+      .lane .cell { position: absolute; top: 0; height: 108px; display: flex; align-items: center; font-size: 26px; line-height: 1.22; font-weight: 600; }
+      .lane .in { left: 310px; width: 390px; font-family: "JetMono", monospace; font-size: 25px; color: #e8deff; }
+      .lane .ex { left: 720px; width: 400px; color: var(--ink); }
+      .lane .re { left: 1140px; width: 280px; gap: 14px; }
+      .lane .re .okmark, .lane .re .nomark { position: relative; flex: none; width: 54px; height: 54px; }
+      .lane .re .okmark svg, .lane .re .nomark svg { width: 30px; height: 30px; }
+      .lane .re span { color: var(--ink); }
+      .lane .re span.bad { color: #ffb3c1; font-weight: 800; }
+      .lane .re span.good { color: #b5ffe2; font-weight: 800; }
+      #ln2 .re .fix { position: absolute; left: 0; top: 27px; }
+      #ln2 .re .fixtxt { position: absolute; left: 68px; top: 0; height: 108px; display: flex; align-items: center; }
+      /* Panel de versión */
+      #ver { left: 1460px; top: 0; width: 316px; height: 496px; padding: 24px 26px; gap: 6px; }
+      #ver .kick { font-weight: 800; font-size: 22px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+      .vn { position: relative; width: 100%; height: 118px; }
+      .vn span { position: absolute; left: 0; top: 0; font-family: "Bricolage"; font-weight: 800; font-size: 112px; line-height: 1; letter-spacing: -.04em; color: var(--ink); }
+      .vn span.v1 { color: var(--green); }
+      .chgs { position: relative; width: 100%; height: 170px; margin-top: 4px; }
+      #ver .chg { position: absolute; left: 0; right: 0; top: 0; font-size: 26px; line-height: 1.25; color: var(--ink-soft); }
+      #ver .chg b { color: var(--ink); }
+      #seal { left: 1488px; top: 408px; }
+      /* Analogía: la escalera que se certifica */
+      .ladder { position: absolute; left: 50px; top: 60px; width: 250px; height: 510px; }
+      .ladder svg { width: 100%; height: 100%; fill: none; stroke: var(--lavender); stroke-width: 9; stroke-linecap: round; }
+      .tests { position: absolute; left: 330px; top: 70px; display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+      .tests div { display: flex; align-items: center; gap: 16px; height: 84px; padding: 0 26px 0 16px; border-radius: 44px; background: rgba(255, 255, 255, .06); border: 2px solid var(--line); font-size: 30px; font-weight: 800; color: var(--ink); white-space: nowrap; }
+      .tests i { flex: none; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: var(--green); color: #062418; }
+      .tests i svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 12; stroke-linecap: round; stroke-linejoin: round; }
+      .sticker { position: absolute; left: 574px; top: 436px; width: 156px; height: 156px; }
+      .sticker div { width: 100%; height: 100%; border-radius: 50%; display: grid; place-items: center; text-align: center; background: var(--yellow); color: #2a1b00; font-family: "Bricolage"; font-weight: 800; font-size: 28px; line-height: 1.05; transform: rotate(-12deg); box-shadow: 0 0 0 6px rgba(255, 196, 90, .3), 0 18px 40px rgba(0, 0, 0, .5); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="c3p5" data-start="0" data-duration="44" data-width="1920" data-height="1080" data-fps="30">
+      <div id="board">
+        <div class="say hide colh" id="h1">Prueba</div><div class="say hide colh" id="h2">Entrada</div>
+        <div class="say hide colh" id="h3">Esperado</div><div class="say hide colh" id="h4">Real</div>
+
+        <div class="lane hide" id="ln1"><div class="ty"><i>1</i><b>Caso feliz</b></div>
+          <div class="cell in hide">«Notas completas de la reunión del lunes»</div>
+          <div class="cell ex hide">Tabla con tareas, dueños y fechas</div>
+          <div class="cell re"><div class="okmark hide" data-icon="check" data-icon-class=""></div><span class="hide">Como se esperaba</span></div></div>
+
+        <div class="lane hide" id="ln2"><div class="ty"><i>2</i><b>Caso borde</b></div>
+          <div class="cell in hide">«Notas sin fechas»</div>
+          <div class="cell ex hide">Marcar «pendiente de confirmar»</div>
+          <div class="cell re"><div class="nomark hide" data-icon="x" data-icon-class=""></div><span class="bad hide">Inventó fechas</span>
+            <div class="okmark fix hide" data-icon="check" data-icon-class=""></div><span class="good fixtxt hide">Ahora marca «pendiente»</span></div></div>
+
+        <div class="lane hide" id="ln3"><div class="ty"><i>3</i><b>Fallo</b></div>
+          <div class="cell in hide">Archivo vacío o ilegible</div>
+          <div class="cell ex hide">Pide la fuente y se detiene</div>
+          <div class="cell re"><div class="okmark hide" data-icon="check" data-icon-class=""></div><span class="hide">No inventó nada</span></div></div>
+
+        <div class="lane hide" id="ln4"><div class="ty"><i>4</i><b>No activación</b></div>
+          <div class="cell in hide">«Transcribe este audio»</div>
+          <div class="cell ex hide">La skill no se activa</div>
+          <div class="cell re"><div class="okmark hide" data-icon="check" data-icon-class=""></div><span class="hide">No se activó</span></div></div>
+
+        <svg class="wires" viewBox="0 0 1776 600">
+          <path class="r1" pathLength="1" d="M310 150H1120" /><path class="r2" pathLength="1" d="M310 276H1120" />
+          <path class="r3" pathLength="1" d="M310 402H1120" /><path class="r4" pathLength="1" d="M310 528H1120" />
+          <path class="rr2 green" pathLength="1" d="M310 276H1120" /><path class="rr1 green" pathLength="1" d="M310 150H1120" />
+        </svg>
+
+        <div class="card hide" id="ver"><span class="kick">Versión</span>
+          <div class="vn"><span class="v0">0.1</span><span class="v1">1.0</span></div>
+          <div class="chgs"><p class="chg c-wait">Pasa a 1.0 solo si supera <b>las cuatro pruebas</b>.</p>
+          <p class="chg c-done hide">Cambio: si falta la fecha, marca <b>«pendiente de confirmar»</b>.</p></div></div>
+        <span class="tag green hide" id="seal" data-icon="check">Skill 1.0</span>
+      </div>
+    </div>
+    <script>
+      const T = Teacher.setup({
+        cls: 3, point: 5,
+        title: "¿Cuándo está <em>lista</em> mi skill para usarse en serio?",
+        headTitle: "Probar, corregir y versionar",
+        question: "Que funcione una vez no basta. Pasa cuatro pruebas, corrige lo que falla y entonces sí: versión 1.0.",
+        analogy: {
+          art: `<div class="ladder"><svg viewBox="0 0 230 470"><path d="M50 20V450M180 20V450"/><path d="M50 80h130M50 160h130M50 240h130M50 320h130M50 400h130"/></svg></div>
+            <div class="tests">
+              <div><i>${Teacher.icon("check", "")}</i>Uso normal</div>
+              <div><i>${Teacher.icon("check", "")}</i>Peso al límite</div>
+              <div><i>${Teacher.icon("check", "")}</i>Un escalón flojo</div>
+              <div><i>${Teacher.icon("check", "")}</i>Mal uso</div>
+            </div>
+            <div class="sticker"><div>Aprobada</div></div>`,
+          title: "La escalera que se certifica",
+          text: "Antes de venderse, una escalera pasa cuatro pruebas: uso normal, peso al límite, una pieza floja y mal uso. Solo entonces lleva el <em>sello</em>.",
+        },
+        steps: [
+          { label: "Caso feliz", caption: "Caso feliz: entrada <em>completa y normal</em>. Antes de correrla, escribe qué esperas." },
+          { label: "Caso borde", caption: "Caso borde: <em>notas sin fechas</em>. Esperabas «pendiente», pero inventó fechas: falla." },
+          { label: "Fallo", caption: "Fallo: <em>archivo vacío</em>. Debe pedir la fuente y detenerse, nunca rellenar." },
+          { label: "No activación", caption: "No activación: <em>«transcribe este audio»</em> se parece, pero no debe activarla." },
+          { label: "Corregir y versionar", caption: "Corrige solo la causa y repite esa prueba y una anterior. Ahora sí: <em>Skill 1.0</em>." },
+        ],
+        takeaway: {
+          title: "Solo es <em>1.0</em> cuando pasa las cuatro pruebas y falla de forma segura.",
+          text: "Caso feliz · caso borde · fallo · no activación. Corrige la causa y repite.",
+        },
+      });
+
+      const s = T.stepAt;
+      const GREEN = "#45e0a8", RED = "#ff5c78";
+      // Analogía: las cuatro pruebas se marcan y llega el sello
+      T.slide("@.ladder", T.analogyAt(.4), { y: 30 });
+      T.slide("@.tests div", T.analogyAt(1.0), { x: 30, y: 0, stagger: .55 });
+      T.fromTo("@.tests i", T.analogyAt(1.4), { opacity: 0, scale: .3 }, { opacity: 1, scale: 1, duration: .4, stagger: .55, ease: "back.out(2)" });
+      T.fromTo("@.sticker", T.analogyAt(4.0), { opacity: 0, scale: 2 }, { opacity: 1, scale: 1, duration: .5, ease: "back.out(1.8)" });
+
+      // Estado inicial de los trazos de cada corrida y del número de versión
+      T.tl.set(["#board .wires path"], { strokeDasharray: 1, strokeDashoffset: 1 }, 0);
+      T.tl.set(["#board .vn .v1"], { opacity: 0 }, 0);
+
+      // Al iniciar la pizarra: el banco vacío y la versión 0.1
+      T.fadeIn(".colh", s(0, -.5), .4);
+      T.slide(".lane", s(0, -.45), { x: -24, y: 0, stagger: .08, duration: .4 });
+      T.pop("#ver", s(0, -.25));
+
+      // Corre un carril: entrada, esperado, trazo de la corrida y resultado
+      const run = (n, t, ok) => {
+        T.glow(`#ln${n}`, t, ok ? T.accent : RED);
+        T.slide(`#ln${n} .in`, t + .3, { x: -20, y: 0 });
+        T.slide(`#ln${n} .ex`, t + 1.0, { x: -20, y: 0 });
+        T.draw(`.r${n}`, t + 1.7, .8);
+        T.check(`#ln${n} .re > .${ok ? "okmark" : "nomark"}`, t + 2.5);
+        T.slide(`#ln${n} .re > span:first-of-type`, t + 2.7, { x: -16, y: 0 });
+        T.to(`#ln${n}`, t + 3.4, { boxShadow: "0 0 0 0px rgba(0,0,0,0)", borderColor: ok ? "rgba(69,224,168,.7)" : RED, duration: .4 });
+      };
+
+      run(1, s(0, .1), true);   // Paso 1 · Caso feliz
+      run(2, s(1, .1), false);  // Paso 2 · Caso borde (falla)
+      run(3, s(2, .1), true);   // Paso 3 · Fallo
+      run(4, s(3, .1), true);   // Paso 4 · No activación
+
+      // Paso 5 · Corregir la causa, repetir y versionar
+      T.fadeOut("#ver .c-wait", s(4, .1), 0, .3);
+      T.slide("#ver .c-done", s(4, .3), { y: 16 });
+      T.draw(".rr2", s(4, .6), .7);
+      T.fadeOut("#ln2 .re .nomark, #ln2 .re .bad", s(4, 1.2), 0, .25);
+      T.check("#ln2 .re .fix", s(4, 1.35));
+      T.slide("#ln2 .re .fixtxt", s(4, 1.5), { x: -16, y: 0 });
+      T.to("#ln2", s(4, 1.4), { borderColor: "rgba(69,224,168,.7)", duration: .3 });
+      T.draw(".rr1", s(4, 1.9), .6);
+      T.pulse("#ln1 .re .okmark", s(4, 2.4), 1.2);
+      T.fadeOut("#ver .vn .v0", s(4, 2.5), 0, .2);
+      T.fromTo("#ver .vn .v1", s(4, 2.75), { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .4, ease: "back.out(1.6)" });
+      T.pop("#seal", s(4, 3.0));
+      T.glow("#ver", s(4, 3.2), GREEN);
+
+      window.__timelines["c3p5"] = T.tl;
+    </script>
+  </body>
+</html>

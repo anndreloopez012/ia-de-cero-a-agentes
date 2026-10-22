@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>C2·P2 · Construir con ROCAV</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared/teacher.css" />
+    <script src="shared/teacher.js"></script>
+    <style>
+      /* Pizarra: cinco vigas que se apilan (izquierda) y el prompt que se resalta por letra (derecha) */
+      #board .col-h { top: 0; font-size: 26px; text-transform: uppercase; letter-spacing: .1em; color: var(--lavender); }
+      #h-a { left: 0; } #h-b { left: 820px; }
+
+      .beam { position: absolute; left: 0; width: 760px; height: 92px; display: flex; align-items: center; border-radius: 18px; border: 3px solid var(--c); background: linear-gradient(180deg, rgba(255, 255, 255, .09), rgba(255, 255, 255, .025)); box-shadow: 0 16px 34px rgba(0, 0, 0, .4); overflow: hidden; }
+      .beam .lt { flex: none; width: 92px; height: 100%; display: grid; place-items: center; background: var(--c); color: #050507; font-family: "Bricolage"; font-weight: 800; font-size: 58px; }
+      .beam .tx { flex: 1; display: flex; flex-direction: column; padding-left: 24px; }
+      .beam .tx b { font-family: "Bricolage"; font-weight: 700; font-size: 34px; line-height: 1.05; color: var(--ink); }
+      .beam .tx span { font-size: 26px; line-height: 1.2; color: var(--ink-soft); }
+      .beam .rv { flex: none; width: 18px; height: 18px; margin-right: 18px; border-radius: 50%; border: 3px solid var(--c); }
+      #bR { top: 50px; --c: #b997ff; } #bO { top: 154px; --c: #5bdcff; } #bC { top: 258px; --c: #45e0a8; }
+      #bA { top: 362px; --c: #ffc45a; } #bV { top: 466px; --c: #ff7ab6; }
+      #ghost { position: absolute; left: 0; top: 466px; width: 760px; height: 92px; border-radius: 18px; border: 3px dashed rgba(255, 122, 182, .7); display: flex; align-items: center; padding-left: 28px; font-size: 27px; font-weight: 750; color: #ffc6e0; }
+
+      /* El prompt de ejemplo del currículo */
+      #prompt { left: 820px; top: 50px; width: 956px; padding: 26px 30px; font-family: "Figtree"; font-size: 27px; line-height: 1.5; font-weight: 600; }
+      #prompt .seg { border-radius: 8px; padding: 2px 4px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+      #prompt .seg i { display: inline-block; width: 36px; height: 36px; margin-right: 8px; border-radius: 9px; font-style: normal; font-family: "Bricolage"; font-weight: 800; font-size: 26px; line-height: 36px; text-align: center; color: #fff; vertical-align: 2px; }
+      #gR i { background: #7a3cff; } #gO i { background: #0a9cc9; } #gC i { background: #12a874; } #gA i { background: #c98400; } #gV i { background: #e0458e; }
+      #stamp { position: absolute; left: 1450px; top: 420px; z-index: 9; padding: 10px 22px; border-radius: 14px; border: 4px solid var(--green); background: rgba(5, 5, 7, .88); color: var(--green); font-family: "Bricolage"; font-weight: 800; font-size: 30px; letter-spacing: .06em; text-transform: uppercase; }
+      #board .note { left: 820px; top: 450px; max-width: 640px; }
+
+      /* Analogía: sin plano cada quien imagina otra casa; con plano, todos la misma */
+      .ask { position: absolute; left: 40px; top: 28px; padding: 14px 26px; border-radius: 22px 22px 22px 6px; background: #f6f2ff; color: #1b1426; font-family: "Bricolage"; font-weight: 750; font-size: 34px; }
+      .house { position: absolute; top: 120px; width: 200px; height: 220px; }
+      .house .rf { position: absolute; background: rgba(185, 151, 255, .35); border: 0; }
+      .house .bd { position: absolute; bottom: 40px; border: 4px solid #b997ff; background: rgba(185, 151, 255, .12); border-radius: 6px; }
+      .house .dr { position: absolute; bottom: 40px; width: 34px; height: 54px; border: 4px solid #b997ff; border-bottom: 0; border-radius: 6px 6px 0 0; }
+      .house em { position: absolute; left: 0; right: 0; bottom: 0; text-align: center; font-style: normal; font-size: 26px; font-weight: 750; color: var(--ink-soft); }
+      .h1 { left: 30px; } .h2 { left: 280px; } .h3 { left: 530px; }
+      .h1 .rf { left: 10px; top: 0; width: 180px; height: 70px; clip-path: polygon(50% 0, 100% 100%, 0 100%); background: #b997ff; }
+      .h1 .bd { left: 30px; width: 140px; height: 110px; } .h1 .dr { left: 83px; }
+      .h2 .rf { left: 0; top: 52px; width: 200px; height: 18px; background: #b997ff; border-radius: 4px; }
+      .h2 .bd { left: 0; width: 200px; height: 110px; } .h2 .dr { left: 30px; }
+      .h3 .rf { left: 50px; top: 0; width: 100px; height: 50px; border-radius: 50px 50px 0 0; background: #b997ff; }
+      .h3 .bd { left: 50px; width: 100px; height: 130px; } .h3 .dr { left: 83px; }
+      .bp { position: absolute; left: 40px; top: 392px; width: 680px; height: 196px; border-radius: 22px; border: 3px solid #5bdcff; background-color: #0b2f4a;
+        background-image: linear-gradient(rgba(91, 220, 255, .18) 1px, transparent 1px), linear-gradient(90deg, rgba(91, 220, 255, .18) 1px, transparent 1px); background-size: 24px 24px; }
+      .bp svg { position: absolute; left: 24px; top: 18px; width: 200px; height: 160px; fill: none; stroke: #e8fbff; stroke-width: 4; stroke-linejoin: round; }
+      .bp p { position: absolute; left: 250px; top: 34px; right: 26px; font-size: 30px; line-height: 1.25; font-weight: 750; color: #e8fbff; }
+      .bp p small { display: block; margin-top: 8px; font-size: 26px; font-weight: 600; color: #9fe9ff; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="c2p2" data-start="0" data-duration="44" data-width="1920" data-height="1080" data-fps="30">
+      <div id="board">
+        <div class="say col-h hide" id="h-a">Las cinco vigas del plano</div>
+        <div class="say col-h hide" id="h-b">Prompt ROCAV de ejemplo</div>
+
+        <div class="beam hide" id="bR"><div class="lt">R</div><div class="tx"><b>Rol útil</b><span>una perspectiva que ayuda, sin fingir</span></div><i class="rv"></i></div>
+        <div class="beam hide" id="bO"><div class="lt">O</div><div class="tx"><b>Objetivo</b><span>el resultado que debe lograr</span></div><i class="rv"></i></div>
+        <div class="beam hide" id="bC"><div class="lt">C</div><div class="tx"><b>Contexto</b><span>datos que cambian la respuesta</span></div><i class="rv"></i></div>
+        <div class="beam hide" id="bA"><div class="lt">A</div><div class="tx"><b>Acuerdos</b><span>audiencia, formato, tono y límites</span></div><i class="rv"></i></div>
+        <div class="hide" id="ghost">Sin V: nadie la revisó</div>
+        <div class="beam hide" id="bV"><div class="lt">V</div><div class="tx"><b>Verificación</b><span>criterios y manejo de vacíos</span></div><i class="rv"></i></div>
+
+        <div class="paper hide" id="prompt"><span class="seg" id="gR"><i>R</i>Actúa como tutor paciente de alfabetización digital.</span>
+          <span class="seg" id="gO"><i>O</i>Crea una guía para que una persona adulta sin experiencia active la verificación en dos pasos de una cuenta de práctica.</span>
+          <span class="seg" id="gC"><i>C</i>Usa el caso ficticio entregado.</span>
+          <span class="seg" id="gA"><i>A</i>Escribe ocho pasos numerados, una acción por paso, define tecnicismos y añade una lista final de comprobación. No solicites contraseñas ni códigos reales.</span>
+          <span class="seg" id="gV"><i>V</i>Antes de finalizar, verifica que cada paso sea reversible y señala qué pantallas pueden variar.</span></div>
+        <div class="hide" id="stamp">Inspeccionado</div>
+
+        <div class="note red hide" id="nR">“Actúa como el mejor experto del mundo” es decoración: no verifica nada.</div>
+        <div class="note purple hide" id="nO">Un resultado que se pueda observar: “una guía de 8 pasos”.</div>
+        <div class="note green hide" id="nC">Si un dato no cambia la respuesta, sobra.</div>
+        <div class="note hide" id="nA">Los acuerdos también dicen lo que no se debe hacer.</div>
+      </div>
+    </div>
+    <script>
+      const T = Teacher.setup({
+        cls: 2, point: 2,
+        title: "¿Cómo convierto una idea en un <em>plano</em> para la IA?",
+        headTitle: "Construir con ROCAV",
+        question: "Cinco piezas convierten un deseo en instrucciones que otra persona puede ejecutar y evaluar.",
+        analogy: {
+          art: `<div class="ask">“Constrúyanme una casa”</div>
+            <div class="house h1"><i class="rf"></i><i class="bd"></i><i class="dr"></i><em>Ana imagina</em></div>
+            <div class="house h2"><i class="rf"></i><i class="bd"></i><i class="dr"></i><em>Luis imagina</em></div>
+            <div class="house h3"><i class="rf"></i><i class="bd"></i><i class="dr"></i><em>Eva imagina</em></div>
+            <div class="bp"><svg viewBox="0 0 200 160"><path d="M20 70L100 18l80 52M36 60v80h128V60M86 140v-42h28v42"/><path d="M36 152h128M36 146v12M164 146v12"/></svg>
+              <p>Con plano, todos construyen la misma casa.<small>8 × 6 m · techo a dos aguas</small></p></div>`,
+          title: "Un plano para que todos construyan lo mismo",
+          text: "Un plano no construye la casa, pero evita que <em>cada persona imagine una distinta</em>. ROCAV es el plano de tu petición.",
+        },
+        steps: [
+          { label: "Rol", caption: "<em>Rol útil</em>: una perspectiva que ayuda, como “tutor paciente”, no “el mejor experto”." },
+          { label: "Objetivo", caption: "<em>Objetivo</em>: el resultado que debe lograr la salida, dicho de forma observable." },
+          { label: "Contexto", caption: "<em>Contexto</em>: solo los datos que de verdad cambian la respuesta." },
+          { label: "Acuerdos", caption: "<em>Acuerdos</em>: audiencia, formato, tono, longitud y límites que se deben respetar." },
+          { label: "Verificación", caption: "<em>Verificación</em>: cómo se comprueba. Sin ella, todo se ve listo y nadie lo revisó." },
+        ],
+        takeaway: {
+          title: "Cinco vigas, un plano. Sin la <em>V</em>, nadie revisa la obra.",
+          text: "Rol útil · Objetivo · Contexto · Acuerdos · Verificación.",
+        },
+      });
+
+      const s = T.stepAt;
+      // Analogía: tres casas distintas para la misma frase, y luego el plano
+      T.slide("@.t-analogy-art .ask", T.analogyAt(.6), { y: 20 });
+      T.pop("@.t-analogy-art .house", T.analogyAt(1.3), .35);
+      T.slide("@.t-analogy-art .bp", T.analogyAt(3.6), { y: 40, duration: .7 });
+      T.to("@.t-analogy-art .house", T.analogyAt(4.4), { opacity: .45, duration: .5 });
+      T.pulse("@.t-analogy-art .bp", T.analogyAt(5.4), 1.03);
+
+      // Estado inicial: los segmentos del prompt sin resaltar
+      const HL = { R: "rgba(122,60,255,.2)", O: "rgba(10,166,214,.22)", C: "rgba(18,168,116,.22)", A: "rgba(255,180,0,.32)", V: "rgba(224,69,142,.2)" };
+      T.tl.set("#board #prompt .seg", { backgroundColor: "rgba(255,255,255,0)" }, 0);
+      T.tl.set("#board #prompt .seg i", { opacity: .22 }, 0);
+      const BEAM_C = { R: "#b997ff", O: "#5bdcff", C: "#45e0a8", A: "#ffc45a", V: "#ff7ab6" };
+
+      // Coloca una viga y resalta su parte del prompt. tIn = llegada de la viga, tHl = resaltado.
+      const place = (L, i, tIn = .25, tHl = 1.0) => {
+        T.fromTo(`#b${L}`, s(i, tIn), { opacity: 0, x: -120 }, { opacity: 1, x: 0, duration: .7, ease: "back.out(1.3)" });
+        const t = s(i, tHl);
+        T.to(`#g${L}`, t, { backgroundColor: HL[L], duration: .45, ease: "power2.out" });
+        T.to(`#g${L} i`, t, { opacity: 1, duration: .3 });
+        T.pulse(`#g${L} i`, t, 1.3);
+        T.glow(`#b${L}`, t, BEAM_C[L]);
+        T.to(`#b${L}`, t + 1.6, { boxShadow: "0 16px 34px rgba(0,0,0,.4)", duration: .5 });
+      };
+      // Cada nota aparece tras el resaltado y se queda hasta el paso siguiente
+      const note = (L, i) => { T.slide(`#n${L}`, s(i, 1.4), { y: 20 }); T.fadeOut(`#n${L}`, s(i + 1, 1.1)); };
+
+      // Paso 1 · Rol
+      T.slide("#h-a", s(0, 0), { y: 10 }).slide("#h-b", s(0, 0), { y: 10 });
+      T.slide("#prompt", s(0, .1), { y: 24 });
+      place("R", 0); note("R", 0);
+      // Paso 2 · Objetivo
+      place("O", 1); note("O", 1);
+      // Paso 3 · Contexto
+      place("C", 2); note("C", 2);
+      // Paso 4 · Acuerdos
+      place("A", 3); note("A", 3);
+      // Paso 5 · Verificación: primero el hueco sin V, luego la viga y la inspección
+      T.fadeIn("#ghost", s(4, .1), .4);
+      T.pulse("#ghost", s(4, 1.0), 1.03);
+      T.fadeOut("#ghost", s(4, 2.0), 0, .25);
+      place("V", 4, 2.25, 2.85);
+      T.fromTo("#stamp", s(4, 3.3), { opacity: 0, scale: 1.8, rotation: -24 }, { opacity: 1, scale: 1, rotation: -6, duration: .5, ease: "back.out(2)" });
+
+      window.__timelines["c2p2"] = T.tl;
+    </script>
+  </body>
+</html>

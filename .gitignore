@@ -6,3 +6,8 @@ motion/point-explainers/.hyperframes/
 motion/point-explainers/renders/
 site/assets/motion/points/manifest.json
 *.log
+motion/point-explainers/scenes/*/.hyperframes/
+motion/point-explainers/scenes/*/renders/
+.DS_Store
+graphify-out
+site/assets/motion/points/.*.hf-transaction-*/

@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>C3·P1 · Elegir el recurso correcto</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared/teacher.css" />
+    <script src="shared/teacher.js"></script>
+    <style>
+      /* Pizarra: escalera de siete recursos, del más simple (abajo) al más complejo (arriba) */
+      .rung { position: absolute; width: 680px; height: 66px; display: flex; align-items: center; gap: 14px; padding: 0 22px; border-radius: 16px; border: 2px solid var(--line); background: linear-gradient(155deg, rgba(41, 29, 63, .96), rgba(13, 10, 19, .96)); box-shadow: 0 14px 34px rgba(0, 0, 0, .35); }
+      .rung b { flex: none; width: 196px; font-family: "Bricolage"; font-weight: 700; font-size: 30px; letter-spacing: -.01em; color: var(--ink); }
+      .rung span { font-size: 26px; font-weight: 600; color: var(--ink-soft); white-space: nowrap; }
+      .rung.skill b { color: var(--accent); }
+      #r0 { left: 0; top: 522px; } #r1 { left: 64px; top: 444px; } #r2 { left: 128px; top: 366px; }
+      #r3 { left: 192px; top: 288px; } #r4 { left: 256px; top: 210px; } #r5 { left: 320px; top: 132px; } #r6 { left: 384px; top: 54px; }
+      #lbl-up { left: 64px; top: 0; font-size: 24px; letter-spacing: .12em; text-transform: uppercase; color: var(--lavender); }
+      #tok { left: 692px; top: 523px; width: 64px; height: 64px; }
+      #tag-ok { left: 128px; top: 137px; }
+      #tag-much { left: 160px; top: 59px; }
+      #note-short { left: 780px; top: 470px; max-width: 340px; }
+      /* Panel derecho: la tarea y la justificación */
+      #task { left: 1096px; top: 0; width: 680px; gap: 6px; }
+      #task .facts { position: relative; display: flex; flex-direction: column; gap: 10px; width: 100%; margin-top: 6px; }
+      #task .facts div { display: flex; gap: 14px; font-size: 26px; line-height: 1.2; padding: 9px 14px; border-radius: 12px; background: rgba(255, 255, 255, .06); color: var(--ink); }
+      #task .facts i { flex: none; width: 128px; font-style: normal; font-weight: 800; color: var(--accent); }
+      #why { left: 1096px; top: 332px; width: 680px; }
+      /* Analogía: colgar un cuadro con la herramienta proporcional */
+      .wall { position: absolute; left: 0; right: 0; top: 0; height: 270px; background: linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .015)); border-bottom: 3px solid rgba(185, 151, 255, .3); }
+      .pic { position: absolute; left: 280px; top: 62px; width: 200px; height: 150px; border-radius: 10px; border: 10px solid #c9a46a; background: linear-gradient(180deg, #2a4f7a, #1b2c45); overflow: hidden; }
+      .pic svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+      .nail { position: absolute; left: 372px; top: 22px; width: 16px; height: 16px; border-radius: 50%; background: #d8d2e6; }
+      .pic-label { position: absolute; left: 0; right: 0; top: 222px; text-align: center; font-size: 28px; font-weight: 800; color: var(--ink); }
+      .tools { position: absolute; left: 26px; right: 26px; top: 300px; display: flex; gap: 18px; }
+      .tool { position: relative; flex: 1; height: 290px; border-radius: 26px; border: 2px solid var(--line); background: rgba(255, 255, 255, .04); display: flex; flex-direction: column; align-items: center; padding-top: 16px; }
+      .tool svg { width: 150px; height: 130px; fill: none; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+      .tool b { margin-top: 6px; font-family: "Bricolage"; font-size: 32px; font-weight: 700; color: var(--ink); }
+      .tool small { margin-top: 10px; padding: 6px 16px; border-radius: 20px; font-size: 24px; font-weight: 800; }
+      .tool.ok { border-color: var(--green); background: rgba(69, 224, 168, .08); } .tool.ok svg { stroke: var(--green); } .tool.ok small { background: rgba(69, 224, 168, .18); color: #b5ffe2; }
+      .tool.mid svg { stroke: var(--yellow); } .tool.mid small { background: rgba(255, 196, 90, .16); color: #ffe2ad; }
+      .tool.bad svg { stroke: var(--red); } .tool.bad small { background: rgba(255, 92, 120, .16); color: #ffc0cc; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="c3p1" data-start="0" data-duration="44" data-width="1920" data-height="1080" data-fps="30">
+      <div id="board">
+        <svg class="wires" viewBox="0 0 1776 600">
+          <path class="w-up" pathLength="1" d="M30 470V40" />
+          <path class="w-head" pathLength="1" d="M14 58L30 38L46 58" />
+        </svg>
+        <div class="say hide" id="lbl-up">Más complejo</div>
+
+        <div class="rung hide" id="r0"><b>Prompt</b><span>¿Qué quiero obtener ahora?</span></div>
+        <div class="rung hide" id="r1"><b>Plantilla</b><span>¿Qué campos debo llenar?</span></div>
+        <div class="rung hide" id="r2"><b>Proyecto</b><span>¿Qué contexto es de este trabajo?</span></div>
+        <div class="rung hide" id="r3"><b>Herramienta</b><span>¿Con qué leo, busco o actúo?</span></div>
+        <div class="rung hide" id="r4"><b>Workflow</b><span>¿Qué secuencia fija sigo?</span></div>
+        <div class="rung skill hide" id="r5"><b>Skill</b><span>¿Cómo repito bien esta tarea?</span></div>
+        <div class="rung hide" id="r6"><b>Agente</b><span>¿Cómo decide el siguiente paso?</span></div>
+
+        <div class="token round hide" id="tok"><span data-icon="doc" data-icon-class="ic sm"></span></div>
+        <span class="tag green hide" id="tag-ok" data-icon="check">Justo</span>
+        <span class="tag red hide" id="tag-much" data-icon="x">Excesivo</span>
+        <div class="note hide" id="note-short">Se quedan cortos: no dicen cuándo usarse ni cuándo parar.</div>
+
+        <div class="card accent hide" id="task"><h3>Tu tarea</h3><p>Convertir notas de reunión en acuerdos y tareas</p>
+          <div class="facts">
+            <div><i>Se repite</i>dos veces al mes</div>
+            <div><i>Entra</i>notas de la reunión</div>
+            <div><i>Sale</i>tabla de tareas y acuerdos</div>
+          </div></div>
+        <div class="paper hide" id="why">Necesito una <b>skill</b> porque <span class="hl">convertir notas en tareas</span> se repite y debe conservar <span class="hl">tarea | responsable | fecha</span>.</div>
+      </div>
+    </div>
+    <script>
+      const T = Teacher.setup({
+        cls: 3, point: 1,
+        title: "¿Prompt, workflow, skill o agente? <em>¿Qué necesita</em> tu tarea?",
+        headTitle: "Elegir el recurso correcto: de prompt a agente",
+        question: "No toda tarea pide un agente. Aprende a elegir el recurso más simple que la resuelve bien.",
+        analogy: {
+          art: `<div class="wall"><div class="nail"></div>
+              <div class="pic"><svg viewBox="0 0 200 150"><path d="M0 150L60 70l40 45 30-30 70 65z" fill="#45e0a8" opacity=".75"/><circle cx="150" cy="40" r="16" fill="#ffc45a"/></svg></div>
+              <div class="pic-label">Tarea: colgar un cuadro</div></div>
+            <div class="tools">
+              <div class="tool ok"><svg viewBox="0 0 150 130"><rect x="64" y="40" width="18" height="84" rx="7"/><rect x="30" y="14" width="88" height="32" rx="9"/></svg><b>Martillo</b><small>Justo</small></div>
+              <div class="tool mid"><svg viewBox="0 0 150 130"><path d="M16 30h86a16 16 0 010 32H16z"/><path d="M118 46h26"/><path d="M42 62l-8 58h34l4-58"/></svg><b>Taladro</b><small>De más</small></div>
+              <div class="tool bad"><svg viewBox="0 0 150 130"><path d="M40 124V18M20 124h40M40 18h100M40 18L16 38M40 44l100-26M130 18v52"/><path d="M130 70c0 14-14 14-14 4"/></svg><b>Grúa</b><small>Excesiva</small></div>
+            </div>`,
+          title: "No traes una grúa para colgar un cuadro",
+          text: "Para un clavo basta un martillo. Con la IA pasa igual: elige el <em>recurso proporcional</em> a la tarea, no el más poderoso.",
+        },
+        steps: [
+          { label: "La escalera", caption: "Siete recursos, del <em>más simple</em> al <em>más complejo</em>. Cada uno responde otra pregunta." },
+          { label: "Tu tarea", caption: "Parte de una tarea que repites: <em>notas de reunión</em> que se vuelven acuerdos y tareas." },
+          { label: "Se queda corto", caption: "Sube peldaño a peldaño: los cinco primeros <em>se quedan cortos</em> para repetir bien la tarea." },
+          { label: "Justo a la medida", caption: "La <em>skill</em> es justa. Un agente sería excesivo: aquí nadie decide acciones en ciclos." },
+          { label: "Tu justificación", caption: "Escribe tu porqué y elige siempre el recurso <em>menos complejo</em> que resuelve la tarea." },
+        ],
+        takeaway: {
+          title: "Usa el recurso <em>más simple</em> que resuelva la tarea. No todo necesita un agente.",
+          text: "Prompt → plantilla → proyecto → herramienta → workflow → skill → agente.",
+        },
+      });
+
+      const s = T.stepAt;
+      // Analogía: aparece el cuadro, luego las tres herramientas; el martillo es la medida justa
+      T.slide("@.wall .pic, @.wall .pic-label", T.analogyAt(.5), { y: -20, stagger: .2 });
+      T.slide("@.tools .tool", T.analogyAt(1.5), { y: 40, stagger: .35 });
+      T.pulse("@.tools .tool.ok", T.analogyAt(3.4), 1.06);
+      T.to("@.tools .tool.bad", T.analogyAt(4.4), { opacity: .45, duration: .5 });
+
+      // Estado inicial de los trazos
+      T.tl.set(["#board .w-up", "#board .w-head"], { strokeDasharray: 1, strokeDashoffset: 1 }, 0);
+
+      // Paso 1 · La escalera: los peldaños aparecen de abajo hacia arriba
+      T.pop(".rung", s(0, .1), .3);
+      T.draw(".w-up", s(0, .4), 1.8);
+      T.draw(".w-head", s(0, 2.2), .3);
+      T.slide("#lbl-up", s(0, 2.4), { y: 14 });
+      T.pulse("#r0", s(0, 3.1), 1.03).pulse("#r6", s(0, 3.5), 1.03);
+
+      // Paso 2 · Tu tarea
+      T.pop("#task", s(1, .1));
+      T.slide("#task .facts div", s(1, .8), { x: 30, y: 0, stagger: .4 });
+      T.glow("#task", s(1, 2.8));
+
+      // Paso 3 · Sube peldaño a peldaño: los cinco primeros se quedan cortos
+      T.pop("#tok", s(2, .1));
+      [1, 2, 3, 4].forEach((i, k) => T.to("#tok", s(2, .6 + k * .5), { x: 64 * i, y: -78 * i, duration: .42 }));
+      T.to("#r0, #r1, #r2, #r3, #r4", s(2, .5), { borderColor: "#ffc45a", backgroundColor: "rgba(255,196,90,.10)", duration: .3, stagger: .5 });
+      T.slide("#note-short", s(2, 2.8), { y: 20 });
+
+      // Paso 4 · La skill es justa; el agente, excesivo
+      T.to("#tok", s(3, .1), { x: 320, y: -390, duration: .5 });
+      T.glow("#r5", s(3, .6), "#45e0a8");
+      T.pop("#tag-ok", s(3, 1.0));
+      T.to("#r6", s(3, 1.9), { borderColor: "#ff5c78", opacity: .55, duration: .4 });
+      T.pop("#tag-much", s(3, 2.1));
+
+      // Paso 5 · Tu justificación
+      T.slide("#why", s(4, .2), { y: 30 });
+      T.pulse("#why", s(4, 2.2), 1.03);
+      T.pulse("#tag-ok", s(4, 3.0), 1.1);
+
+      window.__timelines["c3p1"] = T.tl;
+    </script>
+  </body>
+</html>
