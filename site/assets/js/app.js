@@ -14,6 +14,29 @@
     "Caja de herramientas modular para construir una skill reutilizable",
     "Agente coordinador conectado a dos subagentes con controles humanos",
   ];
+  const pointAnimations = {
+    c1p1: "Una entrada llega a un modelo generativo, se abre en varias respuestas posibles y una persona verifica la opción útil antes de aprobarla.",
+    c1p2: "Tres datos recorren un semáforo: el público avanza, el sensible se revisa y anonimiza, y una credencial queda bloqueada.",
+    c1p3: "Tres plataformas se configuran con controles de memoria, privacidad, personalización y seguridad hasta converger en un entorno protegido.",
+    c1p4: "Prompt, contexto, herramienta, skill y agente se conectan como partes consecutivas de una misma obra bajo control humano.",
+    c1p5: "Documentos, tablas e imágenes entran a un selector que los dirige hacia el recurso y el comando proporcional para resolverlos.",
+    c2p1: "Objetivo, contexto, restricciones y formato se arrastran hasta un plano; la verificación completa la estructura del prompt.",
+    c2p2: "Cinco vigas se ensamblan para formar una estructura ROCAV estable; la última inspección evita que el resultado quede incompleto.",
+    c2p3: "Bloques de aclaración, fuentes, formato y lista de control se arrastran desde una biblioteca hasta una plantilla reutilizable.",
+    c2p4: "Un resultado recorre un ciclo de prueba; se reemplaza una sola pieza defectuosa y la nueva versión supera la revisión.",
+    c2p5: "Un entregable atraviesa siete lentes de calidad y termina empaquetado con un sello que permite transferirlo con confianza.",
+    c3p1: "Una tarea pequeña pasa por una escala de recursos y selecciona la herramienta más sencilla que puede resolverla bien.",
+    c3p2: "Ocho componentes orbitan una skill central y después se integran para formar una herramienta completa, limitada y comprobable.",
+    c3p3: "Una solicitud activa una puerta, pasa por un hook inicial, el proceso y un hook final; si falla, se desvía hacia un fallback seguro.",
+    c3p4: "Una skill portable conserva su núcleo y se conecta mediante adaptadores a tres plataformas sin cambiar su lógica principal.",
+    c3p5: "Una herramienta atraviesa cuatro carriles de prueba y solo recibe el sello final después de superar casos normales, borde, incompletos y riesgosos.",
+    c4p1: "Un workflow sigue una ruta fija, mientras un agente elige entre rutas permitidas dentro de una cerca visible.",
+    c4p2: "Un agente recorre un ciclo con presupuesto limitado y termina por una salida de éxito o solicita intervención humana.",
+    c4p3: "Un coordinador divide el trabajo entre dos subagentes especialistas, recibe sus resultados y los entrega a una persona para aprobación.",
+    c4p4: "Un paquete de delegación incorpora contexto, formato, evidencia y condición de retorno antes de cruzar la puerta hacia el especialista.",
+    c4p5: "Las acciones reversibles avanzan, las ambiguas esperan aprobación humana y las irreversibles permanecen bloqueadas por guardrails.",
+    c4p6: "Una lupa recorre la traza completa de objetivo, decisiones, herramientas, resultado, verificación y pausa humana en tres escenarios de prueba.",
+  };
   const storageKey = "ai-academy-course-progress-v2";
   let completed = new Set(JSON.parse(localStorage.getItem(storageKey) || "[]"));
 
@@ -30,7 +53,8 @@
     .replace(/ {2}$/g, "<br>");
 
   function markdownToHtml(markdown) {
-    const lines = markdown.replace(/\r/g, "").split("\n");
+    const studentFacingMarkdown = markdown.replaceAll("**Idea visual para la web:**", "**Qué observar en la animación:**");
+    const lines = studentFacingMarkdown.replace(/\r/g, "").split("\n");
     const html = [];
     let index = 0;
 
@@ -112,6 +136,23 @@
     return title.replace(/^.+?:\s*/, "").replace(/\b\w/g, (char) => char.toUpperCase());
   }
 
+  function animationMarkup(id, title) {
+    const mediaId = id.replaceAll("-", "");
+    const description = pointAnimations[mediaId] || `Animación visual del punto ${title}.`;
+    return `
+      <figure class="topic-animation" data-animation-id="${id}">
+        <div class="topic-animation-stage">
+          <video muted loop playsinline preload="none" data-poster="assets/motion/points/posters/${mediaId}.jpg" aria-label="${escapeHtml(description)}">
+            <source data-src="assets/motion/points/${mediaId}.mp4" type="video/mp4">
+          </video>
+          <button class="animation-replay" type="button" aria-label="Reproducir de nuevo la explicación visual de ${escapeHtml(title)}">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M19 12a7 7 0 1 0-2 4.9"/></svg>
+          </button>
+        </div>
+        <figcaption class="sr-only">${escapeHtml(description)}</figcaption>
+      </figure>`;
+  }
+
   function renderCourse() {
     const root = document.querySelector("#course-root");
     if (!content || !root) {
@@ -126,7 +167,7 @@
         return `
           <details class="topic-card ${isComplete ? "is-complete" : ""}" data-point-id="${id}" data-search="${escapeHtml((point.title + " " + point.markdown).toLowerCase())}">
             <summary><span class="topic-index">${isComplete ? "✓" : String(point.number).padStart(2, "0")}</span><span class="topic-title">${inline(point.title)}</span><span class="chevron" aria-hidden="true">+</span></summary>
-            <div class="topic-content class-markdown">${markdownToHtml(point.markdown)}<button class="complete-button" type="button" aria-pressed="${isComplete}">${isComplete ? "Punto completado ✓" : "Marcar como completado"}</button></div>
+            <div class="topic-content class-markdown">${animationMarkup(id, point.title)}${markdownToHtml(point.markdown)}<button class="complete-button" type="button" aria-pressed="${isComplete}">${isComplete ? "Punto completado ✓" : "Marcar como completado"}</button></div>
           </details>`;
       }).join("");
 
@@ -176,6 +217,59 @@
         button.textContent = done ? "Punto completado ✓" : "Marcar como completado";
         card.querySelector(".topic-index").textContent = done ? "✓" : id.split("p")[1].padStart(2, "0");
         updateProgress();
+      });
+    });
+    bindTopicAnimations();
+  }
+
+  function bindTopicAnimations() {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const figures = document.querySelectorAll(".topic-animation");
+
+    const loadAnimation = (figure, shouldPlay = true) => {
+      const video = figure.querySelector("video");
+      const source = video?.querySelector("source");
+      if (!video || !source) return;
+      if (!video.poster) video.poster = video.dataset.poster;
+      if (!source.src) {
+        source.src = source.dataset.src;
+        video.load();
+      }
+      if (shouldPlay && !reducedMotion) video.play().catch(() => {});
+    };
+
+    const observer = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const figure = entry.target;
+        const card = figure.closest(".topic-card");
+        const video = figure.querySelector("video");
+        if (entry.isIntersecting && card?.open) loadAnimation(figure, true);
+        else video?.pause();
+      });
+    }, { rootMargin: "180px 0px", threshold: .12 }) : null;
+
+    figures.forEach((figure) => {
+      const card = figure.closest(".topic-card");
+      const video = figure.querySelector("video");
+      const replay = figure.querySelector(".animation-replay");
+      observer?.observe(figure);
+
+      card?.addEventListener("toggle", () => {
+        if (!card.open) { video?.pause(); return; }
+        const rect = figure.getBoundingClientRect();
+        const nearViewport = rect.top < window.innerHeight + 180 && rect.bottom > -180;
+        if (!observer || nearViewport) loadAnimation(figure, true);
+      });
+
+      replay?.addEventListener("click", () => {
+        loadAnimation(figure, false);
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      });
+
+      video?.addEventListener("click", () => {
+        if (video.paused) video.play().catch(() => {});
+        else video.pause();
       });
     });
   }

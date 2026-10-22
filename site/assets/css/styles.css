@@ -166,6 +166,13 @@ h1, h2, h3, h4 { margin: 0; line-height: 1.08; letter-spacing: -.04em; }
 .chevron { color: var(--glow); font-size: 25px; transition: transform .2s; }
 .topic-card[open] .chevron { transform: rotate(45deg); }
 .topic-content { padding: 6px 28px 30px 88px; border-top: 1px solid rgba(255,255,255,.08); }
+.topic-animation { width: min(100%, 1040px); margin: 26px 0 34px; }
+.topic-animation-stage { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid rgba(185,151,255,.38); border-radius: 24px; background: radial-gradient(circle at 50% 45%, rgba(122,60,255,.22), transparent 48%), #050507; box-shadow: 0 24px 70px rgba(0,0,0,.35), inset 0 1px rgba(255,255,255,.08); isolation: isolate; }
+.topic-animation-stage::before { content: ""; position: absolute; z-index: 2; inset: 0; pointer-events: none; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255,255,255,.04), inset 0 -70px 90px rgba(5,5,7,.2); }
+.topic-animation video { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
+.animation-replay { position: absolute; z-index: 3; right: 16px; bottom: 16px; width: 48px; height: 48px; display: grid; place-items: center; color: #fff; border: 1px solid rgba(255,255,255,.38); border-radius: 50%; background: rgba(5,5,7,.72); box-shadow: 0 8px 24px rgba(0,0,0,.35); backdrop-filter: blur(12px); transition: transform .2s ease, border-color .2s ease, background .2s ease; }
+.animation-replay:hover, .animation-replay:focus-visible { transform: scale(1.07); border-color: var(--glow); background: rgba(122,60,255,.82); outline: none; }
+.animation-replay svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .topic-content h2:first-child { display: none; }
 .topic-content h3 { margin-top: 30px; }
 .topic-content h3.exercise-title { padding: 20px 22px; color: #fff; border: 1px solid rgba(185,151,255,.28); border-radius: 16px 16px 0 0; background: linear-gradient(100deg, rgba(122,60,255,.3), rgba(122,60,255,.06)); }
@@ -253,6 +260,9 @@ footer a { color: var(--glow); font-weight: 800; }
   .topic-index { width: 42px; height: 42px; }
   .topic-title { font-size: 16px; }
   .topic-content { padding: 4px 18px 26px; }
+  .topic-animation { margin: 18px 0 28px; }
+  .topic-animation-stage { border-radius: 16px; }
+  .animation-replay { right: 10px; bottom: 10px; width: 42px; height: 42px; }
   .class-markdown table { min-width: 660px; }
   .deliverable-grid { grid-template-columns: 1fr; }
   .deliverable-grid article { min-height: 185px; }

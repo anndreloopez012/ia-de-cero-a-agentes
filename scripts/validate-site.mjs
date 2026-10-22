@@ -19,6 +19,15 @@ const required = [
   "assets/motion/construccion-aprendizaje.mp4",
 ];
 
+for (let classNumber = 1; classNumber <= 4; classNumber += 1) {
+  const pointTotal = classNumber === 4 ? 6 : 5;
+  for (let pointNumber = 1; pointNumber <= pointTotal; pointNumber += 1) {
+    const id = `c${classNumber}p${pointNumber}`;
+    required.push(`assets/motion/points/${id}.mp4`);
+    required.push(`assets/motion/points/posters/${id}.jpg`);
+  }
+}
+
 const errors = [];
 for (const relative of required) {
   const full = path.join(site, relative);
@@ -42,4 +51,4 @@ if (errors.length) {
   console.error(errors.join("\n"));
   process.exit(1);
 }
-console.log("Sitio validado: 4 clases, 21 puntos, recursos presentes y JavaScript correcto.");
+console.log("Sitio validado: 4 clases, 21 puntos, 21 animaciones, 21 pósteres y JavaScript correcto.");

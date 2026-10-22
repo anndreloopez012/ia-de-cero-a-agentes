@@ -2,4 +2,7 @@
 node_modules/
 motion/construction-journey/.hyperframes/
 motion/construction-journey/output/
+motion/point-explainers/.hyperframes/
+motion/point-explainers/renders/
+site/assets/motion/points/manifest.json
 *.log
