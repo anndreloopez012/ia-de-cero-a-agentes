@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>IA de cero a Agentes — construir para aprender</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #050507; }
+      body { font-family: Inter, Arial, sans-serif; color: #fff; }
+      #root { position: relative; overflow: hidden; background: #050507; }
+      .clip { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: hidden; }
+      .scene { opacity: 0; background: #050507; }
+      .scene-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.08); }
+      .shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(5,5,7,.98) 0%, rgba(5,5,7,.86) 34%, rgba(5,5,7,.28) 68%, rgba(5,5,7,.55) 100%); }
+      .grid { position: absolute; inset: 0; opacity: .18; background-image: linear-gradient(rgba(185,151,255,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(185,151,255,.18) 1px, transparent 1px); background-size: 80px 80px; }
+      .copy { position: absolute; left: 118px; top: 144px; width: 780px; z-index: 3; }
+      .eyebrow { display: flex; align-items: center; gap: 16px; color: #B997FF; font-size: 28px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+      .eyebrow::before { content: ""; width: 66px; height: 5px; border-radius: 9px; background: #7A3CFF; box-shadow: 0 0 22px #7A3CFF; }
+      h1 { margin-top: 28px; font-size: 112px; line-height: .92; letter-spacing: -.055em; font-weight: 900; text-wrap: balance; }
+      h1 .accent { color: #B997FF; text-shadow: 0 0 38px rgba(122,60,255,.55); }
+      .description { margin-top: 32px; max-width: 710px; color: #ECE7FF; font-size: 34px; line-height: 1.28; font-weight: 560; }
+      .step { margin-top: 50px; display: inline-flex; align-items: center; gap: 16px; padding: 15px 24px; border: 2px solid rgba(185,151,255,.5); border-radius: 999px; background: rgba(5,5,7,.68); font-size: 28px; font-weight: 800; backdrop-filter: blur(10px); }
+      .step-num { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; color: #050507; background: #B997FF; }
+      .brand { position: absolute; right: 64px; top: 48px; width: 285px; height: auto; z-index: 5; filter: drop-shadow(0 10px 30px rgba(0,0,0,.5)); }
+      .rail { position: absolute; right: 92px; bottom: 60px; z-index: 5; display: flex; gap: 12px; }
+      .rail i { display: block; width: 58px; height: 8px; border-radius: 999px; background: rgba(255,255,255,.25); }
+      .rail i.active { background: #B997FF; box-shadow: 0 0 18px #7A3CFF; }
+      #outro { z-index: 20; display: grid; place-items: center; text-align: center; background: radial-gradient(circle at 50% 45%, rgba(122,60,255,.35), transparent 38%), #050507; }
+      #outro .outro-inner { opacity: 0; }
+      #outro img { width: 410px; }
+      #outro h2 { margin-top: 34px; font-size: 82px; letter-spacing: -.04em; }
+      #outro p { margin-top: 20px; color: #D6C7FF; font-size: 32px; }
+    </style>
+  </head>
+  <body>
+    <main id="root" data-composition-id="main" data-start="0" data-duration="19.2" data-width="1920" data-height="1080">
+      <section id="scene-1" class="clip scene" data-start="0" data-duration="4" data-track-index="0">
+        <img class="scene-media" src="assets/01-cimientos-ia.png" alt="" />
+        <div class="shade"></div><div class="grid"></div><img class="brand" src="assets/logo-ai-academy.png" alt="" />
+        <div class="copy"><div class="eyebrow">Clase 1 · Cimientos</div><h1>Configura.<br /><span class="accent">Comprende.</span></h1><p class="description">Privacidad, memoria, vocabulario y los comandos esenciales para empezar con criterio.</p><div class="step"><span class="step-num">1</span> Preparar el terreno</div></div>
+        <div class="rail"><i class="active"></i><i></i><i></i><i></i></div>
+      </section>
+      <section id="scene-2" class="clip scene" data-start="4" data-duration="4" data-track-index="0">
+        <img class="scene-media" src="assets/02-planos-prompts.png" alt="" />
+        <div class="shade"></div><div class="grid"></div><img class="brand" src="assets/logo-ai-academy.png" alt="" />
+        <div class="copy"><div class="eyebrow">Clase 2 · Planos</div><h1>Dirige con<br /><span class="accent">prompts ROCAV.</span></h1><p class="description">Convierte una idea vaga en instrucciones claras, comprobables y reutilizables.</p><div class="step"><span class="step-num">2</span> Dibujar el resultado</div></div>
+        <div class="rail"><i></i><i class="active"></i><i></i><i></i></div>
+      </section>
+      <section id="scene-3" class="clip scene" data-start="8" data-duration="4" data-track-index="0">
+        <img class="scene-media" src="assets/03-caja-skills.png" alt="" />
+        <div class="shade"></div><div class="grid"></div><img class="brand" src="assets/logo-ai-academy.png" alt="" />
+        <div class="copy"><div class="eyebrow">Clase 3 · Herramientas</div><h1>Construye<br /><span class="accent">skills.</span></h1><p class="description">Transforma una buena manera de trabajar en un procedimiento que puedas probar y repetir.</p><div class="step"><span class="step-num">3</span> Crear la caja de herramientas</div></div>
+        <div class="rail"><i></i><i></i><i class="active"></i><i></i></div>
+      </section>
+      <section id="scene-4" class="clip scene" data-start="12" data-duration="4" data-track-index="0">
+        <img class="scene-media" src="assets/04-equipo-agentes.png" alt="" />
+        <div class="shade"></div><div class="grid"></div><img class="brand" src="assets/logo-ai-academy.png" alt="" />
+        <div class="copy"><div class="eyebrow">Clase 4 · Equipo coordinado</div><h1>Agente +<br /><span class="accent">2 subagentes.</span></h1><p class="description">Delega con límites, permisos, trazas y aprobación humana cuando realmente importa.</p><div class="step"><span class="step-num">4</span> Coordinar sin perder el control</div></div>
+        <div class="rail"><i></i><i></i><i></i><i class="active"></i></div>
+      </section>
+      <section id="outro" class="clip" data-start="16" data-duration="3.2" data-track-index="0"><div class="outro-inner"><img src="assets/logo-ai-academy.png" alt="" /><h2>IA de cero a Agentes</h2><p>Aprender · practicar · construir · demostrar</p></div></section>
+    </main>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const scenes = ["#scene-1", "#scene-2", "#scene-3", "#scene-4"];
+      scenes.forEach((id, index) => {
+        const at = index * 4;
+        tl.set(id, { opacity: 1 }, at);
+        tl.fromTo(`${id} .copy`, { x: -88, opacity: 0 }, { x: 0, opacity: 1, duration: .72, ease: "power3.out" }, at + .18);
+        tl.fromTo(`${id} .scene-media`, { scale: 1.08, xPercent: 2 }, { scale: 1.0, xPercent: 0, duration: 3.7, ease: "sine.out" }, at);
+        tl.fromTo(`${id} .brand`, { y: -30, opacity: 0 }, { y: 0, opacity: 1, duration: .6, ease: "power2.out" }, at + .25);
+        tl.fromTo(`${id} .rail`, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: .5 }, at + .7);
+        if (index < scenes.length - 1) tl.to(id, { opacity: 0, duration: .36, ease: "power2.inOut" }, at + 3.64);
+      });
+      tl.to("#scene-4", { opacity: 0, duration: .32 }, 15.68);
+      tl.set("#outro", { opacity: 1 }, 16);
+      tl.fromTo("#outro .outro-inner", { opacity: 0, scale: .92 }, { opacity: 1, scale: 1, duration: .75, ease: "back.out(1.3)" }, 16.12);
+      window.__timelines.main = tl;
+    </script>
+  </body>
+</html>

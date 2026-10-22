@@ -1,0 +1,10 @@
+{
+  "name": "ia-de-cero-a-agentes",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:content": "node scripts/build-content.mjs",
+    "check": "node scripts/validate-site.mjs",
+    "serve": "npx --yes serve site"
+  }
+}
