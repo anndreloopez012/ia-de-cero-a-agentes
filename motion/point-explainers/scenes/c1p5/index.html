@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>C1·P5 · Elegir el recurso correcto y 20 comandos esenciales</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared/teacher.css" />
+    <script src="shared/teacher.js"></script>
+    <style>
+      /* Pizarra: a la izquierda el enrutador (tarea → recurso); a la derecha los 20 verbos y la anatomía de un comando */
+      .hdr { top: 0; font-size: 26px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; color: var(--lavender); }
+      #h1 { left: 0; } #h2 { left: 600px; }
+      .case { left: 0; width: 470px; height: 76px; padding: 0 22px; gap: 14px; border-radius: 20px; }
+      .case .ic { width: 38px; height: 38px; }
+      .case b { font-size: 27px; font-weight: 750; }
+      .res { position: absolute; left: 600px; width: 230px; height: 76px; display: grid; place-items: center; border-radius: 20px; background: linear-gradient(155deg, #8a55ff, #4a1fb0); border: 2px solid rgba(255, 255, 255, .7); font-family: "Bricolage"; font-weight: 750; font-size: 32px; color: #fff; box-shadow: 0 16px 36px rgba(0, 0, 0, .4); }
+      .k1 { top: 44px; } .k2 { top: 136px; } .k3 { top: 228px; } .k4 { top: 320px; } .k5 { top: 412px; }
+      #note-verb { left: 0; top: 514px; max-width: 470px; }
+
+      .fcol { position: absolute; top: 0; width: 172px; display: flex; flex-direction: column; gap: 8px; }
+      .fcol h5 { height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 26px; font-weight: 850; color: #050507; }
+      .fcol .vb { height: 46px; display: grid; place-items: center; border-radius: 12px; background: rgba(255, 255, 255, .06); border: 2px solid; font-size: 26px; font-weight: 750; color: var(--ink); }
+      #f1 { left: 880px; } #f1 h5 { background: var(--cyan); } #f1 .vb { border-color: rgba(91, 220, 255, .5); }
+      #f2 { left: 1061px; } #f2 h5 { background: var(--yellow); } #f2 .vb { border-color: rgba(255, 196, 90, .5); }
+      #f3 { left: 1242px; } #f3 h5 { background: var(--lavender); } #f3 .vb { border-color: rgba(185, 151, 255, .5); }
+      #f4 { left: 1423px; } #f4 h5 { background: var(--green); } #f4 .vb { border-color: rgba(69, 224, 168, .5); }
+      #f5 { left: 1604px; } #f5 h5 { background: var(--red); } #f5 .vb { border-color: rgba(255, 92, 120, .5); }
+
+      #anat { left: 880px; top: 276px; font-size: 26px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; color: var(--lavender); }
+      .arow { position: absolute; left: 880px; display: flex; gap: 12px; }
+      .arow.a { top: 318px; } .arow.b { top: 430px; }
+      .blk { position: relative; display: flex; flex-direction: column; gap: 2px; padding: 8px 16px 10px; border-radius: 16px; border: 3px solid; background: #15111f; }
+      .blk small { font-size: 26px; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
+      .blk span { font-size: 28px; font-weight: 750; color: var(--ink); white-space: nowrap; }
+      .blk.v { border-color: var(--cyan); } .blk.v small { color: var(--cyan); }
+      .blk.o { border-color: var(--lavender); } .blk.o small { color: var(--lavender); }
+      .blk.c { border-color: var(--yellow); } .blk.c small { color: var(--yellow); }
+      .blk.f { border-color: #8f86a3; } .blk.f small { color: var(--ink-soft); }
+      .blk.x { border-color: transparent; } .blk.x small { color: var(--red); }
+      .blk.x .dash { position: absolute; inset: -3px; border-radius: 16px; border: 3px dashed rgba(255, 92, 120, .7); display: grid; place-items: center; font-size: 27px; font-weight: 800; color: #ffc0cc; }
+
+      /* Analogía: para colgar un cuadro basta un martillo; la grúa es exagerar */
+      .job { position: absolute; inset: 0; }
+      .job .strings { position: absolute; left: 0; top: 0; width: 760px; height: 300px; fill: none; stroke: rgba(255, 255, 255, .45); stroke-width: 3; }
+      .job .nail { position: absolute; left: 372px; top: 16px; width: 16px; height: 16px; border-radius: 50%; background: #d8d0e8; }
+      .job .pic { position: absolute; left: 250px; top: 62px; width: 260px; height: 168px; border: 12px solid #c28a4a; border-radius: 6px; background: linear-gradient(#5bdcff 0 58%, #45e0a8 58%); overflow: hidden; }
+      .job .pic i { position: absolute; left: 40px; bottom: 30px; width: 150px; height: 70px; background: #2f7a5f; clip-path: polygon(0 100%, 45% 0, 100% 100%); }
+      .job .pic b { position: absolute; right: 30px; top: 16px; width: 34px; height: 34px; border-radius: 50%; background: #ffc45a; }
+      .job .lb { position: absolute; left: 0; right: 0; top: 246px; text-align: center; font-weight: 800; font-size: 28px; color: var(--ink); }
+      .tool { position: absolute; top: 312px; width: 280px; height: 222px; border-radius: 24px; background: rgba(255, 255, 255, .05); border: 2px solid rgba(185, 151, 255, .3); }
+      .tool.t1 { left: 70px; } .tool.t2 { left: 410px; }
+      .tool svg { position: absolute; left: 0; top: 8px; width: 280px; height: 160px; }
+      .tool span { position: absolute; left: 0; right: 0; bottom: 14px; text-align: center; font-weight: 800; font-size: 28px; }
+      .job .okmark { left: 302px; top: 290px; } .job .nomark { left: 642px; top: 290px; }
+      .job .tag { top: 552px; }
+      .job .tag.green { left: 140px; } .job .tag.red { left: 455px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="c1p5" data-start="0" data-duration="44" data-width="1920" data-height="1080" data-fps="30">
+      <div id="board">
+        <svg class="wires" viewBox="0 0 1776 600">
+          <path class="w1" pathLength="1" d="M478 82H592" />
+          <path class="w2" pathLength="1" d="M478 174H592" />
+          <path class="w3" pathLength="1" d="M478 266H592" />
+          <path class="w4" pathLength="1" d="M478 358H592" />
+          <path class="w5" pathLength="1" d="M478 450H592" />
+        </svg>
+
+        <span class="say hdr" id="h1">Si la tarea es…</span><span class="say hdr" id="h2">usa…</span>
+        <div class="card row case k1" data-icon="chat"><b>Una pregunta puntual</b></div>
+        <div class="card row case k2" data-icon="folder"><b>Un trabajo con contexto</b></div>
+        <div class="card row case k3" data-icon="copy"><b>Un proceso que se repite</b></div>
+        <div class="card row case k4" data-icon="search"><b>Buscar, leer o calcular</b></div>
+        <div class="card row case k5" data-icon="route"><b>Decidir varios pasos</b></div>
+        <div class="res k1">Prompt</div><div class="res k2">Proyecto</div><div class="res k3">Skill</div><div class="res k4">Herramienta</div><div class="res k5">Agente</div>
+        <div class="note green" id="note-verb">Un verbo solo no es un prompt.</div>
+
+        <div class="fcol" id="f1"><h5>Comprender</h5><div class="vb">Explica</div><div class="vb">Resume</div><div class="vb extrae">Extrae</div><div class="vb">Analiza</div></div>
+        <div class="fcol" id="f2"><h5>Organizar</h5><div class="vb">Clasifica</div><div class="vb">Compara</div><div class="vb">Planifica</div><div class="vb">Prioriza</div></div>
+        <div class="fcol" id="f3"><h5>Crear</h5><div class="vb">Genera</div><div class="vb">Idea</div><div class="vb">Reescribe</div><div class="vb">Transforma</div></div>
+        <div class="fcol" id="f4"><h5>Revisar</h5><div class="vb">Critica</div><div class="vb">Verifica</div><div class="vb">Evalúa</div><div class="vb">Cita</div></div>
+        <div class="fcol" id="f5"><h5>Controlar</h5><div class="vb pregunta">Pregunta</div><div class="vb">Simula</div><div class="vb">Mejora</div><div class="vb detente">Detente</div></div>
+
+        <span class="say" id="anat">Comando completo =</span>
+        <div class="arow a">
+          <div class="blk v"><small>Verbo</small><span>Extrae</span></div>
+          <div class="blk o"><small>Objeto</small><span>del texto</span></div>
+          <div class="blk c"><small>Criterio</small><span>solo actividad, público y fecha</span></div>
+        </div>
+        <div class="arow b">
+          <div class="blk f"><small>Formato</small><span>tabla de 3 columnas</span></div>
+          <div class="blk x"><small>Si falta</small><span>escribe “no disponible”</span><div class="dash">¿Y si falta un dato?</div></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const T = Teacher.setup({
+        cls: 1, point: 5,
+        title: "¿Qué recurso uso… y con qué <em>verbo</em>?",
+        headTitle: "Elegir el recurso correcto y 20 comandos esenciales",
+        question: "Prompt, proyecto, skill, herramienta o agente: cada tarea pide uno. Y un buen comando empieza con un verbo preciso.",
+        analogy: {
+          art: `<div class="job">
+            <svg class="strings" viewBox="0 0 760 300"><path d="M380 24L262 66M380 24L498 66" /></svg>
+            <div class="nail"></div>
+            <div class="pic"><i></i><b></b></div>
+            <div class="lb">Tarea: colgar un cuadro</div>
+            <div class="tool t1"><svg viewBox="0 0 280 160"><rect x="128" y="58" width="24" height="96" rx="8" fill="#c28a4a" /><rect x="78" y="28" width="124" height="42" rx="10" fill="#b8b0c8" /><rect x="186" y="28" width="16" height="42" rx="4" fill="#8f86a3" /></svg><span>Martillo</span></div>
+            <div class="tool t2"><svg viewBox="0 0 280 160" fill="none" stroke="#ffc45a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M80 156V22M104 156V22M80 50L104 34M80 82L104 66M80 114L104 98M80 146L104 130M40 22H250M40 22V44H70V22M224 22V86M214 86h20v10c0 10-20 10-20 0" /></svg><span>Grúa</span></div>
+            <div class="okmark" data-icon="check" data-icon-class=""></div><div class="nomark" data-icon="x" data-icon-class=""></div>
+            <span class="tag green">Basta</span><span class="tag red">Exagerado</span>
+          </div>`,
+          title: "Para cada trabajo, su herramienta",
+          text: "Para colgar un cuadro basta un martillo; traer una grúa es <em>exagerar</em>. Con la IA igual: primero el <em>recurso</em>, luego el verbo.",
+        },
+        steps: [
+          { label: "Prompt o proyecto", caption: "Pregunta puntual: <em>prompt</em>. Trabajo que dura y necesita contexto: <em>proyecto</em>." },
+          { label: "Repetir y actuar", caption: "Si se repite: <em>skill</em>. Buscar o calcular: <em>herramienta</em>. Decidir varios pasos: <em>agente</em>." },
+          { label: "20 comandos", caption: "Luego, el <em>verbo</em> preciso: 20 comandos en cinco familias, de comprender a controlar." },
+          { label: "Comando completo", caption: "Comando completo: verbo + objeto + <em>criterio</em> + formato. El verbo solo no basta." },
+          { label: "Si falta información", caption: "Y dile qué hacer si falta información: <em>“no disponible”</em>, pregunta o detente." },
+        ],
+        takeaway: {
+          title: "Primero el <em>recurso</em> correcto; después, el <em>verbo</em> preciso.",
+          text: "Un verbo solo no es un prompt: suma objeto, criterio, formato y qué hacer si falta información.",
+        },
+      });
+
+      const s = T.stepAt;
+      const tl = T.tl;
+
+      // Analogía: la tarea pide la herramienta justa
+      tl.set([".job .okmark", ".job .nomark", ".job .tag"], { opacity: 0 }, 0);
+      T.pop("@.job .pic", T.analogyAt(.6));
+      T.fadeIn("@.job .lb", T.analogyAt(1.1));
+      T.slide("@.job .tool", T.analogyAt(1.7), { y: 30, stagger: .25 });
+      T.check("@.job .okmark", T.analogyAt(3.0));
+      T.slide("@.job .tag.green", T.analogyAt(3.3), { y: 16 });
+      T.check("@.job .nomark", T.analogyAt(4.2));
+      T.slide("@.job .tag.red", T.analogyAt(4.5), { y: 16 });
+      T.glow("@.job .tool.t1", T.analogyAt(5.6), "#45e0a8");
+
+      // Estados iniciales
+      tl.set(["#board .hdr", "#board .case", "#board .res", "#note-verb", "#board .fcol h5", "#board .vb", "#anat", "#board .blk", ".blk.x small", ".blk.x span", ".blk.x .dash"], { opacity: 0 }, 0);
+      const route = (k, t) => {
+        T.slide(`.case.k${k}`, t, { x: -24, y: 0 });
+        T.draw(`.w${k}`, t + .4, .4);
+        T.pop(`.res.k${k}`, t + .7);
+      };
+
+      // Paso 1 · Prompt o proyecto
+      T.fadeIn("#h1, #h2", s(0, .05), .4);
+      route(1, s(0, .3));
+      route(2, s(0, 1.9));
+      T.pulse(".res.k1, .res.k2", s(0, 3.4), 1.06);
+
+      // Paso 2 · Skill, herramienta o agente
+      route(3, s(1, .1));
+      route(4, s(1, 1.2));
+      route(5, s(1, 2.3));
+      T.glow(".res.k5", s(1, 3.4));
+
+      // Paso 3 · 20 comandos en cinco familias
+      T.slide(".fcol h5", s(2, .1), { y: -20, stagger: .12 });
+      T.pop("#f1 .vb, #f2 .vb, #f3 .vb, #f4 .vb, #f5 .vb", s(2, .6), .07);
+      T.glow(".vb.extrae", s(2, 3.0), "#5bdcff");
+
+      // Paso 4 · Comando completo
+      T.fadeIn("#anat", s(3, .1), .4);
+      T.pop(".blk.v", s(3, .4));
+      T.pop(".blk.o", s(3, 1.0));
+      T.pop(".blk.c", s(3, 1.6));
+      T.pop(".blk.f", s(3, 2.3));
+      T.fadeIn(".blk.x, .blk.x .dash", s(3, 2.9), .4);
+      T.pulse(".blk.x", s(3, 3.5), 1.05);
+
+      // Paso 5 · Si falta información
+      T.fadeOut(".blk.x .dash", s(4, .2), 0, .3);
+      T.to(".blk.x", s(4, .3), { borderColor: "#ff5c78", duration: .3 });
+      T.fadeIn(".blk.x small, .blk.x span", s(4, .4), .4);
+      T.slide("#note-verb", s(4, 1.3), { y: 20 });
+      T.glow(".vb.pregunta, .vb.detente", s(4, 1.6), "#ff5c78");
+      T.glow(".blk.x", s(4, 2.2), "#45e0a8");
+      T.pulse("#note-verb", s(4, 3.2), 1.04);
+
+      window.__timelines["c1p5"] = T.tl;
+    </script>
+  </body>
+</html>

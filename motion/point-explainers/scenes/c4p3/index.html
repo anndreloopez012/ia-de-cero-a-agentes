@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>C4·P3 · Diseñar el agente coordinador y dos subagentes</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared/teacher.css" />
+    <script src="shared/teacher.js"></script>
+    <style>
+      /* Pizarra: organigrama coordinador → dos especialistas → persona que aprueba */
+      #ask { left: 0; top: 0; width: 470px; height: 180px; padding: 24px 26px; gap: 10px; justify-content: center; }
+      #ask h3 { font-size: 34px; }
+      #ask p { font-size: 28px; color: var(--ink); }
+      #coord { left: 520px; top: 0; width: 580px; height: 180px; padding: 24px 30px; gap: 8px; }
+      #coord h3 { font-size: 40px; }
+      .verbs { display: flex; gap: 10px; }
+      .verbs span { height: 44px; padding: 0 16px; display: flex; align-items: center; border-radius: 22px; background: rgba(255, 255, 255, .16); border: 2px solid rgba(255, 255, 255, .45); font-weight: 800; font-size: 26px; color: #fff; }
+
+      .spec { top: 290px; width: 470px; height: 300px; padding: 22px 26px; gap: 10px; }
+      .spec h3 { font-size: 36px; }
+      .spec > p { margin-top: -4px; }
+      #inv { left: 160px; }
+      #red { left: 990px; }
+      .facts { position: relative; width: 100%; display: flex; flex-direction: column; gap: 8px; }
+      .facts div { white-space: nowrap; display: flex; justify-content: space-between; align-items: center; height: 46px; padding: 0 8px 0 16px; border-radius: 12px; background: rgba(255, 255, 255, .07); font-size: 26px; font-weight: 700; color: var(--ink); }
+      .facts b { height: 34px; padding: 0 12px; display: flex; align-items: center; border-radius: 10px; background: rgba(69, 224, 168, .18); color: #b5ffe2; font-size: 26px; font-weight: 750; }
+      .spec .paper { position: relative; font-family: "Figtree", sans-serif; font-weight: 650; font-size: 27px; line-height: 1.3; padding: 14px 20px; }
+      .spec .tag { position: relative; height: 48px; font-size: 26px; padding: 0 18px; }
+
+      .lb { position: absolute; z-index: 6; height: 44px; padding: 0 16px; display: flex; align-items: center; border-radius: 22px; background: #14111d; border: 2px solid var(--lavender); color: var(--lavender); font-weight: 800; font-size: 26px; white-space: nowrap; }
+      .lb.g { border-color: var(--green); color: #b5ffe2; }
+      .lb.y { border-color: var(--yellow); color: #ffe2ad; }
+      #lbL1 { left: 412px; top: 192px; } #lbL2 { left: 614px; top: 192px; }
+      #lbR1 { left: 864px; top: 240px; } #lbR2 { left: 1084px; top: 214px; }
+      #lbH { left: 1250px; top: 66px; }
+      .mini { position: absolute; z-index: 7; width: 40px; height: 40px; border-radius: 50%; border: 3px solid #fff; }
+      .mini.l { background: var(--lavender); box-shadow: 0 0 22px rgba(185, 151, 255, .9); }
+      .mini.g { background: var(--green); box-shadow: 0 0 22px rgba(69, 224, 168, .9); }
+      #tkL1 { left: 530px; top: 160px; } #tkL2 { left: 580px; top: 270px; }
+      #tkR1 { left: 1050px; top: 160px; } #tkR2 { left: 1000px; top: 270px; }
+
+      #verify { left: 652px; top: 306px; width: 316px; height: 246px; padding: 22px 24px; gap: 14px; }
+      #verify h3 { font-size: 34px; }
+      #verify .checklist { position: relative; gap: 12px; }
+      #verify .checklist li { font-size: 27px; gap: 12px; }
+      #verify .checklist li i { width: 40px; height: 40px; }
+      #note-roles { left: 640px; top: 330px; max-width: 330px; }
+
+      #human { left: 1510px; top: 236px; width: 266px; height: 270px; padding: 20px 20px; gap: 6px; }
+      #human h3 { font-size: 34px; }
+      #human p { font-size: 26px; }
+      .gate { position: relative; width: 100%; height: 52px; margin-top: 6px; }
+      .gate .tag { left: 0; right: 0; top: 0; justify-content: center; height: 52px; font-size: 26px; padding: 0 12px; }
+
+      /* Analogía: maestro de obra que reparte misiones a dos cuadrillas */
+      .an-wires { position: absolute; inset: 0; width: 100%; height: 100%; }
+      .an-wires path { fill: none; stroke: var(--lavender); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+      .an-boss { position: absolute; left: 230px; top: 40px; width: 300px; height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 14px; border-radius: 26px; background: rgba(255, 196, 90, .12); border: 3px solid var(--yellow); }
+      .an-hat { position: absolute; left: 110px; top: 20px; width: 80px; height: 44px; border-radius: 44px 44px 6px 6px; background: var(--yellow); }
+      .an-hat::after { content: ""; position: absolute; left: -14px; right: -14px; bottom: -6px; height: 10px; border-radius: 6px; background: #e0a43a; }
+      .an-boss b { font-family: "Bricolage"; font-weight: 750; font-size: 32px; color: #ffe2ad; }
+      .an-crew { position: absolute; top: 290px; width: 300px; height: 200px; padding: 20px; border-radius: 26px; background: rgba(255, 255, 255, .05); border: 2px solid var(--line); }
+      .an-crew b { display: block; font-family: "Bricolage"; font-weight: 700; font-size: 30px; line-height: 1.1; color: var(--ink); }
+      .an-crew.c1 { left: 40px; } .an-crew.c2 { left: 420px; }
+      .an-bricks { position: absolute; left: 20px; right: 20px; bottom: 20px; height: 78px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; transform-origin: 50% 100%; }
+      .an-bricks i { border-radius: 4px; background: #c96a4a; }
+      .an-cable { position: absolute; left: 20px; right: 20px; bottom: 26px; height: 80px; overflow: visible; }
+      .an-cable path { fill: none; stroke: var(--cyan); stroke-width: 7; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+      .an-cable circle { fill: var(--yellow); }
+      .an-ok { position: absolute; left: 200px; top: 528px; height: 60px; padding: 0 26px; display: flex; align-items: center; gap: 12px; border-radius: 30px; background: var(--green); color: #062418; font-weight: 850; font-size: 28px; white-space: nowrap; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="c4p3" data-start="0" data-duration="44" data-width="1920" data-height="1080" data-fps="30">
+      <div id="board">
+        <svg class="wires" viewBox="0 0 1776 600">
+          <path class="w-q" pathLength="1" d="M470 90H520" />
+          <path class="w-ld" pathLength="1" d="M550 180V290" />
+          <path class="w-lu green" pathLength="1" d="M600 290V180" />
+          <path class="w-ru green" pathLength="1" d="M1020 290V180" />
+          <path class="w-rd" pathLength="1" d="M1070 180V290" />
+          <path class="w-h yellow" pathLength="1" d="M1100 92H1600Q1643 92 1643 135V236" />
+        </svg>
+
+        <div class="card hide" id="ask"><h3>Consulta ficticia</h3><p>¿Qué horario tiene la biblioteca el sábado?</p></div>
+        <div class="card solid hide" id="coord"><h3>Coordinador</h3>
+          <div class="verbs"><span>Divide</span><span>Asigna</span><span>Integra</span><span>Verifica</span></div></div>
+
+        <span class="lb hide" id="lbL1">Misión</span>
+        <span class="lb g hide" id="lbL2">Tabla de hechos</span>
+        <span class="lb hide" id="lbR2">Solo los hechos</span>
+        <span class="lb g hide" id="lbR1">Borrador</span>
+        <span class="lb y hide" id="lbH">Pide aprobación</span>
+        <div class="mini l hide" id="tkL1"></div><div class="mini g hide" id="tkL2"></div>
+        <div class="mini l hide" id="tkR1"></div><div class="mini g hide" id="tkR2"></div>
+
+        <div class="card cyan spec hide" id="inv"><h3>Investigador</h3><p>Solo fuentes autorizadas</p>
+          <div class="facts"><div>Sábado: 9 a 13 h <b>web oficial</b></div><div>Domingo: cerrado <b>reglamento</b></div></div>
+          <span class="tag red" data-icon="x">No redacta</span></div>
+
+        <div class="card cyan spec hide" id="red"><h3>Redactor</h3><p>Usa solo la tabla de hechos</p>
+          <div class="paper">Hola, Ana: el sábado la biblioteca abre de 9 a 13 h.</div>
+          <span class="tag red" data-icon="x">No busca ni envía</span></div>
+
+        <div class="note purple" id="note-roles">Roles distintos: nadie hace lo mismo.</div>
+        <div class="card green hide" id="verify"><h3>Verifica</h3>
+          <ul class="checklist"><li><i></i>Dato con fuente</li><li><i></i>Nada inventado</li><li><i></i>Responde a Ana</li></ul></div>
+
+        <div class="card yellow center hide" id="human"><span data-icon="user" data-icon-class="ic sm"></span><h3>Persona</h3><p>aprueba antes de enviar</p>
+          <div class="gate"><span class="tag red g-lock" data-icon="lock">Envío en espera</span><span class="tag green g-ok" data-icon="check">Aprobado</span></div></div>
+      </div>
+    </div>
+    <script>
+      document.querySelectorAll("#verify .checklist li i").forEach((el) => { el.innerHTML = '<svg viewBox="0 0 100 100"><path d="M18 52l21 21 44-49"/></svg>'; });
+
+      const T = Teacher.setup({
+        cls: 4, point: 3,
+        title: "¿Cómo se reparte el trabajo un <em>equipo de agentes</em>?",
+        headTitle: "Coordinador y dos subagentes",
+        question: "Más agentes no es mejor. Sirve cuando cada uno tiene una misión distinta y alguien responde por el resultado.",
+        analogy: {
+          art: `<svg class="an-wires" viewBox="0 0 760 620"><path pathLength="1" d="M380 190V240H190V290"/><path pathLength="1" d="M380 190V240H570V290"/></svg>
+            <div class="an-boss"><div class="an-hat"></div><b>Maestro de obra</b></div>
+            <div class="an-crew c1"><b>Cuadrilla de muros</b><div class="an-bricks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+            <div class="an-crew c2"><b>Cuadrilla eléctrica</b><svg class="an-cable" viewBox="0 0 260 80"><path pathLength="1" d="M10 70V20H90V60H170V20H250"/><circle cx="250" cy="20" r="11"/></svg></div>
+            <div class="an-ok">La dueña aprueba la entrega</div>`,
+          title: "El maestro de obra y sus cuadrillas",
+          text: "No levanta cada muro: <em>reparte misiones</em> a cuadrillas distintas, revisa que todo encaje y la dueña <em>aprueba</em> antes de entregar.",
+        },
+        steps: [
+          { label: "Coordinador", caption: "El coordinador recibe la consulta, la <em>divide</em> y decide quién hace cada parte." },
+          { label: "Investigador", caption: "El Investigador solo usa <em>fuentes autorizadas</em> y devuelve hechos con su evidencia." },
+          { label: "Redactor", caption: "El Redactor recibe <em>solo la tabla</em> de hechos y escribe un borrador. No busca ni envía." },
+          { label: "Integrar y verificar", caption: "El coordinador integra y <em>verifica</em>: cada dato del borrador debe salir de la tabla." },
+          { label: "Aprobación humana", caption: "Antes de cualquier envío, una <em>persona autorizada</em> aprueba. Eso no se delega." },
+        ],
+        takeaway: {
+          title: "El coordinador <em>delega</em> misiones; la <em>responsabilidad</em> no se delega.",
+          text: "Dos especialistas distintos, contexto mínimo para cada uno y aprobación humana antes de enviar.",
+        },
+      });
+
+      const s = T.stepAt;
+      // Analogía: el maestro reparte, cada cuadrilla trabaja en lo suyo y la dueña aprueba
+      T.pop("@.an-boss", T.analogyAt(.3));
+      T.tl.to(".an-wires path", { strokeDashoffset: 0, duration: .8, stagger: .15, ease: "power2.inOut" }, T.analogyAt(1.1));
+      T.slide("@.an-crew", T.analogyAt(1.7), { y: 30, stagger: .25 });
+      T.tl.fromTo(".an-bricks", { scaleY: 0 }, { scaleY: 1, duration: 1.4, ease: "steps(4)" }, T.analogyAt(2.8));
+      T.tl.to(".an-cable path", { strokeDashoffset: 0, duration: 1.4, ease: "power1.inOut" }, T.analogyAt(2.8));
+      T.pulse("@.an-boss", T.analogyAt(4.6), 1.06);
+      T.pop("@.an-ok", T.analogyAt(5.4));
+
+      T.tl.set(".wires path", { strokeDasharray: 1, strokeDashoffset: 1 }, 0);
+      T.tl.set(["#note-roles", "#human .g-ok"], { opacity: 0 }, 0);
+      const travel = (sel, t, y) => {
+        T.fadeIn(sel, t, .2);
+        T.to(sel, t + .1, { y, duration: .8, ease: "power1.inOut" });
+        T.fadeOut(sel, t + .9, 0, .25);
+      };
+
+      // Paso 1 · Coordinador
+      T.pop("#ask", s(0, .1));
+      T.draw(".w-q", s(0, .8), .4);
+      T.pop("#coord", s(0, 1.1));
+      T.pop("#coord .verbs span", s(0, 1.8), .25);
+      T.pulse("#coord", s(0, 3.3), 1.04);
+
+      // Paso 2 · Investigador: misión hacia abajo, hechos con fuente hacia arriba
+      T.draw(".w-ld", s(1, .1), .4);
+      T.pop("#lbL1", s(1, .3));
+      travel("#tkL1", s(1, .4), 110);
+      T.pop("#inv", s(1, .9));
+      T.slide("#inv .facts div", s(1, 1.5), { x: -20, y: 0, stagger: .25 });
+      T.pop("#inv .tag", s(1, 2.2));
+      T.draw(".w-lu", s(1, 2.6), .4);
+      T.pop("#lbL2", s(1, 2.8));
+      travel("#tkL2", s(1, 2.9), -110);
+
+      // Paso 3 · Redactor: recibe solo los hechos y devuelve un borrador
+      T.draw(".w-rd", s(2, .1), .4);
+      T.pop("#lbR2", s(2, .3));
+      travel("#tkR1", s(2, .4), 110);
+      T.pop("#red", s(2, .9));
+      T.slide("#red .paper", s(2, 1.4), { y: 20 });
+      T.slide("#note-roles", s(2, 1.5), { y: 20 });
+      T.pop("#red .tag", s(2, 2.2));
+      T.draw(".w-ru", s(2, 2.6), .4);
+      T.pop("#lbR1", s(2, 2.8));
+      travel("#tkR2", s(2, 2.9), -110);
+
+      // Paso 4 · Integrar y verificar
+      T.fadeOut("#note-roles", s(3, 0));
+      T.pop("#verify", s(3, .3));
+      T.tick("#verify .checklist li i", s(3, 1.0), .45);
+      T.glow("#coord", s(3, 2.6), "#45e0a8");
+      T.pulse("#red .paper", s(3, 1.6), 1.04);
+
+      // Paso 5 · Aprobación humana antes de enviar
+      T.draw(".w-h", s(4, .1), .7);
+      T.pop("#lbH", s(4, .5));
+      T.pop("#human", s(4, .9));
+      T.pulse("#human .g-lock", s(4, 1.7), 1.06);
+      T.fadeOut("#human .g-lock", s(4, 2.4), 0, .25);
+      T.pop("#human .g-ok", s(4, 2.5));
+      T.glow("#human", s(4, 2.7), "#ffc45a");
+
+      window.__timelines["c4p3"] = T.tl;
+    </script>
+  </body>
+</html>

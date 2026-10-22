@@ -1,31 +1,20 @@
 # Point Explainers · IA de cero a Agentes
 
-## Purpose
+## Propósito
 
-Twenty-one silent visual explainers, one per learning point. Every scene communicates through objects, cause-and-effect, drag gestures, routing, inspection and human control. No visible words, letters or numerals are allowed inside the animation.
+Veintiún explicadores "modo maestro", uno por punto del taller. Cada clip enseña el tema como en una pizarra: pregunta, analogía, diagrama paso a paso con rótulos y subtítulo, e idea clave. Quien vea solo el clip debe entender el contexto del tema.
 
-## Brand system
+## Sistema visual
 
-- Background: `#050507`
-- Structural panels: `#121019`, `#1B1428`
-- Primary purple: `#7A3CFF`
-- Lavender highlight: `#B997FF`
-- Safe: `#45E0A8`
-- Review: `#FFC45A`
-- Blocked: `#FF5C78`
-- Information: `#5BDCFF`
+- Fondo `#050507` con papel de planos (cuadrícula lavanda), porque todo el taller es una construcción.
+- Morado `#7A3CFF` y lavanda `#B997FF` para la IA y la estructura.
+- Color por clase: 1 `#45E0A8`, 2 `#5BDCFF`, 3 `#FFC45A`, 4 `#FF7AB6`.
+- Estados: verde permitido, amarillo revisar, rojo bloqueado.
+- Tipografía: Bricolage Grotesque (títulos), Figtree (lectura), JetBrains Mono (prompts). Archivos locales en `shared/fonts`.
+- Orbit, el guía de AI Academy, presenta la pregunta y acompaña la pizarra.
 
-## Motion language
+## Formato
 
-- Construction and routing metaphors, with one clear visual action at a time.
-- Cursor drag demonstrates configuration and reusable building blocks.
-- Connectors draw before tokens travel.
-- Green confirms, yellow pauses for review, red blocks.
-- Human control appears whenever approval is the learning point.
-- Each five-second scene enters, demonstrates, resolves and fades cleanly for looping.
-
-## Format
-
-- 1920 × 1080, 30 fps, five seconds per point.
-- One variable-driven five-second composition, batch-rendered into 21 individual web MP4 files.
-- No audio and no dependency on narration.
+- 1920 × 1080, 30 fps, entre 38 y 44 s por punto, sin audio (el instructor narra en vivo).
+- Un proyecto por escena en `scenes/<id>/` que comparte `shared/teacher.css` y `shared/teacher.js`.
+- Guía completa de escritura: `AUTHORING.md`. Render y pósteres: `node render-all.mjs`.

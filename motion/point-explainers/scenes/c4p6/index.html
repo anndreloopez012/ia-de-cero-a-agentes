@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>C4·P6 · Trazas, pruebas y demostración final</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared/teacher.css" />
+    <script src="shared/teacher.js"></script>
+    <style>
+      /* Pizarra: tres trazas (una por prueba) como líneas de tiempo; una lupa abre cada evento */
+      .ch { position: absolute; top: 0; width: 188px; text-align: center; font-size: 26px; font-weight: 800; color: var(--ink-soft); }
+      #c1 { left: 256px; } #c2 { left: 444px; } #c3 { left: 632px; } #c4 { left: 820px; } #c5 { left: 1008px; } #c6 { left: 1196px; }
+
+      .row { position: absolute; left: 0; width: 1420px; height: 150px; border-radius: 26px; border: 2px solid; z-index: 1; }
+      .row.r1 { top: 52px; background: rgba(69, 224, 168, .06); border-color: rgba(69, 224, 168, .45); box-shadow: inset 10px 0 0 var(--green); }
+      .row.r2 { top: 216px; background: rgba(255, 196, 90, .06); border-color: rgba(255, 196, 90, .45); box-shadow: inset 10px 0 0 var(--yellow); }
+      .row.r3 { top: 380px; background: rgba(255, 92, 120, .06); border-color: rgba(255, 92, 120, .45); box-shadow: inset 10px 0 0 var(--red); }
+      .rl { position: absolute; left: 32px; top: 22px; width: 220px; }
+      .rl small { display: block; font-size: 26px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-mute); }
+      .rl h4 { margin-top: 2px; font-family: "Bricolage"; font-weight: 750; font-size: 32px; line-height: 1.05; }
+      .r1 .rl h4 { color: var(--green); } .r2 .rl h4 { color: var(--yellow); } .r3 .rl h4 { color: var(--red); }
+      .wires { z-index: 2; }
+
+      .nd { position: absolute; z-index: 3; width: 60px; height: 60px; display: grid; place-items: center; border-radius: 50%; border: 3px solid var(--lavender); background: #1d1629; color: var(--lavender); }
+      .nd .ic { width: 32px; height: 32px; }
+      .st { position: absolute; z-index: 3; height: 50px; }
+      .st.low { height: 44px; }
+      .mono-t { font-family: "JetMono", monospace; font-weight: 700; }
+
+      /* Lupa que recorre la traza */
+      #lupa { position: absolute; z-index: 6; left: 302px; top: 60px; width: 96px; height: 96px; border-radius: 50%; border: 7px solid var(--accent); background: rgba(255, 122, 182, .1); box-shadow: 0 0 40px rgba(255, 122, 182, .45); }
+      #lupa i { position: absolute; left: 86px; top: 33px; width: 44px; height: 16px; border-radius: 8px; background: var(--accent); }
+
+      /* Detalle del evento que abre la lupa */
+      #detail { left: 1450px; top: 52px; width: 326px; height: 320px; padding: 22px 24px; }
+      #detail .dk { font-size: 26px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+      .dt { position: absolute; left: 24px; right: 22px; top: 62px; }
+      .dt h3 { font-size: 36px; }
+      .dt p { margin-top: 8px; font-size: 27px; line-height: 1.26; color: var(--ink); }
+      .dt p b { color: var(--accent); }
+
+      /* Guion de la demo final */
+      #demo { left: 1450px; top: 52px; width: 326px; height: 420px; padding: 24px 26px; gap: 14px; }
+      #demo h3 { font-size: 36px; }
+      #demo .checklist { position: relative; gap: 12px; }
+      #demo .checklist li { font-size: 28px; }
+
+      /* Analogía: la caja negra del avión */
+      .bbox { position: absolute; left: 140px; top: 46px; width: 480px; height: 190px; border-radius: 26px; background: linear-gradient(160deg, #ff9a3c, #e0670f); box-shadow: 0 26px 50px rgba(0, 0, 0, .5); z-index: 2; }
+      .bbox::before, .bbox::after { content: ""; position: absolute; left: 0; right: 0; height: 16px; background: repeating-linear-gradient(90deg, #f4f0ff 0 26px, transparent 26px 44px); opacity: .85; }
+      .bbox::before { top: 20px; } .bbox::after { bottom: 20px; }
+      .bbox b { position: absolute; left: 0; right: 0; top: 56px; text-align: center; font-family: "Bricolage"; font-weight: 800; font-size: 34px; letter-spacing: .04em; color: #2a1200; }
+      .bbox span { position: absolute; left: 0; right: 0; top: 100px; text-align: center; font-size: 27px; font-weight: 700; color: #4a2300; }
+      .tape { position: absolute; left: 180px; top: 214px; width: 400px; height: 360px; padding: 40px 28px 20px; border-radius: 0 0 22px 22px; background: #f6f2ff; color: #1b1426; display: flex; flex-direction: column; gap: 14px; }
+      .ev { display: flex; align-items: center; gap: 16px; height: 60px; padding: 0 14px; border-radius: 14px; background: rgba(122, 60, 255, .08); font-size: 27px; font-weight: 700; }
+      .ev code { font-family: "JetMono", monospace; font-size: 26px; font-weight: 700; color: #6a2cf0; }
+      .ev.hot { background: rgba(255, 196, 90, .35); }
+      .alupa { position: absolute; left: 505px; top: 372px; width: 120px; height: 120px; border-radius: 50%; border: 8px solid #7a3cff; background: rgba(122, 60, 255, .1); z-index: 3; }
+      .alupa i { position: absolute; left: 96px; top: 96px; width: 52px; height: 16px; border-radius: 8px; background: #7a3cff; transform-origin: 0 50%; rotate: 45deg; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="c4p6" data-start="0" data-duration="44" data-width="1920" data-height="1080" data-fps="30">
+      <div id="board">
+        <div class="ch" id="c1">Objetivo</div><div class="ch" id="c2">Delegación</div><div class="ch" id="c3">Herramienta</div>
+        <div class="ch" id="c4">Resultado</div><div class="ch" id="c5">Verificación</div><div class="ch" id="c6">Término</div>
+
+        <div class="row r1"><div class="rl"><small>Prueba 1</small><h4>Caso feliz</h4></div></div>
+        <div class="row r2"><div class="rl"><small>Prueba 2</small><h4>Fallo de subagente</h4></div></div>
+        <div class="row r3"><div class="rl"><small>Prueba 3</small><h4>Acción sensible</h4></div></div>
+
+        <svg class="wires" viewBox="0 0 1776 600">
+          <path class="l1" pathLength="1" d="M350 108H1190" />
+          <path class="l2" pathLength="1" d="M350 272H1170" />
+          <path class="l3" pathLength="1" d="M350 436H726" />
+          <path class="l3b red dash" pathLength="1" d="M760 436H900" />
+        </svg>
+
+        <!-- Traza 1 · caso feliz -->
+        <div class="nd r1n" style="left:320px;top:78px"><span data-icon="target" data-icon-class="ic"></span></div>
+        <div class="nd r1n" style="left:508px;top:78px"><span data-icon="users" data-icon-class="ic"></span></div>
+        <div class="nd r1n" style="left:696px;top:78px"><span data-icon="wrench" data-icon-class="ic"></span></div>
+        <div class="nd r1n" style="left:884px;top:78px"><span data-icon="doc" data-icon-class="ic"></span></div>
+        <div class="nd r1n" style="left:1072px;top:78px"><span data-icon="search" data-icon-class="ic"></span></div>
+        <span class="tag green st" id="t1end" style="left:1196px;top:83px" data-icon="check" data-icon-class="ic">Integrado</span>
+
+        <!-- Traza 2 · fallo de subagente -->
+        <div class="nd r2n" style="left:320px;top:242px"><span data-icon="target" data-icon-class="ic"></span></div>
+        <div class="nd r2n" style="left:508px;top:242px"><span data-icon="users" data-icon-class="ic"></span></div>
+        <div class="nd r2n" style="left:696px;top:242px"><span data-icon="wrench" data-icon-class="ic"></span></div>
+        <div class="nd r2n" id="r2n4" style="left:884px;top:242px"><span data-icon="doc" data-icon-class="ic"></span></div>
+        <div class="nd r2n" id="r2n5" style="left:1072px;top:242px"><span data-icon="question" data-icon-class="ic"></span></div>
+        <span class="tag yellow st low" id="t2a" style="left:832px;top:318px">sin fuente</span>
+        <span class="tag yellow st" id="t2end" style="left:1176px;top:247px" data-icon="return" data-icon-class="ic">Corrección</span>
+
+        <!-- Traza 3 · acción sensible -->
+        <div class="nd r3n" style="left:320px;top:406px"><span data-icon="target" data-icon-class="ic"></span></div>
+        <div class="nd r3n" style="left:508px;top:406px"><span data-icon="users" data-icon-class="ic"></span></div>
+        <div class="nd r3n" id="r3n3" style="left:696px;top:406px"><span data-icon="chat" data-icon-class="ic"></span></div>
+        <span class="tag red st low mono-t" id="t3a" style="left:593px;top:482px">enviar_mensaje</span>
+        <span class="tag red st" id="t3end" style="left:900px;top:411px" data-icon="clock" data-icon-class="ic">Esperando aprobación</span>
+
+        <div id="lupa"><i data-layout-allow-overflow></i></div>
+
+        <div class="card" id="detail"><span class="dk">Detalle</span>
+          <div class="dt" id="d1"><h3>Objetivo</h3><p>Resumir 2 fuentes para el boletín</p></div>
+          <div class="dt" id="d2"><h3>Delegación</h3><p>Coordinador → Investigador. Permiso: <b>solo lectura</b></p></div>
+          <div class="dt" id="d3"><h3>Herramienta</h3><p>leer_fuente(A): OK. Clave oculta: <b>••••••</b></p></div>
+          <div class="dt" id="d6"><h3>Falta la fuente</h3><p>El dato queda <b>«no verificado»</b>: no pasa como verdad.</p></div>
+          <div class="dt" id="d7"><h3>Acción roja</h3><p>«Envía el mensaje»: <b>pausa</b> hasta que alguien apruebe.</p></div>
+        </div>
+
+        <div class="card accent" id="demo"><h3>Demo de 3 min</h3>
+          <ul class="checklist">
+            <li><i><span data-icon="check" data-icon-class=""></span></i>Problema</li>
+            <li><i><span data-icon="check" data-icon-class=""></span></i>Arquitectura</li>
+            <li><i><span data-icon="check" data-icon-class=""></span></i>Las 3 trazas</li>
+            <li><i><span data-icon="check" data-icon-class=""></span></i>Límite</li>
+            <li><i><span data-icon="check" data-icon-class=""></span></i>Siguiente mejora</li>
+          </ul></div>
+      </div>
+    </div>
+    <script>
+      const T = Teacher.setup({
+        cls: 4, point: 6,
+        title: "¿Cómo <em>demuestras</em> que tu equipo de agentes funciona?",
+        headTitle: "Trazas, pruebas y demostración final",
+        question: "No basta con que salga bien una vez: hay que ver qué decidió, cómo falla y si sabe detenerse.",
+        analogy: {
+          art: `<div class="bbox"><b>REGISTRADOR DE VUELO</b><span>la «caja negra»</span></div>
+            <div class="tape"><div class="ev"><code>08:02</code>Despegue</div><div class="ev"><code>08:15</code>Turbulencia</div>
+            <div class="ev hot"><code>08:16</code>Baja velocidad</div><div class="ev"><code>08:41</code>Aterriza</div></div>
+            <div class="alupa"><i data-layout-allow-overflow></i></div>`,
+          title: "La caja negra del avión",
+          text: "Registra cada decisión del vuelo para que después alguien <em>reconstruya qué pasó y por qué</em>. Sin registro, solo quedan suposiciones.",
+        },
+        steps: [
+          { label: "La traza", caption: "Una <em>traza</em> registra cada decisión: objetivo, delegación, herramienta, resultado y cierre." },
+          { label: "Caso feliz", caption: "Prueba 1, <em>caso feliz</em>: los dos subagentes cumplen y el coordinador integra." },
+          { label: "Fallo de subagente", caption: "Prueba 2, <em>fallo controlado</em>: sin fuente, el dato no pasa como verdad; se pide corrección." },
+          { label: "Acción sensible", caption: "Prueba 3, <em>acción roja</em>: «envía el mensaje» detiene todo hasta que alguien apruebe." },
+          { label: "Demostración", caption: "En la demo final muestras las <em>tres trazas</em> y explicas el límite y la siguiente mejora." },
+        ],
+        takeaway: {
+          title: "Si no quedó en la traza, <em>no lo puedes demostrar</em>.",
+          text: "Caso feliz, fallo de subagente y acción sensible. La traza guarda decisiones, no secretos ni datos de más.",
+        },
+      });
+
+      const s = T.stepAt;
+      const X = (col) => 188 * col;          // desplazamiento de la lupa por columna
+      const Y = (row) => 164 * row;          // desplazamiento de la lupa por fila
+      const swap = (from, to, t) => { T.fadeOut(from, t, 0, .25); T.slide(to, t + .2, { y: 14, duration: .45 }); };
+
+      // Analogía: la cinta se imprime línea por línea y la lupa encuentra el momento clave
+      T.pop("@.bbox", T.analogyAt(.5));
+      T.tl.fromTo(".tape", { opacity: 0, scaleY: 0 }, { opacity: 1, scaleY: 1, duration: .7, ease: "power2.out", transformOrigin: "50% 0%" }, T.analogyAt(1.1));
+      T.slide("@.ev", T.analogyAt(1.7), { x: -20, y: 0, stagger: .5 });
+      T.tl.fromTo(".alupa", { opacity: 0, y: -150 }, { opacity: 1, y: -150, duration: .4 }, T.analogyAt(3.8));
+      T.tl.to(".alupa", { y: 0, duration: 1.1, ease: "power2.inOut" }, T.analogyAt(4.3));
+      T.pulse("@.ev.hot", T.analogyAt(5.6), 1.05);
+
+      // Estados iniciales
+      T.tl.set([".ch", ".row", ".nd", ".st", "#lupa", "#detail", ".dt", "#demo"], { opacity: 0 }, 0);
+
+      // Paso 1 · La traza: la lupa abre objetivo y delegación
+      T.slide(".ch", s(0, .1), { y: -14, stagger: .08 });
+      T.slide(".row.r1", s(0, .3), { x: -30, y: 0 });
+      T.draw(".l1", s(0, .6), .8);
+      T.pop(".r1n", s(0, .8), .12);
+      T.pop("#lupa", s(0, 1.0));
+      T.pop("#detail", s(0, 1.0));
+      T.slide("#d1", s(0, 1.2), { y: 14, duration: .45 });
+      T.to("#lupa", s(0, 3.3), { x: X(1), duration: .5 });
+      swap("#d1", "#d2", s(0, 3.5));
+
+      // Paso 2 · Caso feliz: herramienta sin secretos, verificación e integración
+      T.to("#lupa", s(1, 1.6), { x: X(2), duration: .5 });
+      swap("#d2", "#d3", s(1, 1.8));
+      T.tl.to("#board .r1n", { backgroundColor: "#45e0a8", borderColor: "#45e0a8", color: "#062418", duration: .25, stagger: .12 }, s(1, 2.4));
+      T.pulse("#lupa", s(1, 2.9), 1.12);
+      T.pop("#t1end", s(1, 3.2));
+
+      // Paso 3 · Fallo de subagente: sin fuente no hay integración
+      T.slide(".row.r2", s(2, .1), { x: -30, y: 0 });
+      T.draw(".l2", s(2, .3), .7);
+      T.pop(".r2n", s(2, .5), .1);
+      T.to("#lupa", s(2, 1.0), { x: X(3), y: Y(1), duration: .6 });
+      T.to("#r2n4", s(2, 1.6), { backgroundColor: "#ffc45a", borderColor: "#ffc45a", color: "#2a1b00", duration: .3 });
+      T.pop("#t2a", s(2, 1.7));
+      swap("#d3", "#d6", s(2, 1.6));
+      T.to("#r2n5", s(2, 2.5), { backgroundColor: "#ffc45a", borderColor: "#ffc45a", color: "#2a1b00", duration: .3 });
+      T.pop("#t2end", s(2, 3.0));
+
+      // Paso 4 · Acción sensible: la línea termina esperando aprobación
+      T.slide(".row.r3", s(3, .1), { x: -30, y: 0 });
+      T.draw(".l3", s(3, .3), .5);
+      T.pop(".r3n", s(3, .5), .12);
+      T.to("#lupa", s(3, .9), { x: X(2), y: Y(2), duration: .6 });
+      T.to("#r3n3", s(3, 1.4), { backgroundColor: "#ff5c78", borderColor: "#ff5c78", color: "#2c0510", duration: .3 });
+      T.pop("#t3a", s(3, 1.5));
+      swap("#d6", "#d7", s(3, 1.4));
+      T.draw(".l3b", s(3, 2.2), .4);
+      T.pop("#t3end", s(3, 2.6));
+      T.pulse("#t3end", s(3, 3.5), 1.06);
+
+      // Paso 5 · Demostración: las tres trazas y el guion
+      T.fadeOut("#lupa", s(4, .3));
+      T.fadeOut("#detail", s(4, .4), 0, .3);
+      T.pop("#demo", s(4, .75));
+      T.slide("#demo .checklist li", s(4, 1.1), { x: -20, y: 0, stagger: .15 });
+      T.tick("#demo .checklist li i", s(4, 1.9), .3);
+      T.pulse(".row.r1", s(4, 2.4), 1.015).pulse(".row.r2", s(4, 2.7), 1.015).pulse(".row.r3", s(4, 3.0), 1.015);
+
+      window.__timelines["c4p6"] = T.tl;
+    </script>
+  </body>
+</html>

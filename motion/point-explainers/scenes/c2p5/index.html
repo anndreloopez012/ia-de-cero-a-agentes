@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>C2·P5 · Evaluar y transferir un prompt</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared/teacher.css" />
+    <script src="shared/teacher.js"></script>
+    <style>
+      /* Pizarra: rúbrica de siete lentes con dos casos (izquierda) y el prompt que se prueba (derecha) */
+      #board .col-h { top: 0; font-size: 26px; text-transform: uppercase; letter-spacing: .1em; color: var(--lavender); }
+      #h-lente { left: 0; } #h-c1 { left: 650px; } #h-c2 { left: 860px; } #h-p { left: 1120px; }
+      .lens { position: absolute; left: 0; width: 1060px; height: 62px; display: flex; align-items: center; border-radius: 14px; background: rgba(255, 255, 255, .045); border: 2px solid rgba(185, 151, 255, .18); }
+      .lens .n { flex: none; width: 40px; height: 40px; margin: 0 14px 0 12px; border-radius: 11px; display: grid; place-items: center; background: rgba(185, 151, 255, .2); color: #e4d8ff; font-family: "Bricolage"; font-weight: 800; font-size: 24px; }
+      .lens b { flex: none; width: 200px; font-family: "Bricolage"; font-weight: 700; font-size: 30px; color: var(--ink); }
+      .lens span.d { flex: none; width: 380px; font-size: 26px; color: var(--ink-soft); white-space: nowrap; }
+      .slotp { position: absolute; top: 8px; width: 190px; height: 42px; border-radius: 21px; border: 2px dashed rgba(185, 151, 255, .35); }
+      .sp1 { left: 650px; } .sp2 { left: 860px; }
+      .pill { position: absolute; top: 8px; width: 190px; height: 42px; border-radius: 21px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 26px; font-weight: 850; white-space: nowrap; }
+      .pill .ic { width: 24px; height: 24px; stroke-width: 10; }
+      .pill.c1 { left: 650px; } .pill.c2 { left: 860px; }
+      .pill.ok { background: rgba(69, 224, 168, .2); border: 2px solid var(--green); color: #b5ffe2; }
+      .pill.mj { background: rgba(255, 196, 90, .22); border: 2px solid var(--yellow); color: #ffe2ad; }
+      .pill.na { background: rgba(255, 255, 255, .06); border: 2px solid rgba(201, 191, 224, .5); color: var(--ink-soft); }
+
+      /* Derecha: el prompt, su entrada y la salida */
+      #pc { left: 1120px; top: 50px; width: 656px; height: 176px; padding: 20px 24px; gap: 6px; }
+      #pc h3 { font-size: 32px; }
+      #pc p { font-size: 26px; }
+      .inp { left: 1144px; top: 168px; z-index: 7; }
+      #sal { left: 1120px; top: 248px; width: 656px; height: 228px; padding: 18px 22px; gap: 8px; }
+      #sal h3 { font-size: 28px; }
+      .sl { position: absolute; left: 22px; right: 22px; display: flex; flex-direction: column; gap: 8px; top: 64px; }
+      .sl div { height: 44px; display: flex; align-items: center; padding: 0 14px; border-radius: 10px; background: rgba(255, 255, 255, .06); font-size: 26px; font-weight: 600; color: var(--ink); white-space: nowrap; }
+      .sl div em { font-style: normal; color: var(--cyan); margin-left: auto; font-weight: 750; }
+      #note-w { left: 1120px; top: 492px; max-width: 370px; }
+      #uso { left: 1120px; top: 248px; width: 656px; height: 228px; padding: 20px 28px; font-family: "Figtree"; font-size: 30px; line-height: 1.32; font-weight: 650; }
+      #uso b { display: block; font-size: 30px; margin-bottom: 6px; color: #3d1795; }
+      #stamp { position: absolute; left: 1190px; top: 484px; z-index: 9; padding: 10px 22px; border-radius: 14px; border: 4px solid var(--green); background: rgba(5, 5, 7, .9); color: var(--green); font-family: "Bricolage"; font-weight: 800; font-size: 30px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+
+      /* Analogía: la revisión técnica del carro */
+      .car { position: absolute; left: 70px; top: 60px; width: 420px; height: 250px; }
+      .car .cab { position: absolute; left: 90px; top: 30px; width: 230px; height: 84px; border-radius: 60px 60px 0 0; background: #b997ff; }
+      .car .win { position: absolute; top: 46px; width: 82px; height: 56px; border-radius: 30px 8px 0 0; background: #1d1629; }
+      .car .w1 { left: 112px; border-radius: 34px 6px 0 0; } .car .w2 { left: 212px; border-radius: 6px 34px 0 0; }
+      .car .body { position: absolute; left: 0; top: 110px; width: 420px; height: 92px; border-radius: 30px; background: #8a55ff; }
+      .car .lamp { position: absolute; left: 388px; top: 132px; width: 26px; height: 22px; border-radius: 6px; background: #ffc45a; }
+      .car .wh { position: absolute; top: 166px; width: 84px; height: 84px; border-radius: 50%; background: #1b1426; border: 12px solid #c9bfe0; }
+      .car .wa { left: 56px; } .car .wb { left: 282px; }
+      .seal { position: absolute; left: 540px; top: 70px; width: 170px; height: 170px; border-radius: 50%; display: grid; place-items: center; text-align: center; background: #45e0a8; color: #062418; font-family: "Bricolage"; font-weight: 800; font-size: 30px; line-height: 1.05; box-shadow: 0 0 0 8px rgba(69, 224, 168, .25); }
+      .insp { position: absolute; left: 70px; top: 330px; width: 640px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+      .insp div { height: 66px; display: flex; align-items: center; gap: 14px; padding: 0 18px; border-radius: 16px; background: rgba(255, 255, 255, .07); font-size: 30px; font-weight: 750; color: var(--ink); }
+      .insp i { flex: none; width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; border: 3px solid #45e0a8; color: #45e0a8; }
+      .insp i svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 12; stroke-linecap: round; stroke-linejoin: round; }
+      .insp-lb { position: absolute; left: 70px; top: 500px; font-size: 27px; font-weight: 750; color: var(--ink-soft); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="c2p5" data-start="0" data-duration="40" data-width="1920" data-height="1080" data-fps="30">
+      <div id="board">
+        <div class="say col-h hide" id="h-lente">Rúbrica: siete lentes</div>
+        <div class="say col-h hide" id="h-c1">Caso 1</div>
+        <div class="say col-h hide" id="h-c2">Caso 2</div>
+        <div class="say col-h hide" id="h-p">El prompt a evaluar</div>
+
+        <div class="lens hide" style="top:48px"><i class="n">1</i><b>Exactitud</b><span class="d">nada que la fuente no sostenga</span><i class="slotp sp1"></i><i class="slotp sp2"></i>
+          <span class="pill c1 ok" data-icon="check" data-icon-class="ic">Cumple</span><span class="pill c2 ok" data-icon="check" data-icon-class="ic">Cumple</span></div>
+        <div class="lens hide" style="top:120px"><i class="n">2</i><b>Relevancia</b><span class="d">responde al objetivo</span><i class="slotp sp1"></i><i class="slotp sp2"></i>
+          <span class="pill c1 ok" data-icon="check" data-icon-class="ic">Cumple</span><span class="pill c2 ok" data-icon="check" data-icon-class="ic">Cumple</span></div>
+        <div class="lens hide" style="top:192px"><i class="n">3</i><b>Claridad</b><span class="d">la audiencia la entiende</span><i class="slotp sp1"></i><i class="slotp sp2"></i>
+          <span class="pill c1 ok" data-icon="check" data-icon-class="ic">Cumple</span><span class="pill c2 ok" data-icon="check" data-icon-class="ic">Cumple</span></div>
+        <div class="lens hide" id="lens4" style="top:264px"><i class="n">4</i><b>Completitud</b><span class="d">cubre todo o marca vacíos</span><i class="slotp sp1"></i><i class="slotp sp2"></i>
+          <span class="pill c1 mj">Debe mejorar</span><span class="pill c2 ok" data-icon="check" data-icon-class="ic">Cumple</span></div>
+        <div class="lens hide" style="top:336px"><i class="n">5</i><b>Formato</b><span class="d">estructura y tono acordados</span><i class="slotp sp1"></i><i class="slotp sp2"></i>
+          <span class="pill c1 ok" data-icon="check" data-icon-class="ic">Cumple</span><span class="pill c2 ok" data-icon="check" data-icon-class="ic">Cumple</span></div>
+        <div class="lens hide" style="top:408px"><i class="n">6</i><b>Riesgos</b><span class="d">sin datos ni acciones indebidas</span><i class="slotp sp1"></i><i class="slotp sp2"></i>
+          <span class="pill c1 ok" data-icon="check" data-icon-class="ic">Cumple</span><span class="pill c2 ok" data-icon="check" data-icon-class="ic">Cumple</span></div>
+        <div class="lens hide" style="top:480px"><i class="n">7</i><b>Fuentes</b><span class="d">permite rastrear lo que afirma</span><i class="slotp sp1"></i><i class="slotp sp2"></i>
+          <span class="pill c1 na">No aplica</span><span class="pill c2 na">No aplica</span></div>
+
+        <div class="card hide" id="pc"><h3>Plan de estudio de 7 días</h3><p>Mismo formato y 30 minutos diarios</p></div>
+        <span class="tag cyan inp hide" id="in1">Caso 1 · Hojas de cálculo</span>
+        <span class="tag accent inp hide" id="in2">Caso 2 · Fotografía con celular</span>
+        <div class="card hide" id="sal"><h3>Salida</h3>
+          <div class="sl" id="sl1"><div>Día 1 · Crear una hoja con datos<em>20 min</em></div><div>Día 2 · Sumar con fórmulas<em>25 min</em></div><div>Día 3 · Hacer un gráfico<em>30 min</em></div></div>
+          <div class="sl" id="sl2"><div>Día 1 · Encuadrar con tercios<em>20 min</em></div><div>Día 2 · Usar luz de ventana<em>25 min</em></div><div>Día 3 · Enfocar y exponer<em>25 min</em></div></div>
+        </div>
+        <div class="note hide" id="note-w">Lo más débil: completitud. Se agrega una mejora.</div>
+        <div class="paper hide" id="uso"><b>Cómo usarlo</b><div>1. Cambia la habilidad.</div><div>2. Deja 7 días, 30 min.</div><div>3. Revisa con 7 lentes.</div></div>
+        <div class="hide" id="stamp">Listo para usar</div>
+      </div>
+    </div>
+    <script>
+      const T = Teacher.setup({
+        cls: 2, point: 5,
+        title: "¿Cómo sé si una respuesta <em>de verdad sirve</em>?",
+        headTitle: "Evaluar y transferir un prompt",
+        question: "Que suene bien no basta. Hace falta una lista que cualquiera pueda aplicar, en cualquier caso.",
+        analogy: {
+          art: `<div class="car"><i class="cab"></i><i class="win w1"></i><i class="win w2"></i><i class="body"></i><i class="lamp"></i><i class="wh wa"></i><i class="wh wb"></i></div>
+            <div class="seal">Revisión aprobada</div>
+            <div class="insp"><div><i>${Teacher.icon("check", "")}</i>Frenos</div><div><i>${Teacher.icon("check", "")}</i>Luces</div><div><i>${Teacher.icon("check", "")}</i>Llantas</div><div><i>${Teacher.icon("check", "")}</i>Emisiones</div></div>
+            <div class="insp-lb">La misma lista, para cualquier carro.</div>`,
+          title: "La revisión técnica del carro",
+          text: "El inspector no aprueba un carro porque <em>se ve bonito</em>: revisa siempre la misma lista. Así se evalúa cualquier salida de la IA.",
+        },
+        steps: [
+          { label: "Siete lentes", caption: "Cada salida se revisa con los mismos <em>siete lentes</em>, no con la impresión de “suena bien”." },
+          { label: "Marcar", caption: "Cada lente se marca: <em>cumple</em>, debe mejorar o no aplica. Así ves lo más débil." },
+          { label: "Transferir", caption: "Mismo prompt, otro caso y sin explicarlo en voz alta: si cumple, <em>se transfiere</em>." },
+          { label: "Instrucción de uso", caption: "Con tres líneas de uso, otra persona puede aplicarlo y <em>evaluarlo igual</em>." },
+        ],
+        takeaway: {
+          title: "Fluida no es correcta: <em>evalúa con la misma rúbrica</em>.",
+          text: "Exactitud · relevancia · claridad · completitud · formato · riesgos · fuentes.",
+        },
+      });
+
+      const s = T.stepAt;
+      // Analogía: el carro llega, se revisa la lista y recibe el sello
+      T.slide("@.t-analogy-art .car", T.analogyAt(.5), { x: -60, y: 0, duration: .8 });
+      T.slide("@.t-analogy-art .insp div", T.analogyAt(1.5), { y: 20, stagger: .3 });
+      T.tl.set(".t-analogy-art .insp i svg", { opacity: 0 }, 0);
+      T.fromTo("@.t-analogy-art .insp i svg", T.analogyAt(2.1), { opacity: 0, scale: .2 }, { opacity: 1, scale: 1, duration: .35, stagger: .45, ease: "back.out(2)" });
+      T.fromTo("@.t-analogy-art .seal", T.analogyAt(4.3), { opacity: 0, scale: 1.8, rotation: -30 }, { opacity: 1, scale: 1, rotation: -8, duration: .55, ease: "back.out(2)" });
+      T.slide("@.t-analogy-art .insp-lb", T.analogyAt(5.0), { x: -20, y: 0 });
+
+      // Estado inicial de las marcas
+      T.tl.set(["#board .pill", "#board #sl2"], { opacity: 0 }, 0);
+
+      // Paso 1 · Los siete lentes
+      T.slide("#h-lente", s(0, 0), { y: 10 });
+      T.slide(".lens", s(0, .2), { x: -30, y: 0, stagger: .3 });
+      T.slide("#h-c1, #h-c2", s(0, 2.5), { y: 10, stagger: .15 });
+
+      // Paso 2 · Marcar el caso 1
+      T.slide("#h-p", s(1, 0), { y: 10 });
+      T.pop("#pc", s(1, .1)).pop("#in1", s(1, .4));
+      T.slide("#sal", s(1, .6), { y: 20 });
+      T.pop(".pill.c1", s(1, 1.2), .28);
+      T.glow("#lens4", s(1, 3.2), "#ffc45a");
+      T.slide("#note-w", s(1, 3.1), { y: 20 });
+
+      // Paso 3 · Transferir: otra entrada equivalente, misma rúbrica
+      T.fadeOut("#note-w", s(2, 2.6));
+      T.to("#lens4", s(2, 0), { boxShadow: "0 0 0 0 rgba(0,0,0,0)", borderColor: "rgba(185,151,255,.18)", duration: .4 });
+      T.fadeOut("#in1", s(2, .1), 0, .3);
+      T.pop("#in2", s(2, .3));
+      T.fadeOut("#sl1", s(2, .4), 0, .3);
+      T.slide("#sl2", s(2, .6), { x: -20, y: 0 });
+      T.pop(".pill.c2", s(2, 1.3), .26);
+
+      // Paso 4 · Instrucción de uso y sello
+      T.fadeOut("#sal", s(3, 0), 0, .3);
+      T.slide("#uso", s(3, .2), { y: 30 });
+      T.fromTo("#stamp", s(3, 2.0), { opacity: 0, scale: 1.8, rotation: -24 }, { opacity: 1, scale: 1, rotation: -6, duration: .5, ease: "back.out(2)" });
+      T.pulse(".pill.c2.ok", s(3, 2.7), 1.08);
+
+      window.__timelines["c2p5"] = T.tl;
+    </script>
+  </body>
+</html>

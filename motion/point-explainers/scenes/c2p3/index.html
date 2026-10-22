@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>C2·P3 · Patrones de control reutilizables</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared/teacher.css" />
+    <script src="shared/teacher.js"></script>
+    <style>
+      /* Pizarra: biblioteca de patrones → prompt con ranuras → salida de la IA */
+      #board .col-h { top: 0; font-size: 26px; text-transform: uppercase; letter-spacing: .1em; color: var(--lavender); }
+      #h-a { left: 0; } #h-b { left: 480px; } #h-c { left: 1140px; }
+
+      /* Biblioteca: bloques arrastrables */
+      .pb { position: absolute; left: 0; width: 420px; height: 54px; display: flex; align-items: center; gap: 12px; padding: 0 18px; border-radius: 14px; border: 2px solid rgba(185, 151, 255, .45); background: linear-gradient(180deg, rgba(41, 29, 63, .98), rgba(24, 18, 36, .98)); font-size: 26px; font-weight: 750; color: var(--ink); white-space: nowrap; }
+      .pb::before { content: ""; flex: none; width: 10px; height: 26px; border-radius: 4px; background-image: radial-gradient(circle, rgba(244, 240, 255, .55) 2px, transparent 2.5px); background-size: 5px 6px; }
+      .pb.c1 { border-color: var(--cyan); } .pb.c2 { border-color: var(--lavender); } .pb.c3 { border-color: var(--yellow); }
+
+      /* Ficha del evento (insumo ficticio) */
+      #ficha { left: 480px; top: 50px; width: 600px; height: 190px; padding: 18px 24px; gap: 4px; }
+      #ficha h3 { font-size: 30px; }
+      #ficha p { font-size: 26px; line-height: 1.25; color: var(--ink); }
+      #ficha p span { color: var(--ink-mute); }
+      #falta { left: 690px; top: 212px; height: 46px; font-size: 26px; border-style: dashed; z-index: 7; }
+
+      /* Prompt con ranuras */
+      #prompt { left: 480px; top: 262px; width: 600px; height: 290px; padding: 18px 22px; font-family: "Figtree"; font-size: 26px; font-weight: 650; line-height: 1.25; }
+      #prompt .base { color: #1b1426; }
+      .slot { position: absolute; left: 22px; width: 556px; height: 60px; border-radius: 12px; border: 3px dashed #c6b8e6; }
+      #sl1 { top: 70px; } #sl2 { top: 140px; } #sl3 { top: 210px; }
+      .fill { position: absolute; left: 22px; width: 556px; height: 60px; display: flex; align-items: center; padding: 0 16px; border-radius: 12px; font-size: 26px; font-weight: 700; color: #1b1426; white-space: nowrap; }
+      #f1 { top: 70px; background: rgba(10, 166, 214, .2); border-left: 7px solid #0a9cc9; }
+      #f2 { top: 140px; background: rgba(122, 60, 255, .16); border-left: 7px solid #7a3cff; }
+      #f3 { top: 210px; background: rgba(255, 180, 0, .3); border-left: 7px solid #c98400; }
+      /* Copias que viajan con el cursor */
+      .drag { z-index: 30; box-shadow: 0 20px 40px rgba(0, 0, 0, .6); }
+
+      /* Salida de la IA */
+      .out { position: absolute; left: 1140px; top: 50px; width: 636px; height: 448px; padding: 22px 22px; border-radius: 26px; border: 2px solid var(--line); background: linear-gradient(155deg, rgba(41, 29, 63, .95), rgba(13, 10, 19, .95)); display: flex; flex-direction: column; gap: 10px; }
+      .out .r { position: relative; height: 56px; display: flex; align-items: center; gap: 14px; padding: 0 14px; border-radius: 12px; background: rgba(255, 255, 255, .05); font-size: 26px; font-weight: 650; color: var(--ink); white-space: nowrap; }
+      .out .r.bad { border: 2px solid var(--red); background: rgba(255, 92, 120, .1); }
+      .out .r .x { position: absolute; right: 10px; top: 8px; height: 36px; padding: 0 14px; border-radius: 18px; background: var(--red); color: #2c0510; font-size: 26px; font-weight: 850; line-height: 36px; }
+      .out .r .lb { flex: none; width: 160px; height: 38px; border-radius: 19px; display: grid; place-items: center; font-size: 26px; font-weight: 850; }
+      .lb.h { background: rgba(69, 224, 168, .2); color: #b5ffe2; } .lb.i { background: rgba(185, 151, 255, .24); color: #e4d8ff; }
+      .lb.c { background: rgba(91, 220, 255, .2); color: #c4f2ff; } .lb.v { background: rgba(255, 196, 90, .26); color: #ffe2ad; }
+      .out .r.gap { border: 2px solid var(--yellow); }
+      .out .r em { font-style: normal; color: var(--ink-mute); }
+
+      /* Analogía: letreros de obra que se reutilizan */
+      .fence { position: absolute; left: 40px; top: 56px; width: 680px; height: 22px; border-radius: 8px; background: repeating-linear-gradient(45deg, #ffc45a 0 22px, #1b1426 22px 44px); }
+      .sign { position: absolute; top: 112px; width: 212px; height: 176px; display: grid; place-items: center; padding: 12px; border-radius: 14px; border: 6px solid #1b1426; background: #ffc45a; color: #2a1b00; text-align: center; font-weight: 850; font-size: 28px; line-height: 1.12; box-shadow: 0 0 0 3px #ffc45a, 0 18px 30px rgba(0, 0, 0, .45); }
+      .sign::before, .sign::after { content: ""; position: absolute; top: -40px; width: 4px; height: 34px; background: #8f86a3; }
+      .sign::before { left: 40px; } .sign::after { right: 40px; }
+      .sg1 { left: 46px; } .sg2 { left: 274px; } .sg3 { left: 502px; }
+      .reuse { position: absolute; left: 46px; top: 330px; font-size: 27px; font-weight: 750; color: var(--ink-soft); }
+      .obra { position: absolute; top: 380px; width: 212px; height: 200px; border-radius: 18px; border: 2px solid var(--line); background: rgba(255, 255, 255, .04); }
+      .obra .ms { position: absolute; top: 34px; width: 46px; height: 36px; border-radius: 6px; border: 3px solid #1b1426; background: #ffc45a; }
+      .obra .ms:nth-child(1) { left: 22px; } .obra .ms:nth-child(2) { left: 83px; } .obra .ms:nth-child(3) { left: 144px; }
+      .obra .roof { position: absolute; left: 36px; top: 96px; width: 140px; height: 56px; clip-path: polygon(50% 0, 100% 100%, 0 100%); background: rgba(185, 151, 255, .45); }
+      .obra b { position: absolute; left: 0; right: 0; bottom: 12px; text-align: center; font-size: 26px; font-weight: 800; color: var(--ink); }
+      .ob1 { left: 46px; } .ob2 { left: 274px; } .ob3 { left: 502px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="c2p3" data-start="0" data-duration="40" data-width="1920" data-height="1080" data-fps="30">
+      <div id="board">
+        <div class="say col-h hide" id="h-a">Biblioteca de patrones</div>
+        <div class="say col-h hide" id="h-b">Insumo y prompt</div>
+        <div class="say col-h hide" id="h-c">Salida de la IA</div>
+
+        <div class="pb hide" style="top:50px">Aclara primero</div>
+        <div class="pb hide" style="top:114px">Plan y confirmación</div>
+        <div class="pb c1 hide" id="pb1" style="top:178px">Fuente cerrada</div>
+        <div class="pb c2 hide" id="pb2" style="top:242px">Separar hecho e inferencia</div>
+        <div class="pb c3 hide" id="pb3" style="top:306px">Vacíos visibles</div>
+        <div class="pb hide" style="top:370px">Borrador, crítica, revisión</div>
+        <div class="pb hide" style="top:434px">Cambio único</div>
+        <div class="pb hide" style="top:498px">Aprobación antes de ejecutar</div>
+
+        <div class="card hide" id="ficha"><h3>Ficha del evento</h3>
+          <p><span>Nombre:</span> Feria de Robótica Escolar</p>
+          <p><span>Tema:</span> robots con material reciclado</p>
+          <p><span>Fecha:</span> sábado 14 de marzo</p></div>
+        <span class="tag yellow hide" id="falta">No dice: lugar ni precio</span>
+
+        <div class="paper hide" id="prompt"><div class="base">Resume esta ficha para anunciar el evento.</div>
+          <div class="slot" id="sl1"></div><div class="slot" id="sl2"></div><div class="slot" id="sl3"></div>
+          <div class="fill hide" id="f1">Usa solo la ficha. Nada de fuera.</div>
+          <div class="fill hide" id="f2">Separa hecho, inferencia y recomendación.</div>
+          <div class="fill hide" id="f3">Si falta: “no disponible” y una pregunta.</div></div>
+
+        <div class="pb c1 drag hide" id="d1" data-layout-allow-overlap data-layout-ignore style="top:178px">Fuente cerrada</div>
+        <div class="pb c2 drag hide" id="d2" data-layout-allow-overlap data-layout-ignore style="top:242px">Separar hecho e inferencia</div>
+        <div class="pb c3 drag hide" id="d3" data-layout-allow-overlap data-layout-ignore style="top:306px">Vacíos visibles</div>
+        <div class="cursor hide"><svg viewBox="0 0 54 66"><path d="M5 4v52l14-12 10 19 9-4-10-19h19z" /></svg></div>
+
+        <div class="out hide" id="out-bad">
+          <div class="r">Feria de Robótica Escolar</div>
+          <div class="r">Sábado 14 de marzo</div>
+          <div class="r bad">Lugar: Hotel Central<span class="x">Inventado</span></div>
+          <div class="r bad">Entrada: Q50<span class="x">Inventado</span></div>
+        </div>
+        <div class="out hide" id="out-good">
+          <div class="r"><span class="lb h">Hecho</span>Sábado 14 de marzo</div>
+          <div class="r"><span class="lb h">Hecho</span>Robots con reciclaje</div>
+          <div class="r"><span class="lb i">Inferencia</span>Pensado para escolares</div>
+          <div class="r"><span class="lb c">Consejo</span>Confirmar lugar antes</div>
+          <div class="r gap"><span class="lb v">Vacío</span>Lugar: no disponible <em>· ¿dónde?</em></div>
+          <div class="r gap"><span class="lb v">Vacío</span>Precio: no disponible <em>· ¿cuánto?</em></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const T = Teacher.setup({
+        cls: 2, point: 3,
+        title: "¿Qué piezas de control puedo <em>reutilizar</em>?",
+        headTitle: "Patrones de control reutilizables",
+        question: "Hay problemas que se repiten en casi todos los prompts. Para cada uno ya existe una pieza que lo resuelve.",
+        analogy: {
+          art: `<div class="fence"></div>
+            <div class="sign sg1">Pregunte antes de excavar</div>
+            <div class="sign sg2">Solo material aprobado</div>
+            <div class="sign sg3">Firme antes de demoler</div>
+            <div class="reuse">Los mismos letreros, en cada obra:</div>
+            <div class="obra ob1"><i class="ms"></i><i class="ms"></i><i class="ms"></i><i class="roof"></i><b>Obra A</b></div>
+            <div class="obra ob2"><i class="ms"></i><i class="ms"></i><i class="ms"></i><i class="roof"></i><b>Obra B</b></div>
+            <div class="obra ob3"><i class="ms"></i><i class="ms"></i><i class="ms"></i><i class="roof"></i><b>Obra C</b></div>`,
+          title: "Letreros que sirven en cualquier obra",
+          text: "Nadie escribe reglas nuevas para cada obra: se cuelgan <em>los mismos letreros</em>. Los patrones de control son esos letreros para tus prompts.",
+        },
+        steps: [
+          { label: "Biblioteca", caption: "Un patrón es una pieza corta y <em>reutilizable</em> que resuelve un problema frecuente." },
+          { label: "El problema", caption: "La ficha no dice lugar ni precio… y la IA los <em>rellena</em> con algo que suena creíble." },
+          { label: "Arrastrar patrones", caption: "Arrastras tres patrones: <em>fuente cerrada</em>, separar hechos y vacíos visibles." },
+          { label: "Vacíos visibles", caption: "Ya nada se inventa: lo ausente dice <em>“no disponible”</em> y genera una pregunta." },
+        ],
+        takeaway: {
+          title: "No reinventes el control: <em>reutiliza patrones</em> en cada prompt.",
+          text: "Fuente cerrada · hecho e inferencia · vacíos visibles · aclara primero · cambio único.",
+        },
+      });
+
+      const s = T.stepAt;
+      // Analogía: se cuelgan los letreros y se repiten en tres obras
+      T.slide("@.t-analogy-art .fence", T.analogyAt(.5), { x: -40, y: 0 });
+      T.slide("@.t-analogy-art .sign", T.analogyAt(1.0), { y: -60, stagger: .3, duration: .7 });
+      T.slide("@.t-analogy-art .reuse", T.analogyAt(3.2), { x: -20, y: 0 });
+      T.pop("@.t-analogy-art .obra", T.analogyAt(3.6), .3);
+      T.pulse("@.t-analogy-art .obra .ms", T.analogyAt(5.2), 1.2);
+
+      // Paso 1 · La biblioteca de patrones
+      T.slide("#h-a", s(0, 0), { y: 10 });
+      T.slide(".pb:not(.drag)", s(0, .2), { x: -40, y: 0, stagger: .2 });
+      T.glow("#pb1", s(0, 2.4), "#5bdcff").glow("#pb2", s(0, 2.6), "#b997ff").glow("#pb3", s(0, 2.8), "#ffc45a");
+
+      // Paso 2 · El problema: ficha sin lugar ni precio y una salida que inventa
+      T.slide("#h-b", s(1, 0), { y: 10 });
+      T.pop("#ficha", s(1, .1));
+      T.pop("#falta", s(1, .7));
+      T.slide("#prompt", s(1, 1.1), { y: 24 });
+      T.slide("#h-c", s(1, 1.6), { y: 10 });
+      T.slide("#out-bad", s(1, 1.7), { x: 30, y: 0 });
+      T.pop("#out-bad .x", s(1, 2.6), .35);
+      T.pulse("#out-bad .bad", s(1, 3.3), 1.04);
+
+      // Paso 3 · Arrastrar tres patrones a las ranuras del prompt
+      const DRAG = [{ d: "#d1", f: "#f1", y0: 178, y1: 332 }, { d: "#d2", f: "#f2", y0: 242, y1: 402 }, { d: "#d3", f: "#f3", y0: 306, y1: 472 }];
+      T.tl.set("#board .cursor", { x: 360, y: 20 }, 0);
+      T.fadeIn(".cursor", s(2, 0), .25);
+      DRAG.forEach(({ d, f, y0, y1 }, i) => {
+        const t = s(2, .2 + i * 1.25);
+        T.to(".cursor", t, { x: 300, y: y0 + 18, duration: .4 });
+        T.fadeIn(d, t + .4, .1);
+        T.to(d, t + .5, { x: 502, y: y1 - y0, scale: 1.04, duration: .6, ease: "power2.inOut" });
+        T.to(".cursor", t + .5, { x: 802, y: y1 + 18, duration: .6, ease: "power2.inOut" });
+        T.fadeOut(d, t + 1.1, 0, .2);
+        T.fadeIn(f, t + 1.1, .25);
+        T.pulse(f, t + 1.15, 1.04);
+      });
+      T.fadeOut(".cursor", s(2, 4.0), 0, .3);
+
+      // Paso 4 · La salida marca los vacíos en lugar de inventar
+      T.to("#out-bad", s(3, .1), { opacity: 0, x: 40, duration: .45 });
+      T.fadeIn("#out-good", s(3, .4), .3);
+      T.tl.set("#board #out-good .r", { opacity: 0 }, 0);
+      T.slide("#out-good .r", s(3, .55), { x: -24, y: 0, stagger: .32 });
+      T.glow("#out-good .gap", s(3, 2.6), "#ffc45a");
+      T.pulse("#falta", s(3, 2.9), 1.08);
+
+      window.__timelines["c2p3"] = T.tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>C2·P1 · Anatomía de un prompt</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared/teacher.css" />
+    <script src="shared/teacher.js"></script>
+    <style>
+      /* Pizarra en tres columnas: petición vaga → capas → prompt armado por capas */
+      #board .col-h { top: 0; font-size: 26px; text-transform: uppercase; letter-spacing: .1em; color: var(--lavender); }
+      #h-a { left: 0; } #h-b { left: 560px; } #h-c { left: 1120px; }
+
+      /* Columna A: la petición vaga y su radiografía */
+      #vague { left: 0; top: 52px; width: 500px; font-size: 29px; line-height: 1.38; }
+      #scan { position: absolute; left: -10px; top: 52px; width: 520px; height: 8px; border-radius: 8px; background: var(--cyan); box-shadow: 0 0 30px var(--cyan); z-index: 9; }
+      #t-tema { left: 0; top: 248px; }
+      #say-sup, #say-ctrl { left: 0; top: 322px; font-size: 26px; }
+      #say-sup { color: #ffe2ad; } #say-ctrl { color: #b5ffe2; }
+      .q { height: 54px; font-size: 26px; padding: 0 20px; }
+      .q .ok { display: inline-flex; }
+      #q1 { left: 0; top: 368px; } #q2 { left: 252px; top: 368px; }
+      #q3 { left: 0; top: 434px; } #q4 { left: 252px; top: 434px; }
+      #q5 { left: 0; top: 500px; }
+
+      /* Columna B: las capas del prompt */
+      .layer { position: absolute; left: 560px; width: 500px; height: 76px; padding: 0 22px 0 34px; border-radius: 16px; background: rgba(255, 255, 255, .05); border: 2px solid var(--c); display: flex; flex-direction: column; justify-content: center; }
+      .layer::before { content: ""; position: absolute; left: 10px; top: 12px; bottom: 12px; width: 10px; border-radius: 6px; background: var(--c); }
+      .layer b { font-family: "Bricolage"; font-size: 29px; line-height: 1.05; color: var(--c); }
+      .layer span { font-size: 26px; line-height: 1.15; color: var(--ink-soft); }
+      #L1 { top: 52px; --c: #b997ff; } #L2 { top: 136px; --c: #5bdcff; } #L3 { top: 220px; --c: #45e0a8; }
+      #L4 { top: 304px; --c: #ff5c78; } #L5 { top: 388px; --c: #ffc45a; } #L6 { top: 472px; --c: #ff7ab6; }
+
+      /* Columna C: el prompt que se arma capa por capa */
+      #built { left: 1120px; top: 52px; width: 656px; height: 350px; padding: 22px 22px; font-family: "Figtree"; font-size: 28px; line-height: 1.2; font-weight: 600; display: flex; flex-direction: column; gap: 10px; }
+      #built .ln { position: relative; padding: 4px 10px 4px 16px; border-radius: 10px; border-left: 7px solid var(--c); background: var(--bg); }
+      #P1 { --c: #7a3cff; --bg: rgba(122, 60, 255, .14); } #P2 { --c: #0aa6d6; --bg: rgba(10, 166, 214, .16); }
+      #P3 { --c: #12a874; --bg: rgba(18, 168, 116, .16); } #P4 { --c: #e0344f; --bg: rgba(224, 52, 79, .13); }
+      #P5 { --c: #d99000; --bg: rgba(255, 180, 0, .22); } #P6 { --c: #e0458e; --bg: rgba(224, 69, 142, .14); }
+      #note-c { left: 1120px; top: 424px; max-width: 360px; }
+
+      /* Analogía: orden de trabajo para el carpintero */
+      .order { position: absolute; left: 70px; top: 54px; width: 620px; height: 512px; border-radius: 26px; background: #f6f2ff; color: #1b1426; padding: 30px 36px; box-shadow: 0 24px 50px rgba(0, 0, 0, .5); }
+      .order .o-head { font-weight: 850; font-size: 25px; letter-spacing: .12em; text-transform: uppercase; color: #7a3cff; }
+      .order .o-ask { margin-top: 12px; font-family: "Bricolage"; font-weight: 750; font-size: 46px; line-height: 1.05; }
+      .order .o-rows { margin-top: 26px; display: flex; flex-direction: column; gap: 14px; }
+      .order .o-row { position: relative; height: 70px; display: flex; align-items: center; padding: 0 22px; border-radius: 16px; background: #e9e2f8; font-size: 30px; font-weight: 750; }
+      .order .o-row span { flex: 1; color: #4b4358; }
+      .order .o-row b { position: absolute; right: 18px; top: 11px; height: 48px; display: grid; place-items: center; padding: 0 18px; border-radius: 24px; font-size: 28px; font-weight: 850; }
+      .order .o-row b.qm { min-width: 48px; background: #ffc45a; color: #3a2600; }
+      .order .o-row b.an { background: #45e0a8; color: #062418; }
+      .saw { position: absolute; right: 30px; top: 24px; width: 120px; height: 82px; }
+      .saw i { position: absolute; display: block; border-radius: 6px; background: #c9a26b; }
+      .saw .top { left: 0; top: 0; width: 120px; height: 18px; }
+      .saw .l1 { left: 12px; top: 18px; width: 12px; height: 62px; } .saw .l2 { right: 12px; top: 18px; width: 12px; height: 62px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="c2p1" data-start="0" data-duration="40" data-width="1920" data-height="1080" data-fps="30">
+      <div id="board">
+        <div class="say col-h hide" id="h-a">Petición vaga</div>
+        <div class="say col-h hide" id="h-b">Capas del prompt</div>
+        <div class="say col-h hide" id="h-c">Prompt armado por capas</div>
+
+        <div class="paper hide" id="vague">“Hazme una presentación sobre inteligencia artificial.”</div>
+        <div class="hide" id="scan"></div>
+        <span class="tag green hide" id="t-tema" data-icon="check" data-icon-class="ic">Explícito: el tema</span>
+        <div class="say hide" id="say-sup">Lo tuvo que suponer la IA:</div>
+        <div class="say hide" id="say-ctrl">Ahora lo decides tú:</div>
+        <span class="tag yellow q hide" id="q1">¿Para quién?<span class="ok hide" data-icon="check" data-icon-class="ic"></span></span>
+        <span class="tag yellow q hide" id="q2">¿Para qué?<span class="ok hide" data-icon="check" data-icon-class="ic"></span></span>
+        <span class="tag yellow q hide" id="q3">¿Cuántas?<span class="ok hide" data-icon="check" data-icon-class="ic"></span></span>
+        <span class="tag yellow q hide" id="q4">¿Qué tono?<span class="ok hide" data-icon="check" data-icon-class="ic"></span></span>
+        <span class="tag yellow q hide" id="q5">¿Con qué fuentes?<span class="ok hide" data-icon="check" data-icon-class="ic"></span></span>
+
+        <div class="layer hide" id="L1"><b>Instrucción</b><span>la regla: qué hacer</span></div>
+        <div class="layer hide" id="L2"><b>Contexto</b><span>datos para interpretar</span></div>
+        <div class="layer hide" id="L3"><b>Entrada</b><span>el material concreto</span></div>
+        <div class="layer hide" id="L4"><b>Restricción</b><span>el límite que evita errores</span></div>
+        <div class="layer hide" id="L5"><b>Criterio</b><span>cómo juzgar si sirve</span></div>
+        <div class="layer hide" id="L6"><b>Ejemplo</b><span>la forma esperada</span></div>
+
+        <div class="paper hide" id="built">
+          <div class="ln" id="P1">Explica qué es la IA en una presentación.</div>
+          <div class="ln" id="P2">Es para adultos sin experiencia.</div>
+          <div class="ln" id="P3">Usa solo el texto que te adjunto.</div>
+          <div class="ln" id="P4">Máximo 8 diapositivas. Sin jerga.</div>
+          <div class="ln" id="P5">Cierra con 3 preguntas de comprensión.</div>
+          <div class="ln" id="P6">Sigue este ejemplo: título + 3 viñetas.</div>
+        </div>
+        <div class="note green hide" id="note-c">Más claro y consistente. No infalible.</div>
+      </div>
+    </div>
+    <script>
+      const T = Teacher.setup({
+        cls: 2, point: 1,
+        title: "¿De qué está <em>hecho</em> un buen prompt?",
+        headTitle: "Anatomía de un prompt",
+        question: "Cuando la respuesta sale genérica, casi nunca es culpa de la IA: faltaron decisiones que nadie le dio.",
+        analogy: {
+          art: `<div class="order"><div class="o-head">Orden de trabajo</div><div class="o-ask">“Hazme una mesa.”</div>
+            <div class="saw"><i class="top"></i><i class="l1"></i><i class="l2"></i></div>
+            <div class="o-rows">
+              <div class="o-row"><span>Medidas</span><b class="qm">?</b><b class="an">1,6 × 0,9 m</b></div>
+              <div class="o-row"><span>Madera</span><b class="qm">?</b><b class="an">Pino</b></div>
+              <div class="o-row"><span>Personas</span><b class="qm">?</b><b class="an">6</b></div>
+              <div class="o-row"><span>Para cuándo</span><b class="qm">?</b><b class="an">Viernes</b></div>
+            </div></div>`,
+          title: "Encargar una mesa al carpintero",
+          text: "Si solo dices “hazme una mesa”, el carpintero <em>decide por ti</em> medidas, madera y fecha. Cada dato que das es una decisión que <em>ya no tiene que suponer</em>.",
+        },
+        steps: [
+          { label: "Petición vaga", caption: "Una petición vaga obliga a la IA a <em>suponer</em> audiencia, propósito, tono y formato." },
+          { label: "Capas", caption: "Un prompt completo tiene capas: instrucción, contexto, entrada, <em>restricción</em>, criterio y ejemplo." },
+          { label: "Armar por capas", caption: "Cada capa agrega <em>una línea</em> al prompt y elimina una suposición." },
+          { label: "Comparar", caption: "Ahora tú controlas lo que antes era supuesto: <em>más claro</em>, aunque nunca infalible." },
+        ],
+        takeaway: {
+          title: "Lo que no escribes, <em>la IA lo supone</em>. Cada capa es una decisión tuya.",
+          text: "Instrucción · contexto · entrada · restricción · criterio · ejemplo.",
+        },
+      });
+
+      const s = T.stepAt;
+      // Analogía: la orden llega vaga, aparecen las dudas y luego las respuestas
+      T.tl.set(".t-analogy-art .order .an", { opacity: 0 }, 0);
+      T.slide("@.order .o-ask", T.analogyAt(.6), { y: 20 });
+      T.pop("@.saw", T.analogyAt(1.0));
+      T.slide("@.order .o-row", T.analogyAt(1.4), { x: -30, y: 0, stagger: .25 });
+      T.pulse("@.order .qm", T.analogyAt(2.8), 1.25);
+      T.fadeOut("@.order .qm", T.analogyAt(4.6), 0, .3);
+      T.pop("@.order .an", T.analogyAt(4.7), .4);
+
+      // Paso 1 · Petición vaga + radiografía
+      T.slide("#h-a", s(0, 0), { y: 10 });
+      T.slide("#vague", s(0, .15), { y: 24 });
+      T.fadeIn("#scan", s(0, .8), .2);
+      T.to("#scan", s(0, .8), { y: 168, duration: 1.0, ease: "power1.inOut" });
+      T.fadeOut("#scan", s(0, 1.8), 0, .25);
+      T.pop("#t-tema", s(0, 1.7));
+      T.slide("#say-sup", s(0, 2.1), { x: -20, y: 0 });
+      T.pop(".q", s(0, 2.35), .16);
+
+      // Paso 2 · Las capas se apilan
+      T.slide("#h-b", s(1, 0), { y: 10 });
+      T.slide(".layer", s(1, .2), { x: 0, y: -40, stagger: .38 });
+      T.pulse("#L4", s(1, 3.1), 1.04);
+
+      // Paso 3 · El prompt se arma: cada capa aporta una línea
+      T.slide("#h-c", s(2, 0), { y: 10 });
+      T.fadeIn("#built", s(2, .1), .35);
+      T.tl.set("#board #built .ln", { opacity: 0 }, 0);
+      ["1", "2", "3", "4", "5", "6"].forEach((n, i) => {
+        const t = s(2, .55 + i * .5);
+        T.slide(`#P${n}`, t, { x: -24, y: 0, duration: .45 });
+        T.pulse(`#L${n}`, t, 1.05);
+      });
+
+      // Paso 4 · Comparar: los supuestos pasan a estar controlados
+      T.pulse("#vague", s(3, .1), 1.03);
+      T.fadeOut("#say-sup", s(3, .2));
+      T.slide("#say-ctrl", s(3, .45), { x: -20, y: 0 });
+      T.to(".q", s(3, .6), { backgroundColor: "rgba(69,224,168,.16)", borderColor: "#45e0a8", color: "#b5ffe2", duration: .3, stagger: .2 });
+      T.pop(".q .ok", s(3, .6), .2);
+      T.slide("#note-c", s(3, 2.0), { y: 20 });
+      T.glow("#built", s(3, 2.4), "#45e0a8");
+
+      window.__timelines["c2p1"] = T.tl;
+    </script>
+  </body>
+</html>

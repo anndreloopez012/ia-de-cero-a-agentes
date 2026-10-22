@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>C1·P2 · Privacidad, autorización y semáforo de datos</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared/teacher.css" />
+    <script src="shared/teacher.js"></script>
+    <style>
+      /* Pizarra: semáforo a la izquierda, el caso original al centro y la versión segura a la derecha */
+      .light { position: absolute; left: 0; top: 20px; width: 128px; height: 470px; border-radius: 64px; background: #0d0b13; border: 3px solid rgba(255, 255, 255, .2); box-shadow: 0 22px 50px rgba(0, 0, 0, .45); }
+      .lamp { position: absolute; left: 15px; width: 92px; height: 92px; border-radius: 50%; border: 3px solid rgba(255, 255, 255, .08); }
+      .lamp.g { top: 31px; background: #123528; }
+      .lamp.y { top: 186px; background: #3a2c10; }
+      .lamp.r { top: 341px; background: #3a1119; }
+      .lbl { position: absolute; left: 156px; width: 350px; }
+      .lbl h4 { font-family: "Bricolage"; font-weight: 750; font-size: 33px; line-height: 1.1; }
+      .lbl p { margin-top: 4px; font-size: 26px; line-height: 1.25; color: var(--ink-soft); }
+      #lbl-g { top: 46px; } #lbl-g h4 { color: var(--green); }
+      #lbl-y { top: 200px; } #lbl-y h4 { color: var(--yellow); }
+      #lbl-r { top: 356px; } #lbl-r h4 { color: var(--red); }
+
+      #case, #safe { top: 20px; font-family: "Figtree", sans-serif; font-size: 28px; line-height: 1.6; font-weight: 600; padding: 24px 30px 28px; }
+      #case { left: 530px; width: 590px; }
+      #safe { left: 1200px; width: 576px; }
+      .ph { display: block; margin-bottom: 6px; font-family: "Bricolage"; font-size: 30px; letter-spacing: .01em; }
+      #case .d { position: relative; display: inline-block; padding: 0 6px; border-radius: 8px; line-height: 1.3; }
+      #case .cut { position: absolute; left: -2px; right: -2px; top: 50%; height: 5px; margin-top: -2px; border-radius: 3px; background: var(--red); }
+      #safe .mk { display: inline-block; padding: 0 10px; border-radius: 10px; line-height: 1.3; background: var(--purple); color: #fff; font-weight: 800; }
+      #goal { left: 530px; top: 364px; }
+      #note-red { left: 1180px; top: 250px; max-width: 400px; }
+      #note-anon { left: 530px; top: 440px; max-width: 590px; }
+      #chk { left: 1214px; top: 352px; }
+      #chk li i { color: transparent; }
+      #ok { left: 1700px; top: -18px; }
+      #board .wires .w1 { stroke: var(--lavender); }
+
+      /* Analogía: una casa con tres puertas */
+      .house { position: absolute; inset: 0; }
+      .house svg.roof { position: absolute; left: 0; top: 0; width: 760px; height: 620px; fill: none; stroke: rgba(185, 151, 255, .55); stroke-width: 5; stroke-linejoin: round; }
+      .house .body { position: absolute; left: 50px; top: 200px; width: 660px; height: 300px; border: 4px solid rgba(185, 151, 255, .55); border-bottom: none; background: rgba(122, 60, 255, .07); }
+      .house .ground { position: absolute; left: 20px; right: 20px; top: 498px; height: 5px; border-radius: 3px; background: rgba(185, 151, 255, .55); }
+      .door { position: absolute; top: 296px; width: 170px; height: 204px; border-radius: 14px 14px 0 0; border: 5px solid; border-bottom: none; overflow: hidden; }
+      .door.g { left: 85px; border-color: var(--green); background: rgba(69, 224, 168, .14); }
+      .door.y { left: 295px; border-color: var(--yellow); background: rgba(255, 196, 90, .1); }
+      .door.r { left: 505px; border-color: var(--red); background: rgba(255, 92, 120, .1); }
+      .door .leaf { position: absolute; inset: 0; background: #2a1f3b; transform-origin: 0 50%; }
+      .door .leaf::after { content: ""; position: absolute; right: 18px; top: 96px; width: 14px; height: 14px; border-radius: 50%; background: rgba(255, 255, 255, .5); }
+      .dlbl { position: absolute; top: 236px; width: 170px; text-align: center; font-weight: 800; font-size: 27px; }
+      .dlbl.g { left: 85px; color: var(--green); } .dlbl.y { left: 295px; color: var(--yellow); } .dlbl.r { left: 505px; color: var(--red); }
+      .padlock { position: absolute; left: 551px; top: 352px; width: 78px; height: 78px; display: grid; place-items: center; border-radius: 50%; background: var(--red); color: #2c0510; }
+      .padlock .ic { width: 46px; height: 46px; stroke-width: 9; }
+      .ask { position: absolute; left: 290px; top: 150px; padding: 10px 18px; border-radius: 18px 18px 18px 4px; background: var(--yellow); color: #2a1b00; font-weight: 800; font-size: 27px; }
+      .chip { position: absolute; top: 528px; width: 190px; height: 58px; display: grid; place-items: center; border-radius: 16px; font-weight: 800; font-size: 26px; color: #fff; }
+      .chip.g { left: 75px; background: #0c7a55; border: 3px solid var(--green); }
+      .chip.y { left: 285px; background: #8a5a00; border: 3px solid var(--yellow); }
+      .chip.r { left: 495px; background: #9c1630; border: 3px solid var(--red); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="c1p2" data-start="0" data-duration="44" data-width="1920" data-height="1080" data-fps="30">
+      <div id="board">
+        <svg class="wires" viewBox="0 0 1776 600">
+          <path class="w1" pathLength="1" d="M1128 160H1190" />
+        </svg>
+
+        <div class="light"><div class="lamp g"></div><div class="lamp y"></div><div class="lamp r"></div></div>
+        <div class="lbl" id="lbl-g"><h4>Verde · se usa</h4><p>Ficticio, público o bien anonimizado</p></div>
+        <div class="lbl" id="lbl-y"><h4>Amarillo · revisar</h4><p>Interno o de terceros: permiso y lo mínimo</p></div>
+        <div class="lbl" id="lbl-r"><h4>Rojo · no se carga</h4><p>Claves, datos bancarios, salud, secretos</p></div>
+
+        <div class="paper" id="case"><b class="ph">Caso original</b>
+          <span class="d name">Ana López<i class="cut"></i></span>, <span class="d phone">teléfono 5555-0101<i class="cut"></i></span>, trabaja en <span class="d org">Empresa Sol<i class="cut"></i></span>. No podrá asistir a la reunión del martes porque tiene <span class="d med">una cita médica<i class="cut"></i></span>. Pide el resumen en <span class="d mail">ana.lopez@example.com<i class="cut"></i></span>.</div>
+
+        <span class="tag cyan" id="goal" data-icon="target" data-icon-class="ic">Objetivo: nota neutral de ausencia</span>
+
+        <div class="paper" id="safe"><b class="ph">Versión segura</b>
+          Redacta una nota breve y neutral: <span class="mk">[persona]</span> no asistirá a <span class="mk">[reunión]</span>. No menciones motivos de salud. Seguimiento por <span class="mk">[medio autorizado]</span>.</div>
+
+        <ul class="checklist" id="chk">
+          <li><i data-icon="check" data-icon-class=""></i>Tengo permiso para usarlo</li>
+          <li><i data-icon="check" data-icon-class=""></i>Es lo mínimo necesario</li>
+          <li><i data-icon="check" data-icon-class=""></i>Revisé antes de enviar</li>
+        </ul>
+        <div class="okmark" id="ok" data-icon="check" data-icon-class=""></div>
+
+        <div class="note red" id="note-red">Motivo de salud: dato sensible, va en rojo.</div>
+        <div class="note purple" id="note-anon">Anonimizar no es solo borrar el nombre: también teléfono, correo y empresa.</div>
+      </div>
+    </div>
+    <script>
+      const T = Teacher.setup({
+        cls: 1, point: 2,
+        title: "¿Qué datos <em>puedo</em> darle a una IA?",
+        headTitle: "Privacidad, autorización y semáforo de datos",
+        question: "Antes de pegar algo en el chat, pregúntate: ¿tengo permiso para usarlo aquí y de verdad lo necesito?",
+        analogy: {
+          art: `<div class="house">
+            <svg class="roof" viewBox="0 0 760 620"><path d="M30 204L380 62 730 204" /><path d="M560 132V84h50v70" /></svg>
+            <div class="body"></div>
+            <span class="dlbl g">Pasa</span><span class="dlbl y">Revisión</span><span class="dlbl r">Cerrada</span>
+            <div class="door g"><div class="leaf"></div></div>
+            <div class="door y"><div class="leaf"></div></div>
+            <div class="door r"><div class="leaf"></div></div>
+            <div class="padlock"><span data-icon="lock"></span></div>
+            <div class="ground"></div>
+            <div class="ask">¿Tienes permiso?</div>
+            <div class="chip g">Caso ficticio</div><div class="chip y">Dato interno</div><div class="chip r">Contraseña</div>
+          </div>`,
+          title: "Una casa con tres puertas",
+          text: "La verde deja pasar lo <em>ficticio o público</em>. La amarilla te detiene para revisar el permiso. La roja está <em>cerrada con llave</em>.",
+        },
+        steps: [
+          { label: "Semáforo", caption: "Antes de enviar, clasifica: <em>verde</em> se usa, <em>amarillo</em> se revisa y <em>rojo</em> nunca se carga." },
+          { label: "Marcar datos", caption: "Lee el caso y marca cada dato que <em>identifica</em> a una persona o revela algo privado." },
+          { label: "Minimizar", caption: "Define el objetivo: una nota de ausencia. Lo que <em>no hace falta</em> para eso, se elimina." },
+          { label: "Anonimizar", caption: "Lo indispensable se cambia por <em>marcadores</em>: [persona], [reunión], [medio autorizado]." },
+          { label: "Revisar y enviar", caption: "Último filtro: <em>¿tengo permiso?</em>, ¿es lo mínimo? Revisa y solo entonces envíalo a la IA." },
+        ],
+        takeaway: {
+          title: "<em>Minimiza</em>, anonimiza, verifica permiso y <em>revisa</em> antes de enviar.",
+          text: "Verde se usa, amarillo se revisa, rojo nunca se carga. Ante la duda, no lo envíes.",
+        },
+      });
+
+      const s = T.stepAt;
+      const tl = T.tl;
+
+      // Analogía: tres fichas llegan a tres puertas y cada una reacciona distinto
+      tl.set([".house .chip", ".house .ask", ".house .padlock"], { opacity: 0 }, 0);
+      T.slide("@.house .door", T.analogyAt(.6), { y: 30, stagger: .15 });
+      T.slide("@.house .dlbl", T.analogyAt(1.0), { y: -16, stagger: .15 });
+      T.slide("@.house .chip", T.analogyAt(1.6), { y: 24, stagger: .2 });
+      // Verde: la puerta se abre y la ficha entra
+      T.to("@.door.g .leaf", T.analogyAt(2.7), { scaleX: .12, duration: .5 });
+      T.to("@.house .chip.g", T.analogyAt(3.0), { y: -150, opacity: 0, duration: .8 });
+      // Amarilla: se detiene y aparece la pregunta
+      T.to("@.house .chip.y", T.analogyAt(3.9), { y: -40, duration: .4 });
+      T.pop("@.house .ask", T.analogyAt(4.2));
+      // Roja: rebota contra el candado
+      T.pop("@.house .padlock", T.analogyAt(5.1));
+      tl.to(".house .chip.r", { keyframes: [{ y: -50, duration: .3, ease: "power2.out" }, { y: 0, duration: .35, ease: "bounce.out" }] }, T.analogyAt(5.4));
+      T.pulse("@.house .padlock", T.analogyAt(6.3), 1.15);
+
+      // Estados iniciales de la pizarra
+      tl.set(["#board .light", "#board .lbl", "#case", "#goal", "#safe", "#chk", "#ok", "#board .note", "#safe .mk"], { opacity: 0 }, 0);
+      tl.set("#case .cut", { scaleX: 0, transformOrigin: "0% 50%" }, 0);
+
+      // Paso 1 · Semáforo
+      T.pop(".light", s(0, .1));
+      T.to(".lamp.g", s(0, .6), { backgroundColor: "#45e0a8", boxShadow: "0 0 46px rgba(69,224,168,.8)", duration: .35 });
+      T.slide("#lbl-g", s(0, .7), { x: -24, y: 0 });
+      T.to(".lamp.y", s(0, 1.5), { backgroundColor: "#ffc45a", boxShadow: "0 0 46px rgba(255,196,90,.8)", duration: .35 });
+      T.slide("#lbl-y", s(0, 1.6), { x: -24, y: 0 });
+      T.to(".lamp.r", s(0, 2.4), { backgroundColor: "#ff5c78", boxShadow: "0 0 46px rgba(255,92,120,.8)", duration: .35 });
+      T.slide("#lbl-r", s(0, 2.5), { x: -24, y: 0 });
+      T.pulse(".light", s(0, 3.4), 1.04);
+
+      // Paso 2 · Marcar datos
+      T.slide("#case", s(1, .1), { x: 30, y: 0 });
+      T.to("#case .d.name, #case .d.phone, #case .d.org, #case .d.mail", s(1, .9), { backgroundColor: "rgba(255,196,90,.55)", duration: .3, stagger: .3 });
+      T.pulse(".lamp.y", s(1, 1.2), 1.12);
+      T.to("#case .d.med", s(1, 2.1), { backgroundColor: "rgba(255,92,120,.6)", duration: .3 });
+      T.pulse(".lamp.r", s(1, 2.2), 1.12);
+      T.slide("#note-red", s(1, 2.4), { x: -24, y: 0 });
+
+      // Paso 3 · Minimizar
+      T.pop("#goal", s(2, .2));
+      T.fadeOut("#note-red", s(2, .9));
+      T.to(".d.phone .cut, .d.org .cut, .d.med .cut", s(2, 1.2), { scaleX: 1, duration: .4, stagger: .4 });
+      T.to("#case .d.phone, #case .d.org, #case .d.med", s(2, 1.3), { opacity: .4, duration: .4, stagger: .4 });
+      T.pulse("#goal", s(2, 3.2), 1.05);
+
+      // Paso 4 · Anonimizar
+      T.draw(".w1", s(3, .1), .4);
+      T.slide("#safe", s(3, .3), { x: 40, y: 0 });
+      T.to(".d.name .cut, .d.mail .cut", s(3, .9), { scaleX: 1, duration: .4, stagger: .3 });
+      T.to("#case .d.name, #case .d.mail", s(3, 1.0), { opacity: .4, duration: .4, stagger: .3 });
+      T.pop("#safe .mk", s(3, 1.3), .45);
+      T.slide("#note-anon", s(3, 2.4), { y: 20 });
+
+      // Paso 5 · Revisar y enviar
+      T.slide("#chk", s(4, .1), { x: -20, y: 0 });
+      T.tick("#chk li i", s(4, .8), .5);
+      T.glow("#safe", s(4, 2.4), "#45e0a8");
+      T.check("#ok", s(4, 2.6));
+      T.pulse(".lamp.g", s(4, 2.8), 1.14);
+      T.fadeOut("#note-anon", s(4, 3.0));
+
+      window.__timelines["c1p2"] = T.tl;
+    </script>
+  </body>
+</html>

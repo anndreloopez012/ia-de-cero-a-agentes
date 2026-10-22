@@ -3,8 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build:content": "node scripts/build-content.mjs",
+    "build:content": "node scripts/build-content.mjs && node scripts/build-explainers.mjs",
+    "render:explainers": "node motion/point-explainers/render-all.mjs",
     "check": "node scripts/validate-site.mjs",
-    "serve": "npx --yes serve site"
+    "serve": "npx --yes http-server site -p 8817 -c-1"
   }
 }

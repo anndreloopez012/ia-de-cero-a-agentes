@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>C2·P4 · Loop de mejora con cambio único</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared/teacher.css" />
+    <script src="shared/teacher.js"></script>
+    <style>
+      /* Pizarra: el ciclo arriba; versión 0.1 y 0.2 lado a lado; bitácora a la derecha */
+      .loop { position: absolute; left: 0; top: 0; width: 1776px; height: 58px; display: flex; gap: 30px; }
+      .chip { position: relative; flex: none; height: 58px; display: flex; align-items: center; padding: 0 18px; border-radius: 16px; border: 2px solid rgba(185, 151, 255, .4); background: rgba(255, 255, 255, .05); font-size: 26px; font-weight: 750; color: var(--ink-soft); white-space: nowrap; }
+      .chip + .chip::before { content: ""; position: absolute; left: -24px; top: 23px; width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 12px solid rgba(185, 151, 255, .7); }
+      #back { left: 0; top: 0; }
+      #back-lb { left: 820px; top: 66px; font-size: 26px; color: var(--lavender); }
+
+      .ver { position: absolute; top: 112px; width: 700px; height: 468px; padding: 20px 22px; border-radius: 26px; border: 2px solid var(--line); background: linear-gradient(155deg, rgba(41, 29, 63, .97), rgba(13, 10, 19, .97)); box-shadow: 0 22px 50px rgba(0, 0, 0, .38); }
+      #v1 { left: 0; } #v2 { left: 750px; }
+      .ver .hd { display: flex; align-items: center; gap: 16px; height: 50px; }
+      .ver .hd b { height: 48px; padding: 0 18px; border-radius: 14px; background: var(--lavender); color: #1d0f3b; font-family: "Bricolage"; font-weight: 800; font-size: 30px; line-height: 48px; }
+      #v2 .hd b { background: var(--cyan); color: #032633; }
+      .ver .hd span { font-size: 26px; font-weight: 650; color: var(--ink-soft); }
+      .ver .rows { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+      .ver .rw { position: relative; height: 50px; display: flex; align-items: center; gap: 14px; padding: 0 12px; border-radius: 12px; background: rgba(255, 255, 255, .05); font-size: 26px; font-weight: 650; color: var(--ink); white-space: nowrap; }
+      .ver .rw i { flex: none; width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; font-style: normal; font-family: "Bricolage"; font-weight: 800; font-size: 26px; color: #050507; }
+      .rw.R i { background: #b997ff; } .rw.O i { background: #5bdcff; } .rw.C i { background: #45e0a8; } .rw.A i { background: #ffc45a; } .rw.V i { background: #ff7ab6; }
+      #v2 .rw.A { border: 2px solid var(--yellow); background: rgba(255, 196, 90, .14); }
+      .rw .chg { position: absolute; right: 10px; top: 8px; height: 34px; padding: 0 12px; border-radius: 17px; background: var(--yellow); color: #2a1b00; font-size: 26px; font-weight: 850; line-height: 34px; }
+      .ver .res { position: absolute; left: 22px; right: 22px; bottom: 20px; height: 70px; display: flex; align-items: center; gap: 14px; padding: 0 16px; border-radius: 16px; font-size: 27px; font-weight: 750; }
+      .ver .res small { font-size: 26px; font-weight: 850; text-transform: uppercase; letter-spacing: .06em; }
+      #res1 { border: 2px solid var(--red); background: rgba(255, 92, 120, .12); color: #ffd3db; } #res1 small { color: var(--red); }
+      #res2 { border: 2px solid var(--green); background: rgba(69, 224, 168, .12); color: #c9ffe9; } #res2 small { color: var(--green); }
+      .score { position: absolute; top: 122px; height: 48px; padding: 0 18px; border-radius: 24px; font-size: 26px; font-weight: 850; line-height: 48px; }
+      #sc1 { left: 474px; background: rgba(255, 92, 120, .2); color: #ffc0cc; border: 2px solid var(--red); }
+      #sc2 { left: 1224px; background: rgba(69, 224, 168, .2); color: #b5ffe2; border: 2px solid var(--green); }
+
+      /* Bitácora: hipótesis, resultado y decisión */
+      #log { left: 1500px; top: 112px; width: 276px; height: 410px; padding: 20px 20px; gap: 6px; }
+      #log h3 { font-size: 32px; }
+      #log .k { font-size: 26px; font-weight: 850; color: var(--cyan); margin-top: 6px; }
+      #log p { font-size: 26px; line-height: 1.22; color: var(--ink); }
+
+      /* Analogía: dos versiones de la misma receta, solo cambia la sal */
+      .rc { position: absolute; top: 56px; width: 320px; height: 420px; padding: 22px 22px; border-radius: 24px; background: #f6f2ff; color: #1b1426; box-shadow: 0 22px 44px rgba(0, 0, 0, .45); }
+      .rc1 { left: 44px; } .rc2 { left: 396px; }
+      .rc h4 { font-family: "Bricolage"; font-weight: 750; font-size: 36px; line-height: 1; }
+      .rc h4 small { display: block; margin-top: 6px; font-family: "Figtree"; font-size: 26px; font-weight: 750; color: #7a3cff; }
+      .rc ul { margin-top: 18px; display: flex; flex-direction: column; gap: 10px; }
+      .rc li { list-style: none; height: 52px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; border-radius: 12px; background: #e9e2f8; font-size: 27px; font-weight: 700; }
+      .rc li b { font-weight: 850; }
+      .rc2 li.salt { background: #ffd98f; outline: 3px solid #c98400; }
+      .verdict { position: absolute; top: 500px; width: 320px; height: 64px; display: grid; place-items: center; border-radius: 32px; font-size: 28px; font-weight: 850; }
+      .vd1 { left: 44px; background: rgba(255, 92, 120, .2); border: 3px solid var(--red); color: #ffc0cc; }
+      .vd2 { left: 396px; background: rgba(69, 224, 168, .2); border: 3px solid var(--green); color: #b5ffe2; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="c2p4" data-start="0" data-duration="40" data-width="1920" data-height="1080" data-fps="30">
+      <div id="board">
+        <div class="loop">
+          <div class="chip hide" id="k1">Definir resultado</div>
+          <div class="chip hide" id="k2">Versión 0.1</div>
+          <div class="chip hide" id="k3">Probar</div>
+          <div class="chip hide" id="k4">Detectar una falla</div>
+          <div class="chip hide" id="k5">Cambiar 1 variable</div>
+          <div class="chip hide" id="k6">Probar igual</div>
+          <div class="chip hide" id="k7">Documentar</div>
+        </div>
+        <svg class="wires" viewBox="0 0 1776 600"><path class="wb dash" pathLength="1" d="M1700 60C1700 100 1660 104 1600 104H760C700 104 676 98 676 66" /><path class="wh" pathLength="1" d="M662 80L676 64L690 80" /></svg>
+        <div class="say hide" id="back-lb">se repite hasta cumplir la rúbrica</div>
+
+        <div class="ver hide" id="v1" data-layout-allow-overlap>
+          <div class="hd"><b>Versión 0.1</b><span>7 días de estudio</span></div>
+          <div class="rows">
+            <div class="rw R"><i>R</i>Tutor paciente</div>
+            <div class="rw O"><i>O</i>Plan de estudio de 7 días</div>
+            <div class="rw C"><i>C</i>Principiante · 30 min al día</div>
+            <div class="rw A"><i>A</i>Tabla: día, objetivo, práctica</div>
+            <div class="rw V"><i>V</i>Sin herramientas pagadas</div>
+          </div>
+          <div class="res hide" id="res1"><small>Falla</small>Día 3: tres prácticas, 2 horas</div>
+        </div>
+        <div class="ver hide" id="v2" data-layout-allow-overlap>
+          <div class="hd"><b>Versión 0.2</b><span>Misma entrada</span></div>
+          <div class="rows">
+            <div class="rw R"><i>R</i>Tutor paciente</div>
+            <div class="rw O"><i>O</i>Plan de estudio de 7 días</div>
+            <div class="rw C"><i>C</i>Principiante · 30 min al día</div>
+            <div class="rw A"><i>A</i>+ 1 acción por fila, máx. 30 min<span class="chg hide">Cambio</span></div>
+            <div class="rw V"><i>V</i>Sin herramientas pagadas</div>
+          </div>
+          <div class="res hide" id="res2"><small>Mejora</small>Día 3: una práctica, 25 min</div>
+        </div>
+        <div class="score hide" id="sc1">3 de 7 días</div>
+        <div class="score hide" id="sc2">7 de 7 días</div>
+
+        <div class="card hide" id="log"><h3>Bitácora</h3>
+          <div class="k lg1">Hipótesis</div><p class="lg1">Si cambio A, el plan será más ejecutable.</p>
+          <div class="k lg2">Resultado</div><p class="lg2">De 3/7 a 7/7 días ejecutables.</p>
+          <span class="tag green lg3" style="position:relative;margin-top:10px" data-icon="check" data-icon-class="ic">Conservar</span>
+        </div>
+      </div>
+    </div>
+    <script>
+      const T = Teacher.setup({
+        cls: 2, point: 4,
+        title: "¿Cómo sé qué cambio <em>mejoró</em> mi prompt?",
+        headTitle: "Loop de mejora: cambiar una variable",
+        question: "Si cambias todo a la vez, la respuesta puede mejorar… y no sabrás por qué.",
+        analogy: {
+          art: `<div class="rc rc1"><h4>Sopa<small>versión 1</small></h4><ul><li>Agua <b>1 litro</b></li><li class="salt">Sal <b>2 cdtas</b></li><li>Fuego <b>medio</b></li><li>Papa <b>2</b></li></ul></div>
+            <div class="rc rc2"><h4>Sopa<small>versión 2</small></h4><ul><li>Agua <b>1 litro</b></li><li class="salt">Sal <b>1 cdta</b></li><li>Fuego <b>medio</b></li><li>Papa <b>2</b></li></ul></div>
+            <div class="verdict vd1">Muy salada</div><div class="verdict vd2">En su punto</div>`,
+          title: "Corregir una receta, una cosa a la vez",
+          text: "Si la sopa salió salada y cambias sal, fuego y agua juntos, <em>no sabrás qué la arregló</em>. Cambia solo la sal y vuelve a probar.",
+        },
+        steps: [
+          { label: "El loop", caption: "Mejorar es un ciclo: probar, encontrar <em>una falla</em>, ajustar y volver a probar." },
+          { label: "Versión 0.1", caption: "La 0.1 arma días de <em>2 horas</em>: es la única falla que vamos a atacar." },
+          { label: "Un solo cambio", caption: "En la 0.2 cambia <em>solo Acuerdos</em>: una acción por fila y máximo 30 minutos." },
+          { label: "Comparar y decidir", caption: "Misma entrada y mismo criterio: 3 de 7 días contra <em>7 de 7</em>. El cambio se conserva." },
+        ],
+        takeaway: {
+          title: "Cambia <em>una sola variable</em> por versión y sabrás qué funcionó.",
+          text: "Definir → probar → una falla → un cambio → probar igual → documentar.",
+        },
+      });
+
+      const s = T.stepAt;
+      const A = "#5bdcff";
+      // Analogía: la versión 1 sale salada; la 2 solo cambia la sal
+      T.tl.set(".t-analogy-art .rc2 .salt", { backgroundColor: "#e9e2f8" }, 0);
+      T.slide("@.t-analogy-art .rc1", T.analogyAt(.5), { x: -30, y: 0 });
+      T.pop("@.t-analogy-art .vd1", T.analogyAt(1.5));
+      T.slide("@.t-analogy-art .rc2", T.analogyAt(2.6), { x: -60, y: 0 });
+      T.to("@.t-analogy-art .rc2 .salt", T.analogyAt(3.6), { backgroundColor: "#ffd98f", duration: .4 });
+      T.pulse("@.t-analogy-art .rc2 .salt", T.analogyAt(3.7), 1.08);
+      T.pop("@.t-analogy-art .vd2", T.analogyAt(4.6));
+
+      // Ayudante: marca un paso del ciclo como activo
+      const on = (k, t) => T.to(k, t, { backgroundColor: "rgba(91,220,255,.18)", borderColor: A, color: "#e6f9ff", duration: .3 });
+
+      // Paso 1 · El ciclo completo
+      T.slide(".chip", s(0, .1), { x: -20, y: 0, stagger: .2 });
+      T.draw(".wb", s(0, 1.7), 1.0);
+      T.draw(".wh", s(0, 2.6), .3);
+      T.fadeIn("#back-lb", s(0, 2.4), .4);
+      on("#k1", s(0, 3.0));
+
+      // Paso 2 · Versión 0.1 y su falla
+      on("#k2", s(1, 0)); T.slide("#v1", s(1, .1), { y: 26 });
+      on("#k3", s(1, 1.3)); T.tl.set("#board #v1 .rw", { opacity: 0 }, 0);
+      T.slide("#v1 .rw", s(1, .5), { x: -16, y: 0, stagger: .12 });
+      on("#k4", s(1, 2.0)); T.pop("#res1", s(1, 2.0));
+      T.pop("#sc1", s(1, 2.7)); T.pulse("#res1", s(1, 3.3), 1.04);
+
+      // Paso 3 · Un solo cambio: la 0.2 nace encima de la 0.1 y se separa
+      on("#k5", s(2, 0));
+      T.fromTo("#v2", s(2, .1), { opacity: 0, x: -750 }, { opacity: .55, x: -750, duration: .4 });
+      T.to("#v2", s(2, .7), { x: 0, opacity: 1, duration: .9, ease: "power3.inOut" });
+      T.glow("#v2 .rw.A", s(2, 1.7), "#ffc45a");
+      T.pop("#v2 .chg", s(2, 1.8));
+      T.pop("#log", s(2, 2.3));
+      T.tl.set(["#board #log .lg1", "#board #log .lg2", "#board #log .lg3"], { opacity: 0 }, 0);
+      T.slide("#log .lg1", s(2, 2.6), { y: 14, stagger: .2 });
+
+      // Paso 4 · Probar igual, comparar y documentar
+      on("#k6", s(3, 0)); T.pop("#res2", s(3, .3));
+      T.pop("#sc2", s(3, 1.0));
+      on("#k7", s(3, 1.6));
+      T.slide("#log .lg2", s(3, 1.6), { y: 14, stagger: .2 });
+      T.pop("#log .lg3", s(3, 2.4));
+      T.glow("#log", s(3, 2.6), "#45e0a8");
+
+      window.__timelines["c2p4"] = T.tl;
+    </script>
+  </body>
+</html>

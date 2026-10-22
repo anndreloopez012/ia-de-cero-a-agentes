@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>C4·P2 · Diseñar un loop con límite y salida</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared/teacher.css" />
+    <script src="shared/teacher.js"></script>
+    <style>
+      /* Pizarra: rueda del loop con contador, presupuesto, causas de pausa y dos salidas */
+      #interp { left: 0; top: 0; width: 300px; height: 200px; padding: 22px 24px; gap: 6px; }
+      #interp h3 { font-size: 34px; }
+      .node { position: absolute; z-index: 4; display: flex; align-items: center; justify-content: center; gap: 12px; width: 224px; height: 80px; border-radius: 22px; border: 2px solid var(--line); background: linear-gradient(155deg, rgba(41, 29, 63, .97), rgba(13, 10, 19, .97)); font-family: "Bricolage"; font-weight: 700; font-size: 32px; color: var(--ink); box-shadow: 0 16px 34px rgba(0, 0, 0, .4); }
+      .node .ic { width: 36px; height: 36px; stroke-width: 7; color: var(--lavender); }
+      #nd-plan { left: 448px; top: 30px; } #nd-act { left: 218px; top: 260px; } #nd-obs { left: 448px; top: 490px; } #nd-adj { left: 678px; top: 260px; }
+      #counter { position: absolute; left: 452px; top: 192px; width: 216px; height: 216px; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 122, 182, .16), rgba(13, 10, 19, .9) 70%); border: 3px solid var(--accent); }
+      #counter small { font-weight: 800; font-size: 26px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); }
+      .cnt { position: relative; width: 150px; height: 74px; }
+      .cnt b { position: absolute; inset: 0; display: flex; align-items: baseline; justify-content: center; font-family: "Bricolage"; font-weight: 800; font-size: 66px; line-height: 1; color: var(--ink); }
+      .cnt b span { color: var(--ink-mute); font-size: 40px; margin-left: 4px; }
+      .pips { display: flex; gap: 10px; }
+      .pips i { width: 22px; height: 22px; border-radius: 50%; border: 3px solid var(--accent); }
+      #orbit { position: absolute; left: 560px; top: 300px; width: 0; height: 0; z-index: 2; }
+      #orbit i { position: absolute; left: -22px; top: -252px; width: 44px; height: 44px; border-radius: 50%; background: var(--accent); border: 4px solid #fff; box-shadow: 0 0 30px rgba(255, 122, 182, .9); }
+
+      #done { left: 960px; top: 10px; width: 370px; height: 206px; padding: 22px 26px; gap: 6px; }
+      #escal { left: 960px; top: 252px; width: 370px; height: 300px; padding: 22px 26px; gap: 8px; }
+      #done h3, #escal h3 { font-size: 36px; }
+      #escal .paper { position: relative; font-family: "Figtree", sans-serif; font-weight: 650; font-size: 27px; line-height: 1.3; padding: 16px 20px; margin-top: 6px; }
+
+      #budget { left: 1380px; top: 0; width: 396px; height: 196px; padding: 22px 26px; gap: 10px; }
+      #budget h3 { font-size: 34px; }
+      .bud-bar { position: relative; width: 100%; height: 40px; border-radius: 12px; background: rgba(255, 255, 255, .07); overflow: hidden; }
+      .bud-bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; border-radius: 12px; background: linear-gradient(90deg, #5bdcff, #45e0a8); transform-origin: 0 50%; }
+      .bud-lbl { position: relative; width: 100%; height: 34px; }
+      .bud-lbl span { position: absolute; left: 0; top: 0; font-size: 28px; font-weight: 750; color: var(--ink); white-space: nowrap; }
+      #pause { left: 1380px; top: 218px; width: 396px; height: 296px; padding: 22px 26px; gap: 14px; }
+      #pause h3 { font-size: 34px; }
+      #pause .checklist { position: relative; gap: 12px; }
+      #pause .checklist li { font-size: 27px; gap: 14px; }
+      #pause .checklist li i { width: 40px; height: 40px; }
+
+      /* Analogía: el horno con temporizador */
+      .ov { position: absolute; left: 110px; top: 54px; width: 540px; height: 400px; border-radius: 34px; background: linear-gradient(180deg, #3a3150, #241d33); border: 3px solid rgba(255, 255, 255, .18); box-shadow: 0 24px 50px rgba(0, 0, 0, .5); }
+      .ov-top { position: absolute; left: 24px; right: 24px; top: 20px; height: 96px; display: flex; align-items: center; gap: 22px; }
+      .ov-dial { position: relative; width: 92px; height: 92px; flex: none; }
+      .ov-dial svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+      .ov-dial circle { fill: none; stroke-width: 12; }
+      .ov-dial .bg { stroke: rgba(255, 255, 255, .12); }
+      .ov-dial .fg { stroke: var(--yellow); stroke-linecap: round; }
+      .ov-top b { font-family: "Bricolage"; font-weight: 750; font-size: 34px; color: #ffe2ad; }
+      .ov-top span { display: block; font-size: 26px; font-weight: 700; color: var(--ink-soft); }
+      .ov-win { position: absolute; left: 34px; right: 34px; top: 132px; bottom: 30px; border-radius: 22px; background: radial-gradient(ellipse at 50% 100%, rgba(255, 160, 60, .55), rgba(40, 14, 4, .95) 70%); border: 4px solid rgba(255, 255, 255, .2); overflow: hidden; }
+      .ov-cake { position: absolute; left: 150px; bottom: 34px; width: 172px; height: 100px; border-radius: 20px 20px 8px 8px; background: linear-gradient(180deg, #e7a95a, #a8692c); transform-origin: 50% 100%; }
+      .ov-pick { position: absolute; left: 232px; top: -10px; width: 8px; height: 120px; border-radius: 4px; background: #f6e2c2; }
+      .ov-tag { position: absolute; height: 54px; padding: 0 22px; display: flex; align-items: center; border-radius: 28px; font-weight: 800; font-size: 27px; white-space: nowrap; }
+      .ov-tag.g { left: 70px; top: 492px; background: rgba(69, 224, 168, .18); border: 2px solid var(--green); color: #b5ffe2; }
+      .ov-tag.y { left: 360px; top: 492px; background: rgba(255, 196, 90, .18); border: 2px solid var(--yellow); color: #ffe2ad; }
+      .ov-check { position: absolute; left: 270px; top: 170px; height: 48px; padding: 0 16px; display: flex; align-items: center; border-radius: 24px; background: rgba(255, 255, 255, .12); color: #fff; font-weight: 800; font-size: 26px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="c4p2" data-start="0" data-duration="44" data-width="1920" data-height="1080" data-fps="30">
+      <div id="board">
+        <svg class="wires" viewBox="0 0 1776 600">
+          <path class="w-in" pathLength="1" d="M300 70H440" />
+          <path class="w-ring" pathLength="1" d="M560 70A230 230 0 0 0 330 300A230 230 0 0 0 560 530A230 230 0 0 0 790 300A230 230 0 0 0 560 70" />
+          <path class="w-done green" pathLength="1" d="M902 288C930 288 920 113 952 113" />
+          <path class="w-esc yellow" pathLength="1" d="M902 312C930 312 920 400 952 400" />
+        </svg>
+
+        <div class="card accent hide" id="interp"><span data-icon="search" data-icon-class="ic sm"></span><h3>Interpretar</h3><p>Plan de estudio de 4 semanas</p></div>
+        <div class="node hide" id="nd-plan"><span data-icon="map" data-icon-class="ic"></span>Planear</div>
+        <div class="node hide" id="nd-act"><span data-icon="bolt" data-icon-class="ic"></span>Actuar</div>
+        <div class="node hide" id="nd-obs"><span data-icon="eye" data-icon-class="ic"></span>Observar</div>
+        <div class="node hide" id="nd-adj"><span data-icon="sliders" data-icon-class="ic"></span>Ajustar</div>
+        <div class="hide" id="counter"><small>Vuelta</small>
+          <div class="cnt"><b class="c0">0<span>/4</span></b><b class="c1">1<span>/4</span></b><b class="c2">2<span>/4</span></b><b class="c3">3<span>/4</span></b><b class="c4">4<span>/4</span></b></div>
+          <div class="pips"><i></i><i></i><i></i><i></i></div></div>
+        <div class="hide" id="orbit"><i></i></div>
+
+        <div class="card green hide" id="done"><h3>Terminar</h3><p>Si cumple el criterio: entrega el plan, las trazas y lo pendiente.</p></div>
+        <div class="card yellow hide" id="escal"><h3>Escalar</h3><p>Pausa y le pregunta a la persona:</p>
+          <div class="paper">No puedo seguir: falta la fecha del examen. ¿La confirmas?</div></div>
+
+        <div class="card cyan hide" id="budget"><h3>Presupuesto</h3><div class="bud-bar"><i></i></div>
+          <div class="bud-lbl"><span class="b1">Quedan 12 de 20 min</span><span class="b2">Quedan 8 de 20 min</span><span class="b3">Quedan 4 de 20 min</span></div></div>
+        <div class="card hide" id="pause"><h3>Pausa si…</h3>
+          <ul class="checklist"><li><i></i>Falta un dato clave</li><li><i></i>Falla una herramienta</li><li><i></i>Acción riesgosa</li><li><i></i>Presupuesto agotado</li></ul></div>
+      </div>
+    </div>
+    <script>
+      // Casillas con su palomita (la checklist del kit espera un svg dentro de <i>)
+      document.querySelectorAll("#pause .checklist li i").forEach((el) => { el.innerHTML = '<svg viewBox="0 0 100 100"><path d="M18 52l21 21 44-49"/></svg>'; });
+
+      const T = Teacher.setup({
+        cls: 4, point: 2,
+        title: "¿Cómo sabe un agente <em>cuándo parar</em>?",
+        headTitle: "Diseñar un loop con límite y salida",
+        question: "Un agente trabaja en ciclos. Sin un máximo, un presupuesto y una salida clara, puede girar para siempre.",
+        analogy: {
+          art: `<div class="ov"><div class="ov-top"><div class="ov-dial"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="40"/><circle class="fg" cx="50" cy="50" r="40" pathLength="1"/></svg></div>
+              <div><b>Máx. 40 min</b><span>Temporizador</span></div></div>
+              <div class="ov-win"><div class="ov-cake"></div><div class="ov-pick"></div><span class="ov-check">Revisar</span></div></div>
+            <span class="ov-tag g">Sale listo</span><span class="ov-tag y">Suena la alarma</span>`,
+          title: "Un horno con temporizador",
+          text: "Horneas, revisas con un palillo y ajustas. El <em>temporizador</em> pone el máximo: el pastel sale listo o suena la alarma y <em>alguien decide</em>.",
+        },
+        steps: [
+          { label: "La rueda", caption: "Primero interpreta el objetivo. Luego gira: <em>planear, actuar, observar y ajustar</em>." },
+          { label: "Contador", caption: "Cada vuelta suma al contador. El máximo se fija antes de empezar: <em>cuatro ciclos</em>." },
+          { label: "Presupuesto", caption: "Cada vuelta también gasta <em>presupuesto</em> de tiempo o costo. Si se agota, se detiene." },
+          { label: "Cuándo pausar", caption: "En la vuelta 4 observa que <em>falta la fecha</em> del examen: es motivo de pausa." },
+          { label: "Terminar o escalar", caption: "Toda vuelta acaba en una salida: <em>terminar</em> con evidencia o <em>escalar</em> a una persona." },
+        ],
+        takeaway: {
+          title: "Un buen loop sabe <em>cuándo parar</em>: termina o <em>escala</em>.",
+          text: "Máximo de ciclos, presupuesto y causas de pausa se definen antes de empezar, no durante.",
+        },
+      });
+
+      const s = T.stepAt;
+      // Analogía: el pastel sube, el palillo revisa y el temporizador se va gastando
+      T.tl.fromTo(".ov-dial .fg", { strokeDasharray: 1, strokeDashoffset: 0 }, { strokeDashoffset: .92, duration: 7, ease: "none" }, T.analogyAt(.4));
+      T.tl.fromTo(".ov-cake", { scaleY: .45 }, { scaleY: 1, duration: 3.2, ease: "power1.inOut" }, T.analogyAt(.6));
+      T.tl.fromTo(".ov-pick", { y: -140 }, { keyframes: [{ y: 30, duration: .6, ease: "power2.out" }, { y: 30, duration: .5 }, { y: -140, duration: .5, ease: "power2.in" }] }, T.analogyAt(2.4));
+      T.pop("@.ov-check", T.analogyAt(2.6));
+      T.fadeOut("@.ov-check", T.analogyAt(4.6));
+      T.pop("@.ov-tag.g", T.analogyAt(5.0));
+      T.pop("@.ov-tag.y", T.analogyAt(5.6));
+      T.pulse("@.ov-dial", T.analogyAt(6.6), 1.15);
+
+      T.tl.set(".wires path", { strokeDasharray: 1, strokeDashoffset: 1 }, 0);
+      T.tl.set(["#counter .cnt b", "#budget .bud-lbl span"], { opacity: 0 }, 0);
+      T.tl.set("#counter .c0", { opacity: 1 }, 0);
+
+      // Cambia el número del contador (los números están apilados)
+      const count = (n, t) => {
+        T.tl.to(`#counter .c${n - 1}`, { opacity: 0, y: -24, duration: .25 }, t);
+        T.tl.fromTo(`#counter .c${n}`, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: .3, ease: "back.out(2)" }, t + .1);
+        T.tl.to(`#counter .pips i:nth-child(${n})`, { backgroundColor: "#ff7ab6", duration: .25 }, t + .1);
+      };
+      // Una vuelta completa en sentido antihorario: planear → actuar → observar → ajustar
+      const NODES = ["#nd-act", "#nd-obs", "#nd-adj", "#nd-plan"];
+      const lap = (k, t, dur = 1.6, quarters = 4) => {
+        T.tl.to("#orbit", { rotation: -90 * ((k - 1) * 4 + quarters), duration: dur * quarters / 4, ease: "none" }, t);
+        for (let q = 0; q < quarters; q++) T.pulse(NODES[q], t + dur * (q + 1) / 4 - .2, 1.08);
+      };
+
+      // Paso 1 · La rueda
+      T.pop("#interp", s(0, .1));
+      T.draw(".w-in", s(0, .7), .5);
+      T.draw(".w-ring", s(0, 1.0), 1.2);
+      T.pop("#nd-plan, #nd-act, #nd-obs, #nd-adj", s(0, 1.2), .2);
+      T.pop("#counter", s(0, 2.6));
+
+      // Paso 2 · Contador: dos vueltas, el contador sube
+      T.pop("#orbit", s(1, .05));
+      count(1, s(1, .25)); lap(1, s(1, .3));
+      count(2, s(1, 2.05)); lap(2, s(1, 2.1));
+
+      // Paso 3 · Presupuesto: cada vuelta gasta
+      T.slide("#budget", s(2, .1), { y: 20 });
+      T.tl.set("#budget .bud-bar i", { scaleX: .6 }, 0);
+      T.fadeIn("#budget .b1", s(2, .4), .3);
+      count(3, s(2, 1.2)); lap(3, s(2, 1.25));
+      T.to("#budget .bud-bar i", s(2, 1.3), { scaleX: .4, duration: 1.5, ease: "none" });
+      T.fadeOut("#budget .b1", s(2, 2.75), 0, .2);
+      T.fadeIn("#budget .b2", s(2, 2.9), .3);
+      T.pulse("#budget", s(2, 3.2), 1.04);
+
+      // Paso 4 · Cuándo pausar: en la vuelta 4 observa que falta un dato
+      count(4, s(3, .1)); lap(4, s(3, .15), 1.6, 2);
+      T.to("#budget .bud-bar i", s(3, .15), { scaleX: .2, duration: .8, ease: "none" });
+      T.fadeOut("#budget .b2", s(3, .8), 0, .2);
+      T.fadeIn("#budget .b3", s(3, .95), .3);
+      T.slide("#pause", s(3, .9), { y: 20 });
+      T.tick("#pause .checklist li i", s(3, 1.6), .25, "#5bdcff");
+      T.to("#pause .checklist li:first-child i", s(3, 2.9), { backgroundColor: "#ffc45a", borderColor: "#ffc45a", duration: .3 });
+      T.glow("#nd-obs", s(3, 2.9), "#ffc45a");
+      T.pulse("#pause .checklist li:first-child", s(3, 3.2), 1.06);
+
+      // Paso 5 · Terminar o escalar
+      T.to("#orbit", s(4, .05), { rotation: -90 * 15, duration: .5, ease: "power1.inOut" });
+      T.draw(".w-done, .w-esc", s(4, .5), .5, .2);
+      T.pop("#done", s(4, .8));
+      T.pop("#escal", s(4, 1.5));
+      T.fadeOut("#orbit", s(4, 2.2), 0, .3);
+      T.glow("#escal", s(4, 2.3), "#ffc45a");
+      T.pulse("#escal .paper", s(4, 3.1), 1.04);
+
+      window.__timelines["c4p2"] = T.tl;
+    </script>
+  </body>
+</html>
