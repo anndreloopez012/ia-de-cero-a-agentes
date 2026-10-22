@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>C1·P3 · Configurar ChatGPT, Claude y Gemini</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared/teacher.css" />
+    <script src="shared/teacher.js"></script>
+    <style>
+      /* Pizarra: tablero de ajustes (4 decisiones × 3 plataformas) + pasaporte que se llena */
+      .ph { position: absolute; top: 0; width: 280px; height: 60px; display: grid; place-items: center; border-radius: 18px; background: rgba(185, 151, 255, .12); border: 2px solid var(--line); font-family: "Bricolage"; font-weight: 750; font-size: 32px; }
+      #ph1 { left: 312px; } #ph2 { left: 602px; } #ph3 { left: 892px; }
+      .rl { position: absolute; left: 0; width: 300px; height: 116px; display: flex; align-items: center; gap: 14px; padding: 0 18px; border-radius: 20px; background: rgba(122, 60, 255, .16); border: 2px solid var(--line); }
+      .rl .ic { width: 42px; height: 42px; color: var(--accent); }
+      .rl b { font-family: "Bricolage"; font-weight: 750; font-size: 29px; line-height: 1.08; }
+      .cell { position: absolute; width: 280px; height: 116px; border-radius: 20px; background: linear-gradient(155deg, rgba(41, 29, 63, .95), rgba(13, 10, 19, .95)); border: 2px solid rgba(185, 151, 255, .22); }
+      .cell .nm { position: absolute; left: 18px; top: 10px; font-size: 26px; font-weight: 700; color: var(--ink-soft); white-space: nowrap; }
+      .cell .switch { left: 18px; top: 52px; }
+      .cell .tag { left: 18px; top: 54px; height: 48px; padding: 0 18px; }
+      .r1 { top: 74px; } .r2 { top: 200px; } .r3 { top: 326px; } .r4 { top: 452px; }
+      .c1 { left: 312px; } .c2 { left: 602px; } .c3 { left: 892px; }
+
+      #pass { left: 1236px; top: 0; width: 540px; height: 508px; align-items: stretch; gap: 14px; padding: 24px 30px; }
+      #pass h3 { font-size: 34px; }
+      .pp { display: flex; flex-direction: column; gap: 2px; padding-left: 18px; border-left: 5px solid var(--green); }
+      .pp b { font-size: 27px; font-weight: 850; color: #b5ffe2; }
+      .pp span { font-size: 26px; line-height: 1.25; color: var(--ink-soft); }
+      .pp-rule { margin-top: auto; display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 16px; background: rgba(255, 196, 90, .12); border: 2px dashed rgba(255, 196, 90, .6); font-size: 26px; font-weight: 750; color: #ffe2ad; }
+      .pp-rule .ic { width: 34px; height: 34px; color: var(--yellow); }
+
+      /* Analogía: tablero eléctrico, solo se encienden los circuitos que se usan */
+      .breakers { position: absolute; left: 140px; top: 46px; width: 480px; height: 528px; border-radius: 30px; background: #15111f; border: 4px solid rgba(185, 151, 255, .45); box-shadow: inset 0 0 0 10px rgba(255, 255, 255, .03); }
+      .breakers .title { position: absolute; left: 0; right: 0; top: 22px; text-align: center; font-family: "Bricolage"; font-weight: 750; font-size: 30px; color: var(--ink-soft); }
+      .brk { position: absolute; width: 190px; height: 210px; border-radius: 20px; background: rgba(255, 255, 255, .05); border: 2px solid rgba(185, 151, 255, .2); }
+      .brk.b1 { left: 40px; top: 84px; } .brk.b2 { left: 250px; top: 84px; } .brk.b3 { left: 40px; top: 308px; } .brk.b4 { left: 250px; top: 308px; }
+      .brk .track { position: absolute; left: 30px; top: 22px; width: 60px; height: 124px; border-radius: 16px; background: #0b0910; border: 2px solid rgba(255, 255, 255, .14); }
+      .brk .knob { position: absolute; left: 4px; top: 64px; width: 48px; height: 52px; border-radius: 12px; background: #6f6680; }
+      .brk .led { position: absolute; left: 122px; top: 64px; width: 34px; height: 34px; border-radius: 50%; background: #2b2338; border: 2px solid rgba(255, 255, 255, .15); }
+      .brk span { position: absolute; left: 0; right: 0; bottom: 14px; text-align: center; font-weight: 800; font-size: 27px; }
+      .brk em { position: absolute; left: 112px; top: 106px; font-style: normal; font-weight: 800; font-size: 26px; color: var(--ink-mute); }
+      .brk em.on { color: var(--green); opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="c1p3" data-start="0" data-duration="40" data-width="1920" data-height="1080" data-fps="30">
+      <div id="board">
+        <div class="ph" id="ph1">ChatGPT</div><div class="ph" id="ph2">Claude</div><div class="ph" id="ph3">Gemini</div>
+
+        <div class="rl r1" data-icon="sliders"><b>Instrucciones</b></div>
+        <div class="cell r1 c1"><span class="nm">Personalización</span><div class="switch s11"><i></i></div></div>
+        <div class="cell r1 c2"><span class="nm">Preferencias</span><div class="switch s12"><i></i></div></div>
+        <div class="cell r1 c3"><span class="nm">Instrucciones</span><div class="switch s13"><i></i></div></div>
+
+        <div class="rl r2" data-icon="brain"><b>Memoria</b></div>
+        <div class="cell r2 c1"><span class="nm">Memoria</span><div class="switch s21 on"><i></i></div></div>
+        <div class="cell r2 c2"><span class="nm">Memoria</span><span class="tag yellow t22" data-icon="search" data-icon-class="ic">Por revisar</span></div>
+        <div class="cell r2 c3"><span class="nm">Actividad</span><div class="switch s23 on"><i></i></div></div>
+
+        <div class="rl r3" data-icon="shield"><b>Datos y apps</b></div>
+        <div class="cell r3 c1"><span class="nm">Controles de datos</span><span class="tag green t31" data-icon="check" data-icon-class="ic">Revisado</span></div>
+        <div class="cell r3 c2"><span class="nm">Privacidad</span><span class="tag green t32" data-icon="check" data-icon-class="ic">Revisado</span></div>
+        <div class="cell r3 c3"><span class="nm">Apps conectadas</span><div class="switch s33 on"><i></i></div></div>
+
+        <div class="rl r4" data-icon="folder"><b>Proyecto</b></div>
+        <div class="cell r4 c1"><span class="nm">Proyecto</span><span class="tag cyan t41" data-icon="folder" data-icon-class="ic">Creado</span></div>
+        <div class="cell r4 c2"><span class="nm">Proyecto</span><span class="tag cyan t42" data-icon="folder" data-icon-class="ic">Creado</span></div>
+        <div class="cell r4 c3"><span class="nm">Gem</span><span class="tag cyan t43" data-icon="folder" data-icon-class="ic">Creado</span></div>
+
+        <div class="card accent" id="pass"><h3>Pasaporte de configuración</h3>
+          <div class="pp p1"><b>Instrucciones · activadas</b><span>Español claro y síntesis primero.</span></div>
+          <div class="pp p2"><b>Memoria · desactivada</b><span>Practico con casos ficticios.</span></div>
+          <div class="pp p3"><b>Datos y apps · revisados</b><span>Solo conecto lo necesario.</span></div>
+          <div class="pp p4"><b>Proyecto · creado</b><span>“Taller IA - prácticas”</span></div>
+          <div class="pp-rule" data-icon="pencil">Cada ajuste, con su motivo</div>
+        </div>
+
+        <div class="cursor"><svg viewBox="0 0 54 66"><path d="M6 4L6 54 19 42 29 62 38 58 28 38 46 38Z" /></svg></div>
+      </div>
+    </div>
+    <script>
+      const T = Teacher.setup({
+        cls: 1, point: 3,
+        title: "¿Configurar la IA es <em>activar todo</em>?",
+        headTitle: "Configurar ChatGPT, Claude y Gemini",
+        question: "No. Es decidir con intención qué recuerda, qué guarda y con qué se conecta. El mismo criterio sirve en las tres.",
+        analogy: {
+          art: `<div class="breakers"><div class="title">Tablero de la casa</div>
+            <div class="brk b1"><div class="track"><div class="knob"></div></div><div class="led"></div><em>OFF</em><em class="on">ON</em><span>Cocina</span></div>
+            <div class="brk b2"><div class="track"><div class="knob"></div></div><div class="led"></div><em>OFF</em><em class="on">ON</em><span>Sala</span></div>
+            <div class="brk b3"><div class="track"><div class="knob"></div></div><div class="led"></div><em>OFF</em><em class="on">ON</em><span>Piscina</span></div>
+            <div class="brk b4"><div class="track"><div class="knob"></div></div><div class="led"></div><em>OFF</em><em class="on">ON</em><span>Bodega</span></div>
+          </div>`,
+          title: "El tablero eléctrico de la casa",
+          text: "No enciendes todos los circuitos: solo los que vas a usar. Y sabes <em>por qué</em> cada uno quedó encendido o apagado.",
+        },
+        steps: [
+          { label: "Instrucciones", caption: "Empieza por las <em>instrucciones</em>: idioma, claridad y qué hacer si falta un dato." },
+          { label: "Memoria", caption: "Para practicar, <em>memoria apagada</em>. ¿No encuentras la opción? Márcala pendiente." },
+          { label: "Datos y apps", caption: "Revisa qué se usa para mejorar el modelo y conecta <em>solo lo necesario</em>." },
+          { label: "Proyecto", caption: "Crea un <em>proyecto</em> para el taller: sus reglas y archivos quedan aparte." },
+        ],
+        takeaway: {
+          title: "Configurar no es activar todo: es <em>decidir</em> y saber <em>por qué</em>.",
+          text: "Mismo criterio en ChatGPT, Claude y Gemini, aunque los botones se llamen distinto.",
+        },
+      });
+
+      const s = T.stepAt;
+      const tl = T.tl;
+      // Cursor: la punta está en (6, 4) del dibujo; el centro de cada control está en (celda + 66, fila + 78)
+      const X = [372, 662, 952], Y = [148, 274, 400, 526];
+      const off = (sel, t) => {
+        T.to(`${sel} i`, t, { x: 0, backgroundColor: "#8f86a3", duration: .3 });
+        T.to(sel, t, { backgroundColor: "#2b2338", borderColor: "rgba(185,151,255,.34)", duration: .3 });
+      };
+
+      // Analogía: suben dos palancas; las otras dos se quedan abajo a propósito
+      const lever = (b, t) => {
+        T.to(`@.brk.${b} .knob`, t, { y: -60, backgroundColor: "#45e0a8", duration: .35, ease: "back.out(2)" });
+        T.to(`@.brk.${b} .led`, t + .15, { backgroundColor: "#45e0a8", boxShadow: "0 0 26px #45e0a8", duration: .3 });
+        T.to(`@.brk.${b} em:not(.on)`, t + .15, { opacity: 0, duration: .15 });
+        T.to(`@.brk.${b} em.on`, t + .2, { opacity: 1, duration: .2 });
+      };
+      T.slide("@.breakers .brk", T.analogyAt(.6), { y: 24, stagger: .12 });
+      lever("b1", T.analogyAt(2.0));
+      lever("b2", T.analogyAt(2.9));
+      T.pulse("@.brk.b3, @.brk.b4", T.analogyAt(4.2), 1.05);
+      T.glow("@.brk.b1, @.brk.b2", T.analogyAt(5.4), "#45e0a8");
+
+      // Estados iniciales
+      tl.set(["#board .ph", "#board .cell .tag", "#pass", "#pass .pp", "#pass .pp-rule", ".cursor"], { opacity: 0 }, 0);
+      tl.set("#board .switch.on i", { x: 44, backgroundColor: "#ffffff" }, 0);
+      tl.set("#board .switch.on", { backgroundColor: "#45e0a8", borderColor: "#45e0a8" }, 0);
+      tl.set(".cursor", { x: 600, y: 560 }, 0);
+
+      // Paso 1 · Instrucciones
+      T.slide(".ph", s(0, .05), { y: -20, stagger: .08 });
+      T.slide("#pass", s(0, .2), { x: 30, y: 0 });
+      tl.fromTo("#board .rl.r1, #board .cell.r1", { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: .5, stagger: .05, ease: "power3.out" }, s(0, .3));
+      tl.fromTo("#board .rl:not(.r1), #board .cell:not(.r1)", { opacity: 0, x: -24 }, { opacity: .32, x: 0, duration: .5, stagger: .03, ease: "power3.out" }, s(0, .5));
+      T.pulse(".rl.r1", s(0, 1.0), 1.05);
+      T.fadeIn(".cursor", s(0, .6), .3);
+      T.slide("#pass .pp-rule", s(0, .7), { y: 20 });
+      T.click(X[0], Y[0], s(0, .8), .6).flip(".s11", s(0, 1.45));
+      T.click(X[1], Y[0], s(0, 1.75), .5).flip(".s12", s(0, 2.3));
+      T.click(X[2], Y[0], s(0, 2.6), .5).flip(".s13", s(0, 3.15));
+      T.slide("#pass .p1", s(0, 3.4), { x: -20, y: 0 });
+
+      // Paso 2 · Memoria (apagar para practicar; lo que no aparece queda por revisar)
+      T.to(".rl.r2, .cell.r2", s(1, .1), { opacity: 1, duration: .3 });
+      T.pulse(".rl.r2", s(1, .1), 1.05);
+      T.click(X[0], Y[1], s(1, .5), .6); off(".s21", s(1, 1.15));
+      T.click(X[1], Y[1], s(1, 1.45), .5); T.pop(".t22", s(1, 2.0));
+      T.click(X[2], Y[1], s(1, 2.3), .5); off(".s23", s(1, 2.85));
+      T.slide("#pass .p2", s(1, 3.2), { x: -20, y: 0 });
+
+      // Paso 3 · Datos y apps
+      T.to(".rl.r3, .cell.r3", s(2, .1), { opacity: 1, duration: .3 });
+      T.pulse(".rl.r3", s(2, .1), 1.05);
+      T.click(X[0], Y[2], s(2, .4), .6); T.pop(".t31", s(2, 1.05));
+      T.click(X[1], Y[2], s(2, 1.4), .5); T.pop(".t32", s(2, 1.95));
+      T.click(X[2], Y[2], s(2, 2.3), .5); off(".s33", s(2, 2.85));
+      T.slide("#pass .p3", s(2, 3.2), { x: -20, y: 0 });
+
+      // Paso 4 · Proyecto
+      T.to(".rl.r4, .cell.r4", s(3, .1), { opacity: 1, duration: .3 });
+      T.pulse(".rl.r4", s(3, .1), 1.05);
+      T.click(X[0], Y[3], s(3, .4), .6); T.pop(".t41", s(3, 1.05));
+      T.click(X[1], Y[3], s(3, 1.35), .45); T.pop(".t42", s(3, 1.85));
+      T.click(X[2], Y[3], s(3, 2.15), .45); T.pop(".t43", s(3, 2.65));
+      T.to(".cursor", s(3, 2.9), { x: 1150, y: 560, opacity: 0, duration: .5 });
+      T.slide("#pass .p4", s(3, 3.0), { x: -20, y: 0 });
+      T.glow("#pass", s(3, 3.5), "#45e0a8");
+
+      window.__timelines["c1p3"] = T.tl;
+    </script>
+  </body>
+</html>

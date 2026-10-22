@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>C3·P4 · De ficha portable a implementación</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared/teacher.css" />
+    <script src="shared/teacher.js"></script>
+    <style>
+      /* Pizarra: núcleo portable al centro, adaptadores a la derecha, carga progresiva a la izquierda */
+      #core { left: 560px; top: 24px; width: 500px; height: 420px; gap: 8px; }
+      #core .kick { font-weight: 800; font-size: 22px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+      .tree { position: relative; width: 100%; margin-top: 8px; display: flex; flex-direction: column; gap: 6px; font-family: "JetMono", monospace; font-size: 26px; }
+      .tree div { padding: 5px 12px; border-radius: 10px; color: var(--ink); white-space: nowrap; }
+      .tree div.root { color: var(--accent); font-weight: 700; }
+      .tree small { font-family: "Figtree"; font-size: 22px; font-weight: 700; color: var(--ink-mute); }
+      .plug { position: absolute; left: 1060px; top: 206px; width: 44px; height: 56px; border-radius: 0 14px 14px 0; background: var(--accent); z-index: 3; }
+      .adp { position: absolute; left: 1200px; width: 576px; height: 136px; padding: 18px 24px 18px 96px; gap: 4px; }
+      .adp h4 { font-family: "Bricolage"; font-weight: 700; font-size: 34px; line-height: 1.05; }
+      .adp p { font-size: 26px; line-height: 1.25; color: var(--ink-soft); }
+      .adp p b { color: var(--ink); }
+      .adp .sock { position: absolute; left: 20px; top: 34px; width: 58px; height: 68px; border-radius: 14px; border: 3px solid var(--line); background: rgba(255, 255, 255, .05); display: flex; justify-content: center; align-items: center; gap: 10px; }
+      .adp .sock i { width: 8px; height: 26px; border-radius: 4px; background: var(--lavender); }
+      #a1 { top: 0; } #a2 { top: 150px; } #a3 { top: 300px; }
+      #same { left: 1200px; top: 476px; }
+      #lbl-load { left: 0; top: 0; font-size: 24px; letter-spacing: .12em; text-transform: uppercase; color: var(--lavender); }
+      .layer { position: absolute; left: 0; width: 480px; height: 118px; padding: 16px 22px 16px 86px; gap: 4px; }
+      .layer h4 { font-family: "Bricolage"; font-weight: 700; font-size: 32px; line-height: 1.05; }
+      .layer p { font-size: 26px; line-height: 1.22; color: var(--ink-soft); }
+      .layer > i { position: absolute; left: 20px; top: 30px; width: 50px; height: 50px; border-radius: 14px; display: grid; place-items: center; font-style: normal; font-family: "Bricolage"; font-weight: 800; font-size: 26px; background: rgba(255, 255, 255, .08); color: var(--ink); }
+      #l1 { top: 46px; } #l2 { top: 180px; } #l3 { top: 314px; }
+      #l1 > i { background: var(--green); color: #062418; } #l2 > i { background: var(--yellow); color: #2a1b00; } #l3 > i { background: var(--lavender); color: #1d0f3b; }
+      .cares { position: absolute; left: 0; top: 476px; display: flex; gap: 16px; }
+      .cares .tag { position: relative; }
+      /* Analogía: un cargador de viaje y tres enchufes */
+      .trip { position: absolute; inset: 0; }
+      .trip svg.cab { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke: rgba(185, 151, 255, .65); stroke-width: 6; stroke-linecap: round; }
+      .charger { position: absolute; left: 50px; top: 220px; width: 230px; height: 180px; border-radius: 30px; background: linear-gradient(150deg, #8a55ff, #3f1b95); border: 3px solid rgba(255, 255, 255, .7); display: grid; place-items: center; text-align: center; color: #fff; box-shadow: 0 0 50px rgba(122, 60, 255, .45); }
+      .charger b { font-family: "Bricolage"; font-size: 34px; font-weight: 750; line-height: 1.05; }
+      .charger small { display: block; margin-top: 6px; font-size: 24px; font-weight: 700; color: #e5dbff; }
+      .outlet { position: absolute; left: 430px; width: 300px; height: 130px; display: flex; align-items: center; gap: 18px; }
+      .outlet .face { flex: none; width: 112px; height: 112px; border-radius: 26px; border: 3px solid rgba(255, 255, 255, .35); background: #f4f0ff; }
+      .outlet .face svg { width: 100%; height: 100%; fill: #2b2338; }
+      .outlet b { display: block; font-size: 30px; font-weight: 800; color: var(--ink); }
+      .outlet small { font-size: 26px; font-weight: 700; color: var(--ink-mute); }
+      #o1 { top: 50px; } #o2 { top: 245px; } #o3 { top: 440px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="c3p4" data-start="0" data-duration="40" data-width="1920" data-height="1080" data-fps="30">
+      <div id="board">
+        <svg class="wires" viewBox="0 0 1776 600">
+          <path class="w1" pathLength="1" d="M1104 234C1150 234 1150 68 1200 68" />
+          <path class="w2" pathLength="1" d="M1104 234C1150 234 1150 218 1200 218" />
+          <path class="w3" pathLength="1" d="M1104 234C1150 234 1150 368 1200 368" />
+          <path class="wl" pathLength="1" d="M480 105C522 105 518 257 560 257" />
+          <path class="wl" pathLength="1" d="M480 239C522 239 518 257 560 257" />
+          <path class="wl" pathLength="1" d="M480 373C522 373 518 308 560 308" />
+        </svg>
+
+        <div class="card accent hide" id="core"><span class="kick">Ficha portable</span><h3>Convertir notas en plan de acción</h3>
+          <div class="tree">
+            <div class="root">notas-a-plan/</div>
+            <div class="t-skill">├ SKILL.md <small>descripción + pasos</small></div>
+            <div class="t-ref">├ references/</div>
+            <div class="t-tpl">├ templates/ <small>tabla vacía</small></div>
+            <div class="t-scr">└ scripts/ <small>opcional</small></div>
+          </div></div>
+        <div class="plug hide"></div>
+
+        <div class="card adp hide" id="a1"><div class="sock"><i></i><i></i></div><h4>ChatGPT</h4><p><b>Skills</b> en espacios elegibles · puente: <b>Projects</b></p></div>
+        <div class="card adp hide" id="a2"><div class="sock"><i></i><i></i></div><h4>Claude</h4><p><b>Agent Skills</b> en experiencias compatibles</p></div>
+        <div class="card adp hide" id="a3"><div class="sock"><i></i><i></i></div><h4>Gemini</h4><p><b>Skills</b> en Gemini Spark · alternativa: <b>Gems</b></p></div>
+        <span class="tag green hide" id="same" data-icon="check">Misma lógica, misma salida</span>
+
+        <div class="say hide" id="lbl-load">Carga progresiva</div>
+        <div class="card layer hide" id="l1"><i>1</i><h4>Descripción</h4><p>Siempre: decide cuándo usarla</p></div>
+        <div class="card layer hide" id="l2"><i>2</i><h4>Instrucciones</h4><p>Al activarse: el procedimiento</p></div>
+        <div class="card layer hide" id="l3"><i>3</i><h4>Referencias</h4><p>Solo si hacen falta</p></div>
+
+        <div class="cares">
+          <span class="tag cyan hide" data-icon="route">Rutas relativas</span>
+          <span class="tag yellow hide" data-icon="doc">Plantilla vacía, sin notas reales</span>
+          <span class="tag red hide" data-icon="search">Revisa skills de terceros</span>
+        </div>
+      </div>
+    </div>
+    <script>
+      const T = Teacher.setup({
+        cls: 3, point: 4,
+        title: "¿Cómo llevo mi skill a <em>cualquier</em> plataforma?",
+        headTitle: "De ficha portable a implementación",
+        question: "ChatGPT, Claude y Gemini la llaman distinto. Si guardas una ficha neutral, no reconstruyes nada al cambiar.",
+        analogy: {
+          art: `<div class="trip">
+              <svg class="cab" viewBox="0 0 760 620"><path d="M280 290C360 290 360 115 430 115"/><path d="M280 310C360 310 360 310 430 310"/><path d="M280 330C360 330 360 505 430 505"/></svg>
+              <div class="charger"><div><b>Tu cargador</b><small>no cambia</small></div></div>
+              <div class="outlet" id="o1"><div class="face"><svg viewBox="0 0 112 112"><rect x="34" y="34" width="10" height="34" rx="4"/><rect x="68" y="34" width="10" height="34" rx="4"/></svg></div><div><b>Tipo A</b><small>América</small></div></div>
+              <div class="outlet" id="o2"><div class="face"><svg viewBox="0 0 112 112"><circle cx="38" cy="56" r="9"/><circle cx="74" cy="56" r="9"/></svg></div><div><b>Tipo C</b><small>Europa</small></div></div>
+              <div class="outlet" id="o3"><div class="face"><svg viewBox="0 0 112 112"><rect x="51" y="24" width="10" height="28" rx="3"/><rect x="26" y="62" width="26" height="10" rx="3"/><rect x="60" y="62" width="26" height="10" rx="3"/></svg></div><div><b>Tipo G</b><small>Reino Unido</small></div></div>
+            </div>`,
+          title: "Un cargador, tres adaptadores",
+          text: "Al viajar, tu cargador es el mismo: solo cambias el <em>adaptador</em>. La skill igual: una ficha portable y un adaptador por plataforma.",
+        },
+        steps: [
+          { label: "Ficha neutral", caption: "Primero, una ficha <em>neutral</em>: una carpeta que no depende de ninguna plataforma." },
+          { label: "Adaptadores", caption: "Luego la conectas: <em>Skills, Agent Skills o Gems</em>. Cambia el adaptador, no la lógica." },
+          { label: "Carga progresiva", caption: "Primero se lee la <em>descripción</em>; las referencias solo se abren si hacen falta." },
+          { label: "Cuidados", caption: "Usa <em>rutas relativas</em>, no subas notas reales y revisa toda skill ajena antes de instalarla." },
+        ],
+        takeaway: {
+          title: "Una ficha <em>portable</em>, un adaptador por plataforma. La lógica no cambia.",
+          text: "Si tu cuenta no tiene skills nativas, usa Projects o Gems y conserva la ficha neutral.",
+        },
+      });
+
+      const s = T.stepAt;
+      const A = T.accent;
+      // Analogía: el cargador se conecta a los tres enchufes, uno tras otro
+      T.slide("@.trip .charger", T.analogyAt(.4), { x: -30, y: 0 });
+      T.fromTo("@.trip svg.cab path", T.analogyAt(1.0), { strokeDasharray: 1200, strokeDashoffset: 1200 }, { strokeDashoffset: 0, duration: .8, stagger: .5 });
+      T.slide("@.trip .outlet", T.analogyAt(1.3), { x: 30, y: 0, stagger: .5 });
+      T.pulse("@.trip .charger", T.analogyAt(4.2), 1.06);
+
+      // Estado inicial de los cables
+      T.tl.set(["#board .wires path"], { strokeDasharray: 1, strokeDashoffset: 1 }, 0);
+
+      // Paso 1 · Ficha neutral
+      T.pop("#core", s(0, .1));
+      T.slide(".tree div", s(0, .8), { x: -24, y: 0, stagger: .3 });
+      T.to(".tree .t-skill", s(0, 2.6), { backgroundColor: "rgba(255,196,90,.16)", duration: .3 });
+      T.pulse("#core", s(0, 3.3), 1.03);
+
+      // Paso 2 · Adaptadores: el mismo núcleo se conecta a tres plataformas
+      T.to(".tree .t-skill", s(1, 0), { backgroundColor: "rgba(255,196,90,0)", duration: .3 });
+      T.slide(".plug", s(1, .1), { x: -30, y: 0, duration: .4 });
+      T.draw(".w1, .w2, .w3", s(1, .4), .6, .5);
+      T.pop("#a1", s(1, .8)).pop("#a2", s(1, 1.3)).pop("#a3", s(1, 1.8));
+      T.to(".adp .sock i", s(1, 1.0), { backgroundColor: A, duration: .3, stagger: .25 });
+      T.pop("#same", s(1, 2.8));
+
+      // Paso 3 · Carga progresiva: se abre solo lo necesario
+      T.slide("#lbl-load", s(2, .1), { y: 14 });
+      T.slide("#l1", s(2, .3), { x: -30, y: 0 });
+      T.slide("#l2", s(2, 1.2), { x: -30, y: 0 });
+      T.slide("#l3", s(2, 2.1), { x: -30, y: 0 });
+      T.draw(".wl", s(2, .6), .5, .9);
+      T.to(".tree .t-skill", s(2, .4), { backgroundColor: "rgba(69,224,168,.18)", duration: .3 });
+      T.to(".tree .t-ref", s(2, 2.3), { backgroundColor: "rgba(185,151,255,.20)", duration: .3 });
+      T.glow("#l1", s(2, 3.2), "#45e0a8");
+
+      // Paso 4 · Cuidados al implementar
+      T.pop(".cares .tag", s(3, .2), .7);
+      T.pulse(".cares .tag.red", s(3, 2.6), 1.08);
+      T.glow("#core", s(3, 3.2));
+
+      window.__timelines["c3p4"] = T.tl;
+    </script>
+  </body>
+</html>

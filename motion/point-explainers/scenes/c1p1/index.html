@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>C1·P1 · Qué es y qué no es una IA generativa</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared/teacher.css" />
+    <script src="shared/teacher.js"></script>
+    <style>
+      /* Pizarra: entrada → proceso → salida → control humano */
+      #board .stage { width: 380px; height: 470px; top: 46px; }
+      #s-in { left: 0; }
+      #s-proc { left: 465px; width: 400px; }
+      #s-out { left: 950px; }
+      #s-ctrl { left: 1420px; width: 356px; }
+      #board .stage .paper { position: relative; margin-top: 8px; font-size: 25px; padding: 18px 20px; }
+      .bars { position: relative; width: 100%; display: flex; flex-direction: column; gap: 12px; margin-top: 6px; }
+      .bar { position: relative; height: 54px; border-radius: 12px; background: rgba(255, 255, 255, .06); overflow: hidden; }
+      .bar i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 12px; background: linear-gradient(90deg, #7a3cff, #b997ff); transform-origin: 0 50%; }
+      .bar span { position: absolute; left: 14px; top: 10px; font-size: 26px; font-weight: 750; color: #fff; }
+      .bar b { text-shadow: 0 1px 6px rgba(0,0,0,.6); position: absolute; right: 12px; top: 10px; font-size: 26px; font-weight: 800; color: #fff; }
+      .lines { position: relative; width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+      .lines div { font-size: 26px; line-height: 1.25; padding: 10px 14px; border-radius: 12px; background: rgba(255, 255, 255, .06); color: #f4f0ff; }
+      #s-ctrl .person { position: relative; margin: 4px auto 0; }
+      .verdicts { position: relative; display: flex; flex-direction: column; gap: 10px; width: 100%; margin-top: 8px; }
+      .verdicts .tag { position: relative; height: 54px; font-size: 27px; }
+      /* Analogía: el teclado del celular que sugiere la siguiente palabra */
+      .phone { position: absolute; left: 150px; top: 60px; width: 460px; height: 500px; border-radius: 48px; border: 4px solid rgba(255,255,255,.22); background: #0d0b13; padding: 34px 28px; }
+      .phone .msg { font-size: 34px; font-weight: 700; color: #f4f0ff; line-height: 1.25; }
+      .phone .msg u { text-decoration: none; display: inline-block; width: 120px; border-bottom: 4px solid #45e0a8; }
+      .phone .sugs { position: absolute; left: 22px; right: 22px; top: 190px; display: flex; flex-direction: column; gap: 16px; }
+      .phone .sug { display: flex; justify-content: space-between; align-items: center; height: 72px; padding: 0 24px; border-radius: 20px; background: rgba(255,255,255,.07); font-size: 30px; font-weight: 750; color: #f4f0ff; }
+      .phone .sug b { color: #45e0a8; font-size: 28px; }
+      .phone .sug.top { background: rgba(69,224,168,.18); outline: 3px solid #45e0a8; }
+      #tok { left: 300px; top: 200px; }
+      #n1 { left: -14px; top: 12px; } #n2 { left: 451px; top: 12px; } #n3 { left: 936px; top: 12px; } #n4 { left: 1406px; top: 12px; }
+      #note-out { left: 1000px; top: 540px; }
+      #note-proc { left: 470px; top: 540px; max-width: 520px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="c1p1" data-start="0" data-duration="40" data-width="1920" data-height="1080" data-fps="30">
+      <div id="board">
+        <svg class="wires" viewBox="0 0 1776 600">
+          <path class="w1" pathLength="1" d="M388 255H455" />
+          <path class="w2" pathLength="1" d="M873 255H940" />
+          <path class="w3" pathLength="1" d="M1338 255H1410" />
+          <path class="w4 dash" pathLength="1" d="M1598 520C1598 600 190 600 190 520" />
+        </svg>
+
+        <div class="card stage" id="s-in"><span data-icon="chat"></span><h3>Entrada</h3><p>Lo que tú le das</p>
+          <div class="paper">Dame 5 ideas para aprender algo nuevo en un mes</div></div>
+
+        <div class="card stage accent" id="s-proc"><span data-icon="brain"></span><h3>Proceso</h3><p>Calcula lo más probable</p>
+          <div class="bars">
+            <div class="bar"><i style="width:88%"></i><span>Practicar a diario</span><b>88%</b></div>
+            <div class="bar"><i style="width:61%"></i><span>Tomar un curso</span><b>61%</b></div>
+            <div class="bar"><i style="width:5%"></i><span>Viajar a Marte</span><b>2%</b></div>
+          </div></div>
+
+        <div class="card stage" id="s-out"><span data-icon="doc"></span><h3>Salida</h3><p>Un borrador, no la verdad</p>
+          <div class="lines"><div>1. Practica 30 min diarios</div><div>2. Busca un tutor</div><div>3. Mide tu avance</div></div></div>
+
+        <div class="card stage yellow" id="s-ctrl"><span data-icon="user"></span><h3>Control</h3><p>Tú decides</p>
+          <div class="verdicts">
+            <span class="tag green v1" data-icon="check" data-icon-class="ic">Útil</span>
+            <span class="tag yellow v2" data-icon="search" data-icon-class="ic">Por verificar</span>
+            <span class="tag red v3" data-icon="x" data-icon-class="ic">Descartar</span>
+          </div></div>
+
+        <div class="num" id="n1">1</div><div class="num" id="n2">2</div><div class="num" id="n3">3</div><div class="num" id="n4">4</div>
+        <div class="token round" id="tok"><span data-icon="chat" data-icon-class="ic sm"></span></div>
+        <div class="note purple" id="note-proc">No “sabe”: imita patrones de millones de ejemplos.</div>
+        <div class="note" id="note-out">Suena seguro… y aun así puede estar mal.</div>
+      </div>
+    </div>
+    <script>
+      const T = Teacher.setup({
+        cls: 1, point: 1,
+        title: "¿Qué es y qué <em>no es</em> una IA generativa?",
+        headTitle: "Qué es y qué no es una IA generativa",
+        question: "Parece que piensa como una persona. En realidad hace algo más simple… y más útil si lo entiendes.",
+        analogy: {
+          art: `<div class="phone"><p class="msg">Este mes quiero aprender a <u></u></p>
+            <div class="sugs"><div class="sug top">cocinar <b>41%</b></div><div class="sug">programar <b>33%</b></div><div class="sug">volar <b>2%</b></div></div></div>`,
+          title: "Un autocompletado gigante",
+          text: "Como el teclado del celular que adivina tu siguiente palabra, pero entrenado con <em>millones de textos</em>. Predice lo probable; <em>no garantiza</em> que sea cierto.",
+        },
+        steps: [
+          { label: "Entrada", caption: "Todo empieza con lo que tú le das: una <em>petición</em>, un archivo o un dato." },
+          { label: "Proceso", caption: "El modelo no busca la verdad: calcula la respuesta <em>más probable</em> según patrones." },
+          { label: "Salida", caption: "Lo que recibes es un <em>borrador</em>: útil para empezar, nunca un dato certificado." },
+          { label: "Control humano", caption: "El ciclo termina contigo: <em>verificas, corriges, apruebas</em> o descartas." },
+        ],
+        takeaway: {
+          title: "La IA te ayuda a <em>producir</em>. Tú sigues siendo responsable de <em>decidir</em>.",
+          text: "Entrada → proceso → salida → control humano. Si falta el control, el ciclo está incompleto.",
+        },
+      });
+
+      const s = T.stepAt;
+      // Analogía: aparecen las sugerencias como lo haría el teclado del celular
+      T.slide("@.phone .msg", T.analogyAt(.6), { y: 20 });
+      T.slide("@.phone .sug", T.analogyAt(1.6), { x: -30, y: 0, stagger: .35 });
+      T.pulse("@.phone .sug.top", T.analogyAt(3.6), 1.06);
+      // Estados iniciales
+      T.tl.set(["#board .card", "#board .num", "#tok", "#board .note", "#board .verdicts .tag"], { opacity: 0 }, 0);
+      T.tl.set("#board .bar i", { scaleX: 0 }, 0);
+      T.tl.set("#board .lines div", { opacity: 0 }, 0);
+
+      // Paso 1 · Entrada
+      T.pop("#s-in", s(0, .1)).pop("#n1", s(0, .35));
+      T.slide("#s-in .paper", s(0, .7), { y: 20 });
+      T.pop("#tok", s(0, 1.6));
+      T.to("#tok", s(0, 2.4), { x: 300, duration: 1.2 });
+      T.draw(".w1", s(0, 2.2), .6);
+
+      // Paso 2 · Proceso
+      T.pop("#s-proc", s(1, .05)).pop("#n2", s(1, .3));
+      T.to("#tok", s(1, .4), { x: 520, scale: .5, opacity: 0, duration: .7 });
+      T.fromTo(".bar i", s(1, .9), { scaleX: 0 }, { scaleX: 1, duration: .9, stagger: .25, ease: "power3.out" });
+      T.glow(".bar:first-child", s(1, 2.3));
+      T.slide("#note-proc", s(1, 1.9), { y: 20 });
+
+      // Paso 3 · Salida
+      T.fadeOut("#note-proc", s(2, 0));
+      T.draw(".w2", s(2, .05), .5);
+      T.pop("#s-out", s(2, .2)).pop("#n3", s(2, .45));
+      T.slide(".lines div", s(2, .8), { x: -20, y: 0, stagger: .3 });
+      T.slide("#note-out", s(2, 2.2), { y: 20 });
+      T.pulse("#s-out", s(2, 2.5), 1.04);
+
+      // Paso 4 · Control humano
+      T.fadeOut("#note-out", s(3, 0));
+      T.draw(".w3", s(3, .05), .5);
+      T.pop("#s-ctrl", s(3, .2)).pop("#n4", s(3, .45));
+      T.pop(".verdicts .tag", s(3, .9), .35);
+      T.draw(".w4", s(3, 2.4), 1.2);
+      T.glow("#s-ctrl", s(3, 2.6), "#ffc45a");
+
+      window.__timelines["c1p1"] = T.tl;
+    </script>
+  </body>
+</html>

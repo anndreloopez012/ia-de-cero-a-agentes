@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>C4·P5 · Herramientas, permisos, hooks y humano en el ciclo</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared/teacher.css" />
+    <script src="shared/teacher.js"></script>
+    <style>
+      /* Pizarra: tres carriles de riesgo → control antes de actuar → resultado; a la derecha, registro y persona */
+      .lane { position: absolute; left: 0; width: 1400px; height: 140px; border-radius: 26px; border: 2px solid; z-index: 1; }
+      .lane.g { top: 72px; background: rgba(69, 224, 168, .07); border-color: rgba(69, 224, 168, .55); box-shadow: inset 10px 0 0 var(--green); }
+      .lane.y { top: 226px; background: rgba(255, 196, 90, .07); border-color: rgba(255, 196, 90, .55); box-shadow: inset 10px 0 0 var(--yellow); }
+      .lane.r { top: 380px; background: rgba(255, 92, 120, .07); border-color: rgba(255, 92, 120, .55); box-shadow: inset 10px 0 0 var(--red); }
+      .lv { position: absolute; left: 34px; top: 18px; width: 280px; }
+      .lv h4 { font-family: "Bricolage"; font-weight: 750; font-size: 38px; line-height: 1.05; }
+      .lv p { margin-top: 4px; font-size: 26px; line-height: 1.2; color: var(--ink-soft); }
+      .g .lv h4 { color: var(--green); } .y .lv h4 { color: var(--yellow); } .r .lv h4 { color: var(--red); }
+      .act { position: absolute; left: 318px; top: 26px; width: 300px; height: 88px; display: flex; align-items: center; gap: 14px; padding: 0 20px; border-radius: 18px; background: #f6f2ff; color: #1b1426; font-size: 27px; line-height: 1.15; font-weight: 750; box-shadow: 0 14px 30px rgba(0, 0, 0, .35); }
+      .act .ic { width: 40px; height: 40px; color: var(--purple); }
+      .out { left: 920px; top: 42px; }
+
+      /* El control fijo antes de actuar */
+      #gate { position: absolute; left: 742px; top: 72px; width: 110px; height: 448px; border-radius: 26px; border: 3px solid var(--lavender); background: linear-gradient(180deg, #2a1d3d, #120e1a); z-index: 3; box-shadow: 0 0 40px rgba(185, 151, 255, .25); }
+      .slot { position: absolute; left: 17px; width: 70px; height: 70px; display: grid; place-items: center; border-radius: 50%; border: 3px dashed rgba(185, 151, 255, .55); color: var(--lavender); }
+      .slot .ic { width: 34px; height: 34px; }
+      .mk { position: absolute; left: 14px; width: 76px; height: 76px; display: grid; place-items: center; border-radius: 50%; z-index: 2; }
+      .mk svg { width: 40px; height: 40px; fill: none; stroke: currentColor; stroke-width: 11; stroke-linecap: round; stroke-linejoin: round; }
+      .mk.ok { background: var(--green); color: #062418; box-shadow: 0 0 30px rgba(69, 224, 168, .6); }
+      .mk.wait { background: var(--yellow); color: #2a1b00; box-shadow: 0 0 30px rgba(255, 196, 90, .6); }
+      .mk.no { background: var(--red); color: #2c0510; box-shadow: 0 0 30px rgba(255, 92, 120, .6); }
+      .mk svg.hand { stroke-width: 8; }
+      #s1, #m1 { top: 35px; } #s2 { top: 189px; } #m2 { top: 186px; } #s3 { top: 343px; } #m3 { top: 340px; }
+      #m1 { top: 32px; }
+      #gate-tag { left: 592px; top: 0; width: 410px; justify-content: center; }
+
+      #tg { left: 634px; top: 100px; } #ty { left: 634px; top: 254px; } #tr { left: 634px; top: 408px; }
+
+      /* Los seis hooks: puntos de control fijos */
+      .hk { position: absolute; top: 0; height: 52px; display: grid; place-items: center; border-radius: 14px; border: 2px solid var(--line); background: rgba(255, 255, 255, .06); font-family: "JetMono", monospace; font-size: 26px; font-weight: 700; color: var(--ink-soft); }
+      .hk.on { border-color: var(--accent); color: #ffd3e7; background: rgba(255, 122, 182, .14); }
+      #h1 { left: 97px; width: 166px; } #h2 { left: 363px; width: 228px; } #h3 { left: 691px; width: 212px; }
+      #h4 { left: 1003px; width: 196px; } #h5 { left: 1299px; width: 196px; } #h6 { left: 1595px; width: 134px; }
+
+      /* Registro (after_tool) y persona responsable */
+      #reg { left: 1430px; top: 72px; width: 346px; height: 252px; padding: 20px 24px; gap: 6px; }
+      #reg h3 { font-size: 34px; }
+      #reg .lg { display: flex; align-items: center; gap: 12px; font-size: 26px; font-weight: 700; color: var(--ink); }
+      #reg .lg i { flex: none; width: 22px; height: 22px; border-radius: 6px; }
+      #reg .lg:nth-of-type(1) i { background: var(--green); } #reg .lg:nth-of-type(2) i { background: var(--yellow); } #reg .lg:nth-of-type(3) i { background: var(--red); }
+      #reg .mono { font-size: 26px; color: var(--accent); }
+      #human { left: 1430px; top: 338px; width: 346px; height: 188px; padding: 16px 20px; gap: 8px; }
+      #human .who { display: flex; align-items: center; gap: 14px; }
+      #human .face { flex: none; display: grid; place-items: center; width: 60px; height: 60px; border-radius: 50%; border: 3px solid var(--yellow); background: #24182f; color: var(--yellow); }
+      #human .face .ic { width: 36px; height: 36px; color: var(--yellow); }
+      #human .who b { font-size: 27px; line-height: 1.1; font-weight: 800; color: #ffe2ad; }
+      #human p { font-size: 26px; color: var(--ink); font-weight: 650; }
+      #human .btns { display: flex; gap: 10px; }
+      #human .btns .tag { position: relative; height: 44px; padding: 0 16px; font-size: 26px; }
+
+      /* Analogía: el llavero del edificio */
+      .rack { position: absolute; left: 40px; top: 40px; width: 680px; height: 540px; border-radius: 30px; border: 3px solid rgba(185, 151, 255, .35); background: linear-gradient(160deg, #2b2039, #15101d); }
+      .rack h5 { position: absolute; left: 36px; top: 26px; font-family: "Bricolage"; font-weight: 750; font-size: 34px; color: var(--ink); }
+      .kr { position: absolute; left: 26px; width: 628px; height: 124px; display: flex; align-items: center; gap: 18px; padding: 0 18px; border-radius: 22px; background: rgba(255, 255, 255, .04); }
+      .kr.k1 { top: 100px; } .kr.k2 { top: 240px; } .kr.k3 { top: 380px; }
+      .peg { flex: none; width: 18px; height: 18px; border-radius: 50%; background: #8f86a3; }
+      .key { position: relative; flex: none; width: 160px; height: 64px; }
+      .key .bow { position: absolute; left: 0; top: 0; width: 64px; height: 64px; border-radius: 50%; border: 13px solid currentColor; }
+      .key .shaft { position: absolute; left: 58px; top: 25px; width: 102px; height: 14px; border-radius: 4px; background: currentColor; }
+      .key .t1, .key .t2 { position: absolute; top: 37px; width: 14px; height: 20px; background: currentColor; border-radius: 0 0 4px 4px; }
+      .key .t1 { left: 124px; } .key .t2 { left: 146px; height: 14px; }
+      .k1 .key { color: var(--green); } .k2 .key { color: var(--yellow); } .k3 .key { color: var(--red); }
+      .kl b { display: block; font-family: "Bricolage"; font-weight: 750; font-size: 34px; color: var(--ink); }
+      .kl span { font-size: 27px; color: var(--ink-soft); white-space: nowrap; }
+      .k3 .lockic { flex: none; margin-left: auto; color: var(--red); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="c4p5" data-start="0" data-duration="44" data-width="1920" data-height="1080" data-fps="30">
+      <div id="board">
+        <svg class="wires" viewBox="0 0 1776 600">
+          <path class="wy yellow" pathLength="1" d="M1376 296C1412 296 1398 420 1430 420" />
+          <path class="wr red" pathLength="1" d="M1250 450H1330C1396 450 1396 476 1430 476" />
+        </svg>
+
+        <div class="lane g"><div class="lv"><h4>Verde</h4><p>Reversible y sin impacto externo</p></div>
+          <div class="act"><span data-icon="doc"></span>Leer ficha ficticia</div>
+          <span class="tag green out" id="o1" data-icon="check" data-icon-class="ic">Avanza y registra</span></div>
+        <div class="lane y"><div class="lv"><h4>Amarillo</h4><p>Ambiguo o difícil de revertir</p></div>
+          <div class="act"><span data-icon="pencil"></span>Preparar borrador</div>
+          <span class="tag yellow out" id="o2" data-icon="hand" data-icon-class="ic">Prepara y pide confirmación</span></div>
+        <div class="lane r"><div class="lv"><h4>Rojo</h4><p>Personas, dinero, accesos, datos</p></div>
+          <div class="act"><span data-icon="chat"></span>Enviar a 40 clientes</div>
+          <span class="tag red out" id="o3" data-icon="stop" data-icon-class="ic">No ejecuta: escala</span></div>
+
+        <span class="tag" id="gate-tag" data-icon="lock" data-icon-class="ic">Control antes de actuar</span>
+        <div id="gate">
+          <div class="slot" id="s1"><span data-icon="lock" data-icon-class="ic"></span></div>
+          <div class="slot" id="s2"><span data-icon="lock" data-icon-class="ic"></span></div>
+          <div class="slot" id="s3"><span data-icon="lock" data-icon-class="ic"></span></div>
+          <div class="mk ok" id="m1"><span data-icon="check" data-icon-class=""></span></div>
+          <div class="mk wait" id="m2"><span data-icon="hand" data-icon-class="hand"></span></div>
+          <div class="mk no" id="m3"><span data-icon="x" data-icon-class=""></span></div>
+        </div>
+
+        <div class="token green round" id="tg"><span data-icon="doc" data-icon-class="ic sm"></span></div>
+        <div class="token yellow round" id="ty"><span data-icon="pencil" data-icon-class="ic sm"></span></div>
+        <div class="token red round" id="tr"><span data-icon="chat" data-icon-class="ic sm"></span></div>
+
+        <div class="hk" id="h1">on_start</div><div class="hk" id="h2">before_model</div><div class="hk on" id="h3">before_tool</div>
+        <div class="hk on" id="h4">after_tool</div><div class="hk" id="h5">on_handoff</div><div class="hk" id="h6">on_end</div>
+
+        <div class="card" id="reg"><h3>Registro</h3><span class="mono">after_tool</span>
+          <div class="lg"><i></i>leer ficha: OK</div><div class="lg"><i></i>borrador: en pausa</div><div class="lg"><i></i>enviar: bloqueado</div></div>
+
+        <div class="card yellow" id="human">
+          <div class="who"><div class="face"><span data-icon="user"></span></div><b>Persona responsable</b></div>
+          <p>¿Enviar a 40 clientes?</p>
+          <div class="btns"><span class="tag green" id="b-ok">Aprobar</span><span class="tag red" id="b-no">Rechazar</span></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const T = Teacher.setup({
+        cls: 4, point: 5,
+        title: "¿Qué puede hacer un agente <em>solo</em> y cuándo debe parar?",
+        headTitle: "Herramientas, permisos, hooks y humano en el ciclo",
+        question: "Leer un archivo no es lo mismo que escribirle a tus clientes. El permiso depende del riesgo.",
+        analogy: {
+          art: `<div class="rack"><h5>Llavero del edificio</h5>
+            <div class="kr k1"><i class="peg"></i><div class="key"><i class="bow"></i><i class="shaft"></i><i class="t1"></i><i class="t2"></i></div><div class="kl"><b>Bodega</b><span>Cualquier empleado</span></div></div>
+            <div class="kr k2"><i class="peg"></i><div class="key"><i class="bow"></i><i class="shaft"></i><i class="t1"></i><i class="t2"></i></div><div class="kl"><b>Oficinas</b><span>Con firma del encargado</span></div></div>
+            <div class="kr k3"><i class="peg"></i><div class="key"><i class="bow"></i><i class="shaft"></i><i class="t1"></i><i class="t2"></i></div><div class="kl"><b>Caja fuerte</b><span>Solo con el dueño</span></div><span class="lockic" data-icon="lock"></span></div></div>`,
+          title: "Las llaves del edificio",
+          text: "Nadie recibe el llavero completo: cada quien tiene <em>solo las llaves que necesita</em>, y la caja fuerte se abre <em>solo con el dueño presente</em>.",
+        },
+        steps: [
+          { label: "Verde", caption: "Lo <em>reversible</em> y sin impacto externo, como leer una ficha ficticia, avanza y queda registrado." },
+          { label: "Amarillo", caption: "Lo ambiguo o difícil de revertir se <em>prepara y se muestra</em>: espera tu confirmación." },
+          { label: "Rojo", caption: "Personas, dinero, accesos o datos sensibles: el <em>guardrail</em> bloquea y el agente escala." },
+          { label: "Hooks", caption: "Los <em>hooks</em> son controles fijos: before_tool revisa el permiso; after_tool registra." },
+          { label: "Humano en el ciclo", caption: "La persona no es decoración: <em>aprueba o rechaza</em> justo donde hay riesgo." },
+        ],
+        takeaway: {
+          title: "Lo verde avanza, lo amarillo se confirma y <em>lo rojo se detiene</em>.",
+          text: "Menor privilegio: no des escritura si basta lectura. Los hooks controlan antes y después de cada herramienta.",
+        },
+      });
+
+      const s = T.stepAt;
+      // Analogía: las llaves cuelgan una a una; la de la caja fuerte queda con candado
+      T.slide("@.rack h5", T.analogyAt(.5), { y: 16 });
+      T.slide("@.kr", T.analogyAt(1.1), { x: -30, y: 0, stagger: .6 });
+      T.tl.fromTo(".kr .key", { rotation: -40 }, { rotation: 0, duration: .9, stagger: .6, ease: "elastic.out(1, .5)", transformOrigin: "0% 50%" }, T.analogyAt(1.2));
+      T.pop("@.k3 .lockic", T.analogyAt(3.6));
+      T.pulse("@.kr.k3", T.analogyAt(4.4), 1.04);
+      T.pulse("@.kr.k1", T.analogyAt(5.6), 1.04);
+
+      // Estados iniciales
+      T.tl.set([".lane", "#gate", "#gate-tag", ".token", ".mk", ".out", ".hk", "#reg", "#human", "#reg .lg", "#human .btns .tag"], { opacity: 0 }, 0);
+
+      // Paso 1 · Verde: pasa el control y queda registrado
+      T.slide(".lane.g", s(0, .1), { x: -30, y: 0 });
+      T.fadeIn("#gate", s(0, .4)).slide("#gate-tag", s(0, .5), { y: -16 });
+      T.pop("#tg", s(0, 1.1));
+      T.to("#tg", s(0, 1.6), { x: 60, duration: .5 });
+      T.check("#m1", s(0, 2.05));
+      T.to("#tg", s(0, 2.3), { x: 330, opacity: 0, duration: .6, ease: "power2.in" });
+      T.pop("#o1", s(0, 2.7));
+      T.pulse("#o1", s(0, 3.6), 1.06);
+
+      // Paso 2 · Amarillo: se detiene en el control y pide confirmación
+      T.slide(".lane.y", s(1, .1), { x: -30, y: 0 });
+      T.pop("#ty", s(1, .8));
+      T.to("#ty", s(1, 1.3), { x: 34, duration: .5 });
+      T.check("#m2", s(1, 1.8));
+      T.pulse("#ty", s(1, 2.2), 1.12);
+      T.pop("#o2", s(1, 2.4));
+      T.pulse("#m2", s(1, 3.4), 1.15);
+
+      // Paso 3 · Rojo: el guardrail bloquea y la acción rebota
+      T.slide(".lane.r", s(2, .1), { x: -30, y: 0 });
+      T.pop("#tr", s(2, .8));
+      T.to("#tr", s(2, 1.3), { x: 40, duration: .45, ease: "power2.in" });
+      T.check("#m3", s(2, 1.75));
+      T.to("#tr", s(2, 1.8), { x: -8, duration: .5, ease: "back.out(2)" });
+      T.pop("#o3", s(2, 2.3));
+      T.pulse("#m3", s(2, 3.2), 1.15);
+
+      // Paso 4 · Hooks: before_tool es ese control; after_tool deja el registro
+      T.fadeOut("#gate-tag", s(3, 0));
+      T.slide(".hk", s(3, .35), { y: -18, stagger: .12 });
+      T.glow("#h3", s(3, 1.5));
+      T.pulse("#gate", s(3, 1.7), 1.04);
+      T.glow("#h4", s(3, 2.3));
+      T.pop("#reg", s(3, 2.5));
+      T.slide("#reg .lg", s(3, 2.9), { x: -20, y: 0, stagger: .3 });
+
+      // Paso 5 · Humano en el ciclo: confirma lo amarillo y decide lo rojo
+      T.pop("#human", s(4, .2));
+      T.draw(".wy", s(4, .8), .6).draw(".wr", s(4, 1.1), .6);
+      T.pop("#human .btns .tag", s(4, 1.6), .15);
+      T.glow("#human", s(4, 2.2), "#ffc45a");
+      T.pulse("#o3", s(4, 2.6), 1.06);
+      T.pulse("#human .btns .tag", s(4, 3.2), 1.08);
+
+      window.__timelines["c4p5"] = T.tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>C3·P2 · Las ocho partes de una skill</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared/teacher.css" />
+    <script src="shared/teacher.js"></script>
+    <style>
+      /* Pizarra: la ficha de una skill se llena parte por parte */
+      .sheet { position: absolute; left: 0; top: 0; width: 1430px; height: 600px; border-radius: 30px; border: 2px solid var(--line); background: linear-gradient(155deg, rgba(33, 24, 50, .92), rgba(11, 9, 16, .92)); box-shadow: 0 24px 60px rgba(0, 0, 0, .4); }
+      .sheet-head { position: absolute; left: 26px; right: 26px; top: 14px; height: 44px; display: flex; align-items: center; justify-content: space-between; }
+      .sheet-head b { font-weight: 800; font-size: 24px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+      .sheet-head span { font-family: "JetMono", monospace; font-size: 24px; color: var(--ink-mute); }
+      .slot { position: absolute; width: 685px; height: 128px; padding: 12px 20px 12px 82px; border-radius: 20px; border: 2px dashed rgba(185, 151, 255, .35); background: rgba(255, 255, 255, .025); }
+      .slot > i { position: absolute; left: 16px; top: 14px; width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-family: "Bricolage"; font-weight: 800; font-size: 26px; background: rgba(255, 255, 255, .08); color: var(--ink-soft); }
+      .slot .sh { display: flex; align-items: baseline; gap: 16px; white-space: nowrap; }
+      .slot .sh b { font-family: "Bricolage"; font-weight: 700; font-size: 33px; letter-spacing: -.01em; color: var(--ink); }
+      .slot .sh span { font-size: 26px; font-weight: 600; color: var(--ink-mute); }
+      .slot .v { position: absolute; left: 82px; right: 20px; top: 54px; font-size: 26px; line-height: 1.2; font-weight: 600; color: var(--ink); }
+      .slot .v.warn { color: #ff8fa3; font-weight: 800; }
+      .slot .v u { text-decoration: none; font-family: "JetMono", monospace; font-size: 24px; color: #ffe2ad; }
+      #f1 { left: 20px; top: 66px; } #f2 { left: 20px; top: 198px; } #f3 { left: 20px; top: 330px; } #f4 { left: 20px; top: 462px; }
+      #f5 { left: 725px; top: 66px; } #f6 { left: 725px; top: 198px; } #f7 { left: 725px; top: 330px; } #f8 { left: 725px; top: 462px; }
+      /* Panel derecho: avance de la ficha */
+      #prog { left: 1460px; top: 0; width: 316px; height: 512px; padding: 26px 26px; }
+      .cnt { position: relative; width: 100%; height: 130px; margin-top: 4px; }
+      .cnt span { position: absolute; left: 0; top: 0; font-family: "Bricolage"; font-weight: 800; font-size: 120px; line-height: 1; letter-spacing: -.04em; color: var(--accent); }
+      .segs { position: relative; display: flex; gap: 6px; width: 100%; }
+      .segs i { flex: 1; height: 18px; border-radius: 9px; background: rgba(255, 255, 255, .1); }
+      #prog .test { position: relative; margin-top: 14px; }
+      #done { left: 1490px; top: 438px; }
+      /* Analogía: licuadora con su manual */
+      .blender { position: absolute; left: 40px; top: 70px; width: 260px; height: 480px; }
+      .blender svg { width: 100%; height: 100%; fill: none; stroke: var(--lavender); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+      .manual { position: absolute; left: 320px; top: 56px; width: 400px; height: 510px; border-radius: 20px; background: #f6f2ff; color: #1b1426; padding: 26px 30px; box-shadow: 0 22px 50px rgba(0, 0, 0, .45); }
+      .manual h4 { font-family: "Bricolage"; font-size: 32px; font-weight: 750; color: var(--purple); }
+      .manual small { display: block; margin-top: 2px; font-size: 22px; font-weight: 700; color: #6c6280; }
+      .manual ol { margin-top: 14px; list-style: none; display: flex; flex-direction: column; gap: 9px; }
+      .manual li { display: flex; align-items: center; gap: 14px; font-size: 26px; font-weight: 700; }
+      .manual li i { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-size: 19px; font-weight: 800; background: var(--purple); color: #fff; }
+      .manual li.warn i { background: var(--red); color: #2c0510; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="c3p2" data-start="0" data-duration="44" data-width="1920" data-height="1080" data-fps="30">
+      <div id="board">
+        <div class="sheet hide"><div class="sheet-head"><b>Ficha de skill</b><span>versión 0.1</span></div></div>
+
+        <div class="slot hide" id="f1"><i>1</i><div class="sh"><b>Nombre</b><span>verbo + objeto</span></div>
+          <p class="v hide">Convertir notas en plan de acción</p></div>
+        <div class="slot hide" id="f2"><i>2</i><div class="sh"><b>Descripción</b><span>cuándo sí y cuándo no</span></div>
+          <p class="v hide">Sí: notas de reunión. No: transcribir audio ni textos legales.</p></div>
+        <div class="slot hide" id="f3"><i>3</i><div class="sh"><b>Entradas</b><span>qué necesita</span></div>
+          <p class="v hide">Notas: obligatorio · fecha: opcional · sin contraseñas</p></div>
+        <div class="slot hide" id="f4"><i>4</i><div class="sh"><b>Pasos</b><span>secuencia y decisiones</span></div>
+          <p class="v hide">Leer → sacar acuerdos → ¿falta responsable? preguntar → armar tabla</p></div>
+        <div class="slot hide" id="f5"><i>5</i><div class="sh"><b>Salida</b><span>qué entrega</span></div>
+          <p class="v hide"><u>tarea | responsable | fecha | fuente</u> + acuerdos y vacíos</p></div>
+        <div class="slot hide" id="f6"><i>6</i><div class="sh"><b>Recursos</b><span>plantillas, scripts</span></div>
+          <p class="v hide">Plantilla de tabla. No necesita herramientas externas.</p></div>
+        <div class="slot hide" id="f7"><i>7</i><div class="sh"><b>Límites</b><span>fuera de alcance y pausa</span></div>
+          <p class="v warn hide">Vacío: la skill inventaría fechas y responsables</p>
+          <p class="v ok hide">No inventar fechas ni responsables. Pausa si no hay fuente.</p></div>
+        <div class="slot hide" id="f8"><i>8</i><div class="sh"><b>Control</b><span>cómo prueba que terminó</span></div>
+          <p class="v hide">Checklist de 6 ítems: cada tarea con responsable o «pendiente»</p></div>
+
+        <div class="card hide" id="prog"><h3>Partes listas</h3>
+          <div class="cnt"><span class="c0">0/8</span><span class="c1">2/8</span><span class="c2">4/8</span><span class="c3">6/8</span><span class="c4">7/8</span><span class="c5">8/8</span></div>
+          <div class="segs"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <p class="test">La prueba: otra persona la entiende <b>sin que se la expliques</b>.</p>
+        </div>
+        <span class="tag green hide" id="done" data-icon="check">Ficha 0.1</span>
+      </div>
+    </div>
+    <script>
+      const T = Teacher.setup({
+        cls: 3, point: 2,
+        title: "¿Qué piezas convierten un prompt en una <em>skill</em>?",
+        headTitle: "Las ocho partes de una skill",
+        question: "Una skill no es un prompt largo con un nombre bonito. Tiene ocho partes, y cada una cumple una función.",
+        analogy: {
+          art: `<div class="blender"><svg viewBox="0 0 260 480">
+              <path d="M60 40h140l-20 250H80z"/><path d="M60 40h140"/><path d="M200 80h34v120h-30"/>
+              <path d="M92 246c20-22 56-22 76 0M92 226c20 22 56 22 76 0"/><path d="M130 236v58"/><circle cx="104" cy="150" r="16"/><circle cx="148" cy="118" r="13"/><circle cx="150" cy="172" r="11"/>
+              <rect x="50" y="300" width="160" height="150" rx="22"/><circle cx="130" cy="375" r="26"/>
+              <path d="M90 26h80"/></svg></div>
+            <div class="manual"><h4>Manual de uso</h4><small>Licuadora L-200</small>
+              <ol><li><i>1</i>Modelo</li><li><i>2</i>Para qué sirve</li><li><i>3</i>Qué le pones</li><li><i>4</i>Pasos de uso</li>
+                <li><i>5</i>Qué obtienes</li><li><i>6</i>Accesorios</li><li class="warn"><i>7</i>Advertencias</li><li><i>8</i>Prueba de calidad</li></ol></div>`,
+          title: "Una herramienta con su manual",
+          text: "Una licuadora trae manual: para qué sirve, qué <em>no</em> meterle, sus pasos y advertencias. Una skill es tu tarea <em>con su manual completo</em>.",
+        },
+        steps: [
+          { label: "Nombre y descripción", caption: "Primero el <em>nombre</em> (verbo + objeto) y la <em>descripción</em>: cuándo se usa y cuándo no." },
+          { label: "Entradas y pasos", caption: "Luego qué <em>necesita</em> y qué <em>pasos</em> sigue, con al menos una decisión y una pregunta." },
+          { label: "Salida y recursos", caption: "Define qué <em>entrega</em>, con campos que se puedan revisar, y qué <em>recursos</em> usa." },
+          { label: "Límites", caption: "Sin <em>límites</em>, la skill inventaría datos. Declara qué queda fuera y cuándo hacer pausa." },
+          { label: "Control", caption: "Cierra con el <em>control</em>: una checklist que prueba que terminó bien. Ficha 0.1 lista." },
+        ],
+        takeaway: {
+          title: "Una skill dice <em>cuándo</em> se usa, <em>cómo</em> trabaja y <em>cuándo se detiene</em>.",
+          text: "Nombre · descripción · entradas · pasos · salida · recursos · límites · control.",
+        },
+      });
+
+      const s = T.stepAt;
+      const A = T.accent;
+      // Analogía: aparece la licuadora y su manual se lee parte por parte
+      T.slide("@.blender", T.analogyAt(.5), { x: -30, y: 0 });
+      T.slide("@.manual", T.analogyAt(1.1), { x: 30, y: 0 });
+      T.slide("@.manual li", T.analogyAt(1.7), { x: 20, y: 0, stagger: .22 });
+      T.pulse("@.manual li.warn", T.analogyAt(4.4), 1.08);
+
+      // Estado inicial del contador
+      T.tl.set(["#board .cnt span"], { opacity: 0 }, 0);
+
+      // Al iniciar la pizarra: la ficha vacía con sus ocho casillas
+      T.fadeIn(".sheet", T.stepAt(0, -.55), .4);
+      T.slide(".slot", T.stepAt(0, -.45), { y: 16, stagger: .04, duration: .4 });
+      T.pop("#prog", T.stepAt(0, -.3));
+      T.fadeIn(".cnt .c0", T.stepAt(0, -.1), .3);
+
+      // Llena una casilla: borde sólido, número encendido y valor escrito
+      const fill = (n, t) => {
+        T.tl.set(`#board #f${n}`, { borderStyle: "solid" }, t);
+        T.to(`#f${n}`, t, { borderColor: A, backgroundColor: "rgba(255,196,90,.07)", duration: .35 });
+        T.to(`#f${n} > i`, t, { backgroundColor: A, duration: .3 });
+        T.tl.set(`#board #f${n} > i`, { color: "#050507" }, t + .15);
+        T.slide(`#f${n} .v:not(.warn)`, t + .25, { x: 24, y: 0, duration: .5 });
+      };
+      const count = (k, t, segs) => {
+        T.fadeOut(`.cnt .c${k - 1}`, t, 0, .2);
+        T.fromTo(`.cnt .c${k}`, t + .15, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .35, ease: "back.out(1.6)" });
+        segs.forEach((n, j) => T.to(`.segs i:nth-child(${n})`, t + j * .15, { backgroundColor: A, duration: .3 }));
+      };
+
+      // Paso 1 · Nombre y descripción
+      fill(1, s(0, .3));
+      fill(2, s(0, 1.6));
+      count(1, s(0, 2.4), [1, 2]);
+      T.pulse("#f2", s(0, 3.2), 1.03);
+
+      // Paso 2 · Entradas y pasos
+      fill(3, s(1, .2));
+      fill(4, s(1, 1.6));
+      count(2, s(1, 2.4), [3, 4]);
+      T.pulse("#f4", s(1, 3.2), 1.03);
+
+      // Paso 3 · Salida y recursos
+      fill(5, s(2, .2));
+      fill(6, s(2, 1.6));
+      count(3, s(2, 2.4), [5, 6]);
+      T.glow("#f5", s(2, 3.0));
+
+      // Paso 4 · Límites: primero la alerta roja por la casilla vacía, luego se llena
+      T.tl.set("#board #f7", { borderStyle: "solid" }, s(3, .1));
+      T.to("#f7", s(3, .1), { borderColor: "#ff5c78", backgroundColor: "rgba(255,92,120,.10)", duration: .3 });
+      T.slide("#f7 .v.warn", s(3, .3), { x: 20, y: 0, duration: .4 });
+      T.pulse("#f7", s(3, .9), 1.04);
+      T.fadeOut("#f7 .v.warn", s(3, 2.95), 0, .25);
+      fill(7, s(3, 3.1));
+      count(4, s(3, 3.6), [7]);
+
+      // Paso 5 · Control y ficha completa
+      fill(8, s(4, .2));
+      count(5, s(4, 1.1), [8]);
+      T.pop("#done", s(4, 1.8));
+      T.glow("#prog", s(4, 2.4), "#45e0a8");
+      T.pulse("#done", s(4, 3.3), 1.1);
+
+      window.__timelines["c3p2"] = T.tl;
+    </script>
+  </body>
+</html>

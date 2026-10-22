@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>C3·P3 · Trigger, hook, fallback y límites de activación</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared/teacher.css" />
+    <script src="shared/teacher.js"></script>
+    <style>
+      /* Pizarra: banda transportadora con puertas que revisan cada petición */
+      .req { position: absolute; left: 0; top: 0; height: 68px; display: flex; align-items: center; gap: 18px; padding: 0 22px; border-radius: 20px; background: #f6f2ff; color: #1b1426; box-shadow: 0 16px 40px rgba(0, 0, 0, .4); white-space: nowrap; }
+      .req small { font-weight: 850; font-size: 22px; letter-spacing: .1em; text-transform: uppercase; color: var(--purple); }
+      .req span { font-family: "JetMono", monospace; font-size: 26px; }
+      .req em { font-style: normal; font-weight: 800; font-size: 23px; padding: 6px 14px; border-radius: 14px; background: rgba(122, 60, 255, .14); color: #3d1a8f; }
+      .req em.no { background: rgba(255, 92, 120, .18); color: #8c1230; }
+      #alt { left: 1080px; top: 2px; max-width: none; white-space: nowrap; }
+      .belt { position: absolute; left: 0; top: 300px; width: 1540px; height: 34px; border-radius: 17px; border: 2px solid rgba(185, 151, 255, .45); background: repeating-linear-gradient(90deg, rgba(185, 151, 255, .28) 0 18px, rgba(185, 151, 255, .06) 18px 46px); z-index: 1; }
+      .gate { position: absolute; top: 84px; height: 152px; padding: 14px 20px; gap: 6px; }
+      .gate h4 { font-family: "Bricolage"; font-weight: 700; font-size: 33px; line-height: 1.05; }
+      .gate p { font-size: 26px; line-height: 1.25; color: var(--ink-soft); }
+      .gate .checklist { position: relative; gap: 8px; }
+      .gate .checklist li { font-size: 26px; gap: 12px; }
+      .gate .checklist li i { width: 34px; height: 34px; }
+      .gate .checklist li i .ic { color: inherit; }
+      #g-trig { left: 100px; width: 270px; }
+      #g-in { left: 420px; width: 384px; }
+      #g-out { left: 1136px; width: 384px; }
+      #g-proc { left: 862px; top: 196px; width: 226px; height: 176px; z-index: 6; align-items: center; justify-content: center; text-align: center; gap: 4px; padding: 14px; }
+      #g-proc .ic { width: 58px; height: 58px; }
+      #deliver { left: 1560px; top: 196px; width: 216px; height: 176px; align-items: center; justify-content: center; text-align: center; gap: 4px; padding: 14px; }
+      .door { position: absolute; top: 236px; width: 16px; height: 98px; border-radius: 6px; background: var(--lavender); z-index: 4; transform-origin: 50% 0%; }
+      #d-trig { left: 227px; } #d-in { left: 604px; } #d-out { left: 1320px; }
+      .tk { width: 60px; height: 60px; top: 240px; left: 14px; }
+      #tk2 { background: linear-gradient(145deg, #ff5c78, #9c1630); }
+      #tk3 { background: linear-gradient(145deg, #ffc45a, #b06d00); }
+      .zone { position: absolute; top: 452px; height: 148px; padding: 18px 24px; gap: 6px; }
+      .zone h4 { font-family: "Bricolage"; font-weight: 700; font-size: 31px; }
+      .zone p { font-size: 26px; line-height: 1.25; color: var(--ink-soft); }
+      #out-scope { left: 0; width: 400px; }
+      #safe { left: 460px; width: 620px; }
+      #result { left: 1110px; width: 410px; height: auto; top: 452px; }
+      #result p { color: var(--ink); }
+      #result p b { color: var(--yellow); }
+      #tag-stop { left: 640px; top: 386px; }
+      #g-in .c-src { position: relative; }
+      #g-in .xmark { position: absolute; left: 0; top: 0; width: 36px; height: 36px; border-radius: 12px; display: grid; place-items: center; background: var(--red); color: #2c0510; }
+      #g-in .xmark svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 12; stroke-linecap: round; }
+      /* Analogía: control de un aeropuerto */
+      .air { position: absolute; inset: 0; }
+      .st { position: absolute; top: 80px; width: 200px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+      .st svg { width: 170px; height: 170px; fill: none; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; stroke: var(--lavender); }
+      .st b { font-size: 28px; font-weight: 800; color: var(--ink); text-align: center; line-height: 1.15; }
+      .st small { font-size: 26px; font-weight: 700; color: var(--ink-mute); text-align: center; }
+      #st1 { left: 40px; } #st2 { left: 280px; } #st3 { left: 520px; }
+      #st1 svg { stroke: var(--green); } #st2 svg { stroke: var(--cyan); }
+      .air .arr { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke: rgba(185, 151, 255, .6); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+      .air .arr .dash { stroke: var(--yellow); stroke-dasharray: 14 14; }
+      .desk { position: absolute; left: 200px; top: 440px; width: 360px; padding: 18px 20px; border-radius: 22px; border: 3px solid var(--yellow); background: rgba(255, 196, 90, .12); text-align: center; }
+      .desk b { display: block; font-size: 28px; font-weight: 800; color: #ffe2ad; }
+      .desk small { font-size: 26px; font-weight: 700; color: var(--ink-soft); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="c3p3" data-start="0" data-duration="44" data-width="1920" data-height="1080" data-fps="30">
+      <div id="board">
+        <svg class="wires" viewBox="0 0 1776 600">
+          <path class="w-out red dash" pathLength="1" d="M190 336V448" />
+          <path class="w-safe yellow dash" pathLength="1" d="M546 336V448" />
+        </svg>
+
+        <div class="req hide" id="q1"><small>Petición</small><span>«Convierte estas notas en tareas»</span><em>notas-lunes.txt</em></div>
+        <div class="req hide" id="q2"><small>Petición</small><span>«Transcribe este audio»</span><em>reunion.mp3</em></div>
+        <div class="req hide" id="q3"><small>Petición</small><span>«Crea las tareas de la reunión»</span><em class="no">sin notas</em></div>
+        <div class="note purple hide" id="alt">También activa: «Sácame los pendientes»</div>
+
+        <div class="belt hide"></div>
+
+        <div class="card gate hide" id="g-trig"><h4>Trigger</h4><p>¿Pide esta tarea? Lee la intención</p></div>
+        <div class="card gate hide" id="g-in"><h4>Hook de entrada</h4>
+          <ul class="checklist"><li class="c-src"><i data-icon="check"></i>Hay fuente<span class="xmark hide" data-icon="x" data-icon-class=""></span></li><li><i data-icon="check"></i>Sin datos sensibles</li></ul></div>
+        <div class="card accent hide" id="g-proc"><span data-icon="gear"></span><h4 style="font-family:Bricolage;font-size:33px;font-weight:700">Proceso</h4><p>sigue sus pasos</p></div>
+        <div class="card gate hide" id="g-out"><h4>Hook de salida</h4>
+          <ul class="checklist"><li><i data-icon="check"></i>Cada tarea con dueño</li><li><i data-icon="check"></i>Si falta: «pendiente»</li></ul></div>
+        <div class="card hide" id="deliver"><span data-icon="table"></span><h4 style="font-family:Bricolage;font-size:33px;font-weight:700">Entrega</h4><p>tabla de tareas</p></div>
+
+        <div class="door hide" id="d-trig"></div><div class="door hide" id="d-in"></div><div class="door hide" id="d-out"></div>
+
+        <div class="token tk hide" id="tk1"><span data-icon="doc" data-icon-class="ic sm"></span></div>
+        <div class="token tk hide" id="tk2"><span data-icon="doc" data-icon-class="ic sm"></span></div>
+        <div class="token tk hide" id="tk3"><span data-icon="doc" data-icon-class="ic sm"></span></div>
+
+        <div class="card red zone hide" id="out-scope"><h4>Fuera de alcance</h4><p>Transcribir no es su tarea.</p></div>
+        <span class="tag red hide" id="tag-stop" data-icon="stop">Con contraseñas: detener</span>
+        <div class="card yellow zone hide" id="safe"><h4>Fallback · zona segura</h4><p>Pregunta: «Faltan las notas, ¿me las compartes?»</p></div>
+        <div class="card green zone hide" id="result"><p>Enviar acta → <b>Ana · 12 oct</b></p><p>Reservar sala → <b>pendiente</b></p></div>
+      </div>
+    </div>
+    <script>
+      const T = Teacher.setup({
+        cls: 3, point: 3,
+        title: "¿Cuándo debe <em>activarse</em> una skill… y cuándo no?",
+        headTitle: "Trigger, hook, fallback y límites de activación",
+        question: "Una buena skill reconoce cuándo le toca, revisa antes de trabajar y sabe qué hacer si algo falta.",
+        analogy: {
+          art: `<div class="air">
+              <svg class="arr" viewBox="0 0 760 620"><path d="M242 165h32M482 165h32"/><path d="M262 155l12 10-12 10M502 155l12 10-12 10"/><path class="dash" d="M380 350V430"/></svg>
+              <div class="st" id="st1"><svg viewBox="0 0 150 150"><path d="M12 40h126v24a12 12 0 000 22v24H12V86a12 12 0 000-22z"/><path d="M98 44v62" stroke-dasharray="8 10"/><path d="M30 66h46M30 86h30"/></svg><b>Pase</b><small>te deja entrar</small></div>
+              <div class="st" id="st2"><svg viewBox="0 0 150 150"><path d="M30 140V60a45 45 0 0190 0v80"/><path d="M54 140V66a21 21 0 0142 0v74"/><path d="M14 140h122"/></svg><b>Escáner</b><small>revisa antes</small></div>
+              <div class="st" id="st3"><svg viewBox="0 0 150 150"><path d="M10 86l50-8 34-46h16l-14 46 40-4 10-16h10l-4 28 4 28h-10l-10-16-40-4 14 46H94L60 104l-50-8z"/></svg><b>Avión</b><small>tarea hecha</small></div>
+              <div class="desk"><b>Mostrador de ayuda</b><small>si falta un documento</small></div></div>`,
+          title: "El control de un aeropuerto",
+          text: "Tu pase te deja entrar, el escáner revisa antes de abordar y, si falta algo, te mandan al <em>mostrador</em>, no al avión equivocado.",
+        },
+        steps: [
+          { label: "Trigger positivo", caption: "El <em>trigger</em> lee la intención: «convierte estas notas» o «sácame pendientes» la activan." },
+          { label: "Trigger negativo", caption: "Un <em>trigger negativo</em> la frena: «transcribe este audio» se parece, pero no es su tarea." },
+          { label: "Hook de entrada", caption: "El <em>hook de entrada</em> revisa antes de trabajar: que haya fuente y nada sensible." },
+          { label: "Hook de salida", caption: "El <em>hook de salida</em> revisa antes de entregar: cada tarea con dueño o «pendiente»." },
+          { label: "Fallback", caption: "Si falta la fuente, el <em>fallback</em> lleva a una zona segura: pregunta, nunca inventa." },
+        ],
+        takeaway: {
+          title: "Se activa por <em>intención</em> y, si algo falta, <em>pregunta</em>: nunca inventa.",
+          text: "Trigger abre · hook revisa · fallback desvía a una respuesta segura.",
+        },
+      });
+
+      const s = T.stepAt;
+      const GREEN = "#45e0a8", RED = "#ff5c78";
+      // Analogía: pase → escáner → avión, y el desvío al mostrador
+      T.slide("@.air .st", T.analogyAt(.5), { x: -30, y: 0, stagger: .45 });
+      T.fromTo("@.air .arr path", T.analogyAt(.9), { opacity: 0 }, { opacity: 1, duration: .5, stagger: .3 });
+      T.pop("@.air .desk", T.analogyAt(3.0));
+      T.pulse("@.air #st2", T.analogyAt(4.4), 1.06);
+
+      // Estado inicial de trazos y puertas
+      T.tl.set(["#board .w-out", "#board .w-safe"], { strokeDasharray: 1, strokeDashoffset: 1 }, 0);
+
+      // Al iniciar la pizarra: la banda y sus estaciones
+      T.fadeIn(".belt", s(0, -.5), .4);
+      T.tl.fromTo("#board .belt", { backgroundPosition: "0px 0px" }, { backgroundPosition: "-920px 0px", duration: T.D - 6.6 - s(0, -.5), ease: "none" }, s(0, -.5));
+      T.slide(".gate, #g-proc, #deliver", s(0, -.4), { y: 20, stagger: .06, duration: .4 });
+      T.fadeIn(".door", s(0, -.1), .3);
+
+      // Paso 1 · Trigger positivo: la petición entra y la puerta se abre
+      T.slide("#q1", s(0, .1), { x: -30, y: 0 });
+      T.pop("#tk1", s(0, .6));
+      T.to("#d-trig", s(0, 1.2), { scaleY: 0, backgroundColor: GREEN, duration: .35 });
+      T.glow("#g-trig", s(0, 1.2), GREEN);
+      T.to("#tk1", s(0, 1.5), { x: 300, duration: .9 });
+      T.slide("#alt", s(0, 2.5), { x: 30, y: 0 });
+
+      // Paso 2 · Trigger negativo: «transcribe este audio» rebota
+      T.fadeOut("#alt", s(1, 0), 0, .3);
+      T.fadeOut("#q1", s(1, 0), 0, .3);
+      T.slide("#q2", s(1, .2), { x: -30, y: 0 });
+      T.to("#d-trig", s(1, .3), { scaleY: 1, backgroundColor: RED, duration: .35 });
+      T.to("#g-trig", s(1, .3), { boxShadow: "0 0 0 4px #ff5c78, 0 0 60px #ff5c78", borderColor: RED, duration: .35 });
+      T.pop("#tk2", s(1, .6));
+      T.to("#tk2", s(1, 1.0), { x: 130, duration: .6, ease: "power2.in" });
+      T.to("#tk2", s(1, 1.6), { x: 110, y: 130, duration: .5, ease: "power2.in" });
+      T.draw(".w-out", s(1, 1.6), .5);
+      T.to("#tk2", s(1, 2.1), { y: 200, opacity: 0, duration: .4 });
+      T.pop("#out-scope", s(1, 2.2));
+
+      // Paso 3 · Hook de entrada: revisa fuente y datos sensibles
+      T.fadeOut("#q2", s(2, 0), 0, .3);
+      T.fadeIn("#q1", s(2, .2), .4);
+      T.glow("#g-in", s(2, .3));
+      T.tick("#g-in .checklist li i", s(2, .7), .5);
+      T.to("#d-in", s(2, 1.8), { scaleY: 0, backgroundColor: GREEN, duration: .35 });
+      T.to("#tk1", s(2, 2.0), { x: 640, duration: .8 });
+      T.pop("#tag-stop", s(2, 2.6));
+
+      // Paso 4 · Proceso y hook de salida
+      T.to("#tk1", s(3, .1), { x: 900, duration: .7 });
+      T.to("#g-proc .ic", s(3, .3), { rotation: 180, duration: 1.2 });
+      T.pulse("#g-proc", s(3, .5), 1.05);
+      T.to("#tk1", s(3, 1.2), { x: 1150, duration: .6 });
+      T.tick("#g-out .checklist li i", s(3, 1.5), .45);
+      T.to("#d-out", s(3, 2.4), { scaleY: 0, backgroundColor: GREEN, duration: .35 });
+      T.to("#tk1", s(3, 2.6), { x: 1620, scale: .6, opacity: 0, duration: .8 });
+      T.glow("#deliver", s(3, 3.1), GREEN);
+      T.slide("#result", s(3, 3.0), { y: 24 });
+
+      // Paso 5 · Fallback: sin notas, se desvía a la zona segura
+      T.fadeOut("#q1", s(4, 0), 0, .3);
+      T.slide("#q3", s(4, .1), { x: -30, y: 0 });
+      T.to("#d-trig", s(4, .2), { scaleY: 0, backgroundColor: GREEN, duration: .35 });
+      T.to("#g-trig", s(4, .2), { boxShadow: "0 0 0 4px #45e0a8, 0 0 60px #45e0a8", borderColor: GREEN, duration: .35 });
+      T.to("#d-in", s(4, .2), { scaleY: 1, backgroundColor: RED, duration: .35 });
+      T.pop("#tk3", s(4, .3));
+      T.to("#tk3", s(4, .6), { x: 500, duration: .7 });
+      T.check("#g-in .xmark", s(4, 1.2));
+      T.pulse("#g-in", s(4, 1.3), 1.04);
+      T.draw(".w-safe", s(4, 1.3), .4);
+      T.to("#tk3", s(4, 1.4), { y: 200, opacity: 0, duration: .5, ease: "power2.in" });
+      T.pop("#safe", s(4, 1.5));
+      T.glow("#safe", s(4, 2.9), "#ffc45a");
+
+      window.__timelines["c3p3"] = T.tl;
+    </script>
+  </body>
+</html>
