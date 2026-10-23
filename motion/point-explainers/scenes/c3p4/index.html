@@ -31,7 +31,7 @@
       .layer > i { position: absolute; left: 20px; top: 30px; width: 50px; height: 50px; border-radius: 14px; display: grid; place-items: center; font-style: normal; font-family: "Bricolage"; font-weight: 800; font-size: 26px; background: rgba(255, 255, 255, .08); color: var(--ink); }
       #l1 { top: 46px; } #l2 { top: 180px; } #l3 { top: 314px; }
       #l1 > i { background: var(--green); color: #062418; } #l2 > i { background: var(--yellow); color: #2a1b00; } #l3 > i { background: var(--lavender); color: #1d0f3b; }
-      .cares { position: absolute; left: 0; top: 476px; display: flex; gap: 16px; }
+      .cares { position: absolute; left: 0; top: 476px; display: flex; gap: 12px; }
       .cares .tag { position: relative; }
       /* Analogía: un cargador de viaje y tres enchufes */
       .trip { position: absolute; inset: 0; }
@@ -81,8 +81,8 @@
 
         <div class="cares">
           <span class="tag cyan hide" data-icon="route">Rutas relativas</span>
-          <span class="tag yellow hide" data-icon="doc">Plantilla vacía, sin notas reales</span>
-          <span class="tag red hide" data-icon="search">Revisa skills de terceros</span>
+          <span class="tag yellow hide" data-icon="doc">Sin actas reales del comité de la iglesia</span>
+          <span class="tag red hide" data-icon="search">Revisa skills ajenas</span>
         </div>
       </div>
     </div>
@@ -91,7 +91,7 @@
         cls: 3, point: 4,
         title: "¿Cómo llevo mi skill a <em>cualquier</em> plataforma?",
         headTitle: "De ficha portable a implementación",
-        question: "ChatGPT, Claude y Gemini la llaman distinto. Si guardas una ficha neutral, no reconstruyes nada al cambiar.",
+        question: "ChatGPT, Claude o Gemini: cada una la llama distinto. Guarda una ficha neutral y adáptala a la tuya.",
         analogy: {
           art: `<div class="trip">
               <svg class="cab" viewBox="0 0 760 620"><path d="M280 290C360 290 360 115 430 115"/><path d="M280 310C360 310 360 310 430 310"/><path d="M280 330C360 330 360 505 430 505"/></svg>
@@ -104,10 +104,10 @@
           text: "Al viajar, tu cargador es el mismo: solo cambias el <em>adaptador</em>. La skill igual: una ficha portable y un adaptador por plataforma.",
         },
         steps: [
-          { label: "Ficha neutral", caption: "Primero, una ficha <em>neutral</em>: una carpeta que no depende de ninguna plataforma." },
-          { label: "Adaptadores", caption: "Luego la conectas: <em>Skills, Agent Skills o Gems</em>. Cambia el adaptador, no la lógica." },
+          { label: "Ficha neutral", caption: "Primero, una ficha <em>neutral</em>: una carpeta que no depende de ChatGPT, Claude o Gemini." },
+          { label: "Adaptadores", caption: "Luego la adaptas a la tuya: <em>Skills, Agent Skills o Gems</em>. Cambia el adaptador, no la lógica." },
           { label: "Carga progresiva", caption: "Primero se lee la <em>descripción</em>; las referencias solo se abren si hacen falta." },
-          { label: "Cuidados", caption: "Usa <em>rutas relativas</em>, no subas notas reales y revisa toda skill ajena antes de instalarla." },
+          { label: "Cuidados", caption: "Usa <em>rutas relativas</em>, no subas actas reales del comité y revisa toda skill ajena." },
         ],
         takeaway: {
           title: "Una ficha <em>portable</em>, un adaptador por plataforma. La lógica no cambia.",

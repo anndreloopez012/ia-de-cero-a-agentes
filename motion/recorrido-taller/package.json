@@ -1,0 +1,9 @@
+{
+  "name": "recorrido-taller",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "npx --yes hyperframes@0.8.186 check .",
+    "render": "npx --yes hyperframes@0.8.186 render . -o ../../site/assets/motion/recorrido-taller.mp4 --crf 22"
+  }
+}

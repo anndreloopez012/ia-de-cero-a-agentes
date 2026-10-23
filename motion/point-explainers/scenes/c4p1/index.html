@@ -83,13 +83,13 @@
 
         <div class="frame hide" id="wf"><span class="say">Workflow · ruta fija</span></div>
         <div class="st hide" id="st1"><i>1</i><div><h3>Leer el nombre</h3><p>foto_0912.jpg</p></div></div>
-        <div class="st hide" id="st2"><i>2</i><div><h3>Aplicar la regla</h3><p>fecha + tema</p></div></div>
-        <div class="st hide" id="st3"><i>3</i><div><h3>Guardar</h3><p>2026-09-12_viaje.jpg</p></div></div>
+        <div class="st hide" id="st2"><i>2</i><div><h3>Aplicar la regla</h3><p>producto + precio</p></div></div>
+        <div class="st hide" id="st3"><i>3</i><div><h3>Guardar</h3><p>tamales-Q10.jpg</p></div></div>
         <div class="hide" id="wf-dot"></div>
-        <span class="tag cyan hide" id="wf-ex" data-icon="copy">Ej.: renombrar fotos con una regla</span>
+        <span class="tag cyan hide" id="wf-ex" data-icon="copy">Ej.: fotos de venta por WhatsApp</span>
 
         <span class="say hide" id="fence-lbl">Agente · elige dentro de la cerca</span>
-        <div class="card row accent hide" id="goal"><span data-icon="target" data-icon-class="ic"></span><h3>Objetivo:</h3><p>responder la consulta de Ana</p></div>
+        <div class="card row accent hide" id="goal"><span data-icon="target" data-icon-class="ic"></span><h3>Objetivo:</h3><p>responder al vecino sobre su trámite</p></div>
         <div class="card center solid hide" id="agent"><span data-icon="brain" data-icon-class="ic"></span><h3>Agente</h3><p>elige el paso</p></div>
         <span class="tag green hide" id="op1" data-icon="search">Investigar en fuentes</span>
         <span class="tag hide" id="op2" data-icon="pencil">Redactar <b>(después)</b></span>
@@ -100,7 +100,7 @@
         <div class="okmark hide" id="pick"><svg viewBox="0 0 100 100"><path d="M18 52l21 21 44-49"/></svg></div>
 
         <div class="card red hide" id="outside"><h3>Fuera de la cerca</h3>
-          <ul><li>Enviar correos</li><li>Borrar archivos</li><li>Hacer pagos</li></ul></div>
+          <ul><li>Enviar mensajes</li><li>Borrar archivos</li><li>Hacer pagos</li></ul></div>
         <div class="nomark hide" id="nomark"><svg viewBox="0 0 100 100"><path d="M24 24l52 52M76 24L24 76"/></svg></div>
         <div class="card cyan hide" id="limits"><h3>Límites</h3><p>Máximo 4 ciclos</p><p>Salida: terminar o escalar</p></div>
 
@@ -128,7 +128,7 @@
         steps: [
           { label: "Ruta fija", caption: "Un workflow sigue una <em>secuencia fija</em>: los mismos pasos, en el mismo orden, siempre." },
           { label: "Objetivo", caption: "Un agente recibe un <em>objetivo</em>, no una lista de pasos: él decide cuál sigue." },
-          { label: "Estado", caption: "Mira el <em>estado</em>: ya leyó la consulta y faltan hechos. Por eso elige investigar." },
+          { label: "Estado", caption: "Mira el <em>estado</em>: ya leyó la consulta del vecino y faltan hechos. Por eso elige investigar." },
           { label: "Cerca y límites", caption: "Autonomía no es hacer todo: elige entre pasos <em>permitidos</em>, con límite y salida." },
           { label: "¿Cuál uso?", caption: "Varios pasos no bastan. Si ninguna decisión depende del estado, usa un <em>workflow</em>." },
         ],

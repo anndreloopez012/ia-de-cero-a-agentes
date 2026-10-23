@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Recorrido del taller · IA de cero a Agentes</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      /* Recorrido de la primera clase: el taller se construye como un edificio de cuatro pisos */
+      @font-face { font-family: "Bricolage"; src: url("assets/bricolage-grotesque-latin-wght-normal.woff2") format("woff2"); font-weight: 200 800; font-display: block; }
+      @font-face { font-family: "Figtree"; src: url("assets/figtree-latin-wght-normal.woff2") format("woff2"); font-weight: 300 900; font-display: block; }
+      @font-face { font-family: "JetMono"; src: url("assets/jetbrains-mono-latin-wght-normal.woff2") format("woff2"); font-weight: 100 800; font-display: block; }
+
+      :root {
+        --void: #050507; --ink: #f4f0ff; --soft: #c9bfe0; --mute: #8f86a3;
+        --purple: #7a3cff; --lavender: #b997ff; --line: rgba(185, 151, 255, .3);
+        --c1: #45e0a8; --c2: #5bdcff; --c3: #ffc45a; --c4: #ff7ab6;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { width: 100%; height: 100%; overflow: hidden; background: var(--void); }
+      body { font-family: "Figtree", sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--void); }
+
+      .bg { position: absolute; inset: -120px; background:
+        radial-gradient(1100px 700px at 75% 10%, rgba(122, 60, 255, .24), transparent 60%),
+        radial-gradient(900px 600px at 10% 95%, rgba(122, 60, 255, .16), transparent 60%); }
+      .grid { position: absolute; inset: -160px; opacity: .6; background-image:
+        linear-gradient(rgba(185, 151, 255, .07) 1px, transparent 1px), linear-gradient(90deg, rgba(185, 151, 255, .07) 1px, transparent 1px),
+        linear-gradient(rgba(185, 151, 255, .03) 1px, transparent 1px), linear-gradient(90deg, rgba(185, 151, 255, .03) 1px, transparent 1px);
+        background-size: 160px 160px, 160px 160px, 32px 32px, 32px 32px; }
+      .tint { position: absolute; inset: 0; opacity: 0; background: radial-gradient(1200px 800px at 80% 20%, var(--tint, transparent), transparent 65%); }
+      .sparks { position: absolute; inset: 0; pointer-events: none; }
+      .spark { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--lavender); box-shadow: 0 0 12px var(--lavender); opacity: 0; }
+
+      .scene { position: absolute; inset: 0; opacity: 0; }
+      .cam { position: absolute; inset: 0; }
+
+      /* ---------- Bienvenida ---------- */
+      .intro-kicker { position: absolute; left: 150px; top: 250px; font-weight: 800; font-size: 34px; letter-spacing: .2em; text-transform: uppercase; color: var(--lavender); display: flex; align-items: center; gap: 20px; }
+      .intro-kicker i { display: block; width: 80px; height: 5px; border-radius: 4px; background: var(--lavender); }
+      .intro-title { position: absolute; left: 140px; top: 320px; width: 1200px; font-family: "Bricolage"; font-weight: 780; font-size: 168px; line-height: .92; letter-spacing: -.045em; }
+      .intro-title .w { display: inline-block; white-space: nowrap; }
+      .intro-title .ch { display: inline-block; }
+      .intro-title .grad .ch { color: var(--lavender); }
+      .intro-sub { position: absolute; left: 150px; top: 720px; width: 1000px; font-size: 44px; line-height: 1.25; font-weight: 600; color: var(--soft); }
+      .intro-sub b { color: var(--ink); }
+      .brick-drop { position: absolute; left: 1360px; top: 820px; width: 280px; height: 120px; border-radius: 18px; background: linear-gradient(160deg, #8f5cff, #4a1fb0); border: 3px solid rgba(255, 255, 255, .7); box-shadow: 0 0 80px rgba(122, 60, 255, .7); }
+      .brick-drop::after { content: ""; position: absolute; inset: 14px; border-radius: 10px; border: 2px dashed rgba(255, 255, 255, .35); }
+      .orbit-big { position: absolute; left: 1330px; top: 120px; width: 380px; }
+      .orbit-big img, .orbit-sm img, .orbit-roof img { display: block; width: 100%; height: auto; filter: drop-shadow(0 30px 50px rgba(0, 0, 0, .6)); }
+      .ring { position: absolute; border-radius: 50%; border: 3px dashed rgba(185, 151, 255, .28); }
+
+      /* ---------- La idea: la casa en planos ---------- */
+      .idea-title { position: absolute; left: 140px; top: 150px; width: 820px; font-family: "Bricolage"; font-weight: 750; font-size: 96px; line-height: 1; letter-spacing: -.035em; }
+      .idea-title em { font-style: normal; color: var(--lavender); }
+      .idea-sub { position: absolute; left: 145px; top: 520px; width: 760px; font-size: 38px; line-height: 1.32; color: var(--soft); }
+      .house { position: absolute; left: 1040px; top: 90px; width: 760px; height: 900px; }
+      .house svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+      .house svg path, .house svg line, .house svg rect { fill: none; stroke: var(--lavender); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+      .house svg .dim { stroke: rgba(185, 151, 255, .4); stroke-width: 2; stroke-dasharray: 8 10; }
+      .floor { position: absolute; left: 60px; width: 640px; height: 150px; border-radius: 18px; display: flex; align-items: center; gap: 22px; padding: 0 30px; border: 3px solid var(--fc); background: color-mix(in srgb, var(--fc) 16%, rgba(10, 8, 15, .92)); }
+      .floor b { display: grid; place-items: center; width: 72px; height: 72px; border-radius: 18px; background: var(--fc); color: var(--void); font-family: "Bricolage"; font-size: 40px; }
+      .floor span { font-family: "Bricolage"; font-weight: 700; font-size: 46px; letter-spacing: -.01em; }
+      .floor small { margin-left: auto; font-size: 24px; font-weight: 750; color: var(--soft); }
+
+      /* ---------- Escenas de clase ---------- */
+      .cls-chip { position: absolute; left: 110px; top: 86px; display: flex; align-items: center; gap: 18px; height: 66px; padding: 0 28px 0 12px; border-radius: 40px; border: 2px solid var(--cc); background: color-mix(in srgb, var(--cc) 14%, transparent); font-weight: 800; font-size: 26px; letter-spacing: .1em; text-transform: uppercase; color: var(--cc); }
+      .cls-chip b { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: var(--cc); color: var(--void); font-family: "Bricolage"; font-size: 26px; letter-spacing: 0; }
+      .floors-mini { display: flex; gap: 6px; margin-left: 10px; }
+      .floors-mini i { display: block; width: 26px; height: 12px; border-radius: 4px; background: rgba(255, 255, 255, .14); }
+      .floors-mini i.on { background: var(--cc); }
+      .cls-title { position: absolute; left: 104px; top: 170px; font-family: "Bricolage"; font-weight: 780; font-size: 128px; line-height: .95; letter-spacing: -.045em; color: var(--cc); }
+      .cls-sub { position: absolute; left: 112px; top: 330px; width: 860px; font-family: "Bricolage"; font-weight: 600; font-size: 44px; line-height: 1.1; color: var(--ink); }
+      .cls-q { position: absolute; left: 112px; top: 450px; width: 840px; padding-left: 26px; border-left: 5px solid var(--cc); font-size: 33px; line-height: 1.32; color: var(--soft); }
+      .takeaway { position: absolute; left: 112px; top: 610px; max-width: 860px; display: flex; align-items: center; gap: 16px; padding: 16px 26px; border-radius: 22px; background: var(--cc); color: var(--void); font-weight: 800; font-size: 28px; line-height: 1.2; box-shadow: 0 0 60px color-mix(in srgb, var(--cc) 45%, transparent); }
+      .takeaway svg { width: 40px; height: 40px; flex: none; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+
+      .stage { position: absolute; left: 1010px; top: 70px; width: 820px; height: 640px; }
+      .bricks { position: absolute; left: 110px; right: 110px; top: 772px; height: 230px; display: flex; gap: 22px; }
+      .brick { position: relative; flex: 1; min-width: 0; height: 100%; padding: 26px 24px 22px; border-radius: 24px; border: 3px solid var(--cc); background: linear-gradient(165deg, color-mix(in srgb, var(--cc) 26%, #1a1426), #0d0a13 80%); box-shadow: 0 20px 50px rgba(0, 0, 0, .45), inset 0 1px rgba(255, 255, 255, .12); }
+      .brick .n { display: inline-grid; place-items: center; height: 44px; padding: 0 14px; border-radius: 12px; background: var(--cc); color: var(--void); font-family: "JetMono", monospace; font-weight: 800; font-size: 24px; }
+      .brick p { margin-top: 18px; font-family: "Bricolage"; font-weight: 700; font-size: 33px; line-height: 1.08; letter-spacing: -.01em; }
+      .brick::after { content: ""; position: absolute; left: 18px; right: 18px; bottom: -14px; height: 10px; border-radius: 0 0 12px 12px; background: color-mix(in srgb, var(--cc) 50%, transparent); filter: blur(4px); }
+      .bricks.six .brick p { font-size: 30px; }
+      .dust { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: var(--cc); opacity: 0; }
+
+      /* Clase 1: cimientos */
+      .ground { position: absolute; left: 0; right: 0; top: 380px; height: 260px; border-radius: 0 0 30px 30px; background: repeating-linear-gradient(170deg, #2a1d17 0 18px, #23170f 18px 36px); border-top: 4px solid #6b4a32; overflow: hidden; }
+      .ground::before { content: ""; position: absolute; left: 60px; right: 60px; top: 0; height: 120px; background: #0f0b0a; border-radius: 0 0 20px 20px; box-shadow: inset 0 10px 30px rgba(0, 0, 0, .8); }
+      .pillar { position: absolute; bottom: 140px; width: 110px; height: 330px; border-radius: 14px 14px 6px 6px; background: linear-gradient(90deg, #8e8a97, #c9c5d3 45%, #8a8693); border: 3px solid rgba(69, 224, 168, .9); box-shadow: 0 0 40px rgba(69, 224, 168, .35); transform-origin: 50% 100%; display: grid; place-items: center; }
+      .pillar::before { content: ""; position: absolute; left: 22px; right: 22px; top: -46px; height: 50px; background: repeating-linear-gradient(90deg, #6c6575 0 6px, transparent 6px 20px); }
+      .pillar span { writing-mode: vertical-rl; transform: rotate(180deg); font-weight: 900; font-size: 30px; color: #12301f; letter-spacing: .04em; }
+      .slab { position: absolute; left: 30px; right: 30px; top: 70px; height: 70px; border-radius: 14px; background: linear-gradient(180deg, #d9d5e3, #9893a4); border: 3px solid var(--c1); box-shadow: 0 0 60px rgba(69, 224, 168, .45); display: grid; place-items: center; font-weight: 900; font-size: 30px; color: #11261b; letter-spacing: .14em; text-transform: uppercase; }
+
+      /* Clase 2: planos */
+      .sheet { position: absolute; left: 30px; top: 20px; width: 760px; height: 600px; border-radius: 22px; background:
+        linear-gradient(rgba(255, 255, 255, .12) 1px, transparent 1px) 0 0 / 40px 40px,
+        linear-gradient(90deg, rgba(255, 255, 255, .12) 1px, transparent 1px) 0 0 / 40px 40px, #0c3d63; border: 3px solid var(--c2); box-shadow: 0 0 70px rgba(91, 220, 255, .35); transform-origin: 50% 0; overflow: hidden; }
+      .sheet svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+      .sheet svg path, .sheet svg line, .sheet svg rect { fill: none; stroke: #e6f9ff; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+      .sheet svg .thin { stroke-width: 2; stroke-dasharray: 8 8; opacity: .7; }
+      .rocav { position: absolute; left: 50px; right: 50px; bottom: 34px; display: flex; gap: 14px; }
+      .rocav div { flex: 1; height: 112px; border-radius: 18px; background: #e6f9ff; color: #0c3d63; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+      .rocav b { font-family: "Bricolage"; font-size: 56px; line-height: 1; }
+      .rocav small { font-weight: 800; font-size: 18px; text-transform: uppercase; letter-spacing: .06em; }
+      .sheet-label { position: absolute; left: 40px; top: 30px; font-family: "JetMono", monospace; font-size: 22px; color: #bdeeff; }
+
+      /* Clase 3: caja de herramientas */
+      .tbox { position: absolute; left: 150px; top: 380px; width: 520px; height: 220px; border-radius: 20px; background: linear-gradient(180deg, #ffcf6b, #c98a10); border: 4px solid #fff2cf; box-shadow: 0 0 70px rgba(255, 196, 90, .4); }
+      .tbox::before { content: ""; position: absolute; left: 190px; top: -46px; width: 140px; height: 50px; border: 10px solid #fff2cf; border-bottom: 0; border-radius: 30px 30px 0 0; }
+      .tbox span { position: absolute; left: 0; right: 0; bottom: 30px; text-align: center; font-weight: 900; font-size: 34px; color: #3a2400; letter-spacing: .1em; text-transform: uppercase; }
+      .lid { position: absolute; left: 150px; top: 340px; width: 520px; height: 56px; border-radius: 16px; background: linear-gradient(180deg, #ffe09a, #e3a52a); border: 4px solid #fff2cf; transform-origin: 0% 100%; }
+      .tool { position: absolute; width: 230px; height: 96px; border-radius: 20px; display: flex; align-items: center; gap: 14px; padding: 0 20px; background: #1d1726; border: 3px solid var(--c3); font-weight: 800; font-size: 28px; color: #ffe2ad; box-shadow: 0 16px 40px rgba(0, 0, 0, .5); }
+      .tool svg { width: 44px; height: 44px; flex: none; fill: none; stroke: var(--c3); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+      .seal { position: absolute; left: 560px; top: 210px; width: 200px; height: 200px; border-radius: 50%; display: grid; place-items: center; text-align: center; background: var(--c1); color: #052016; font-family: "Bricolage"; font-weight: 800; font-size: 46px; line-height: .95; box-shadow: 0 0 70px rgba(69, 224, 168, .6); border: 6px dashed rgba(5, 32, 22, .35); }
+
+      /* Clase 4: equipo */
+      .team svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+      .team svg path { fill: none; stroke: var(--c4); stroke-width: 5; stroke-linecap: round; }
+      .team svg .fence { stroke: rgba(255, 196, 90, .7); stroke-dasharray: 16 14; stroke-width: 4; }
+      .agent { z-index: 2; position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-radius: 50%; border: 4px solid var(--c4); background: radial-gradient(circle at 35% 30%, #4a1f3a, #14101b 70%); box-shadow: 0 0 60px rgba(255, 122, 182, .35); }
+      .agent b { font-family: "Bricolage"; font-size: 34px; line-height: 1; }
+      .agent small { margin-top: 6px; font-weight: 750; font-size: 22px; color: #efe6ff; }
+      .agent.boss { width: 250px; height: 250px; left: 285px; top: 40px; background: radial-gradient(circle at 35% 30%, #ff9cc8, #7a1f52 60%, #2a0f22); }
+      .agent.boss b { font-size: 38px; }
+      .agent.sub { width: 190px; height: 190px; top: 330px; }
+      .packet { z-index: 1; position: absolute; width: 56px; height: 56px; border-radius: 16px; background: #fff; border: 4px solid var(--c4); box-shadow: 0 0 30px rgba(255, 122, 182, .6); }
+      .human { position: absolute; left: 610px; top: 70px; width: 190px; padding: 16px 14px; border-radius: 24px; background: #1d1726; border: 3px solid var(--c3); text-align: center; font-weight: 800; font-size: 24px; color: #ffe2ad; line-height: 1.2; }
+      .human i { display: grid; place-items: center; width: 64px; height: 64px; margin: 0 auto 8px; border-radius: 50%; background: var(--c1); color: #052016; font-style: normal; font-size: 40px; font-weight: 900; }
+
+      /* ---------- Final: el edificio completo ---------- */
+      .tower { position: absolute; left: 1060px; bottom: 30px; width: 700px; height: 860px; }
+      .story { position: absolute; left: 0; right: 0; height: 150px; border-radius: 20px; display: flex; align-items: center; gap: 22px; padding: 0 28px; border: 4px solid var(--fc); background: linear-gradient(110deg, color-mix(in srgb, var(--fc) 30%, #14101b), #0d0a13 75%); box-shadow: 0 0 50px color-mix(in srgb, var(--fc) 30%, transparent); }
+      .story b { display: grid; place-items: center; width: 80px; height: 80px; border-radius: 20px; background: var(--fc); color: var(--void); font-family: "Bricolage"; font-size: 44px; }
+      .story span { font-family: "Bricolage"; font-weight: 750; font-size: 48px; }
+      .story small { margin-left: auto; font-weight: 800; font-size: 24px; color: var(--soft); }
+      .story .wins { display: flex; gap: 10px; margin-left: 8px; }
+      .roof { position: absolute; left: -30px; right: -30px; height: 140px; clip-path: polygon(50% 0, 100% 100%, 0 100%); background: linear-gradient(180deg, #b997ff, #5b21b6); }
+      .orbit-roof { position: absolute; left: 285px; width: 130px; }
+      .final-title { position: absolute; left: 130px; top: 200px; width: 880px; font-family: "Bricolage"; font-weight: 780; font-size: 112px; line-height: .98; letter-spacing: -.04em; }
+      .final-title em { font-style: normal; color: var(--c1); }
+      .stats { position: absolute; left: 130px; top: 560px; display: flex; gap: 22px; }
+      .stat { width: 270px; padding: 22px 26px; border-radius: 24px; border: 2px solid var(--line); background: rgba(255, 255, 255, .04); }
+      .stat b { display: block; font-family: "Bricolage"; font-size: 84px; line-height: 1; letter-spacing: -.03em; }
+      .stat span { font-size: 26px; font-weight: 700; color: var(--soft); }
+      .final-logo { position: absolute; left: 130px; top: 850px; width: 300px; height: auto; border-radius: 14px; }
+      .final-cta { position: absolute; left: 470px; top: 880px; font-size: 34px; font-weight: 700; color: var(--soft); }
+      .final-cta b { color: var(--ink); }
+
+      .wipe { position: absolute; left: -10%; width: 120%; height: 1300px; top: 0; z-index: 50; background: linear-gradient(180deg, transparent, var(--wc) 12%, var(--wc) 88%, transparent); opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="recorrido" data-start="0" data-duration="104" data-width="1920" data-height="1080" data-fps="30">
+      <div class="bg"></div>
+      <div class="grid"></div>
+      <div class="tint"></div>
+      <div class="sparks" id="sparks"></div>
+
+      <!-- 1 · Bienvenida -->
+      <section class="scene" id="s-intro"><div class="cam">
+        <div class="ring" style="left:1220px;top:40px;width:620px;height:620px"></div>
+        <div class="ring" style="left:1300px;top:120px;width:460px;height:460px;border-style:solid;border-color:rgba(185,151,255,.12)"></div>
+        <div class="intro-kicker"><i></i>Bienvenidos al taller</div>
+        <h1 class="intro-title" id="intro-title"><span class="w">IA de cero</span> <span class="w">a <span class="grad">Agentes</span></span></h1>
+        <p class="intro-sub">En cuatro clases vamos a <b>construir</b> algo juntos, desde el primer ladrillo.</p>
+        <div class="orbit-big"><img src="assets/orbit.png" alt="" /></div>
+        <div class="brick-drop"></div>
+      </div></section>
+
+      <!-- 2 · La idea: como construir una casa -->
+      <section class="scene" id="s-idea"><div class="cam">
+        <h2 class="idea-title">Aprender IA es como <em>construir una casa</em></h2>
+        <p class="idea-sub">Nadie levanta el techo primero. Cada clase es un piso que sostiene al siguiente.</p>
+        <div class="house">
+          <svg viewBox="0 0 760 900">
+            <path class="draw roof-line" pathLength="1" d="M40 210 L380 30 L720 210" />
+            <rect class="draw" pathLength="1" x="40" y="210" width="680" height="660" rx="10" />
+            <line class="draw dim" pathLength="1" x1="10" y1="210" x2="10" y2="870" />
+            <line class="draw dim" pathLength="1" x1="40" y1="895" x2="720" y2="895" />
+          </svg>
+          <div class="floor" style="--fc:var(--c4);top:240px"><b>4</b><span>Equipo</span><small>Agentes</small></div>
+          <div class="floor" style="--fc:var(--c3);top:400px"><b>3</b><span>Herramientas</span><small>Skills</small></div>
+          <div class="floor" style="--fc:var(--c2);top:560px"><b>2</b><span>Planos</span><small>Prompts</small></div>
+          <div class="floor" style="--fc:var(--c1);top:720px"><b>1</b><span>Cimientos</span><small>Bases</small></div>
+        </div>
+      </div></section>
+
+      <!-- 3-6 · Las cuatro clases (las arma el script) -->
+      <section class="scene cls" id="s-c1" style="--cc:var(--c1)"><div class="cam">
+        <div class="stage">
+          <div class="ground"></div>
+          <div class="pillar" style="left:95px"><span>Privacidad</span></div>
+          <div class="pillar" style="left:275px"><span>Contexto</span></div>
+          <div class="pillar" style="left:455px"><span>Criterio</span></div>
+          <div class="pillar" style="left:635px"><span>Control</span></div>
+          <div class="slab">Base firme</div>
+        </div>
+      </div></section>
+
+      <section class="scene cls" id="s-c2" style="--cc:var(--c2)"><div class="cam">
+        <div class="stage">
+          <div class="sheet">
+            <div class="sheet-label">PLANO · PROMPT ROCAV</div>
+            <svg viewBox="0 0 760 600">
+              <path class="draw" pathLength="1" d="M200 330 L380 190 L560 330" />
+              <rect class="draw" pathLength="1" x="220" y="330" width="320" height="110" />
+              <rect class="draw" pathLength="1" x="350" y="370" width="60" height="70" />
+              <line class="draw thin" pathLength="1" x1="190" y1="460" x2="570" y2="460" />
+              <line class="draw thin" pathLength="1" x1="600" y1="190" x2="600" y2="440" />
+            </svg>
+            <div class="rocav">
+              <div><b>R</b><small>Rol</small></div><div><b>O</b><small>Objetivo</small></div><div><b>C</b><small>Contexto</small></div><div><b>A</b><small>Acuerdos</small></div><div><b>V</b><small>Verifica</small></div>
+            </div>
+          </div>
+        </div>
+      </div></section>
+
+      <section class="scene cls" id="s-c3" style="--cc:var(--c3)"><div class="cam">
+        <div class="stage">
+          <div class="tool" style="left:30px;top:150px"><svg viewBox="0 0 48 48"><path d="M8 24h32M24 8v32"/><circle cx="24" cy="24" r="16"/></svg>Activación</div>
+          <div class="tool" style="left:290px;top:60px"><svg viewBox="0 0 48 48"><path d="M10 12h28M10 24h28M10 36h18"/></svg>Pasos</div>
+          <div class="tool" style="left:30px;top:20px"><svg viewBox="0 0 48 48"><path d="M8 40V8h32v32z"/><path d="M8 24h32"/></svg>Entradas</div>
+          <div class="tool" style="left:290px;top:190px"><svg viewBox="0 0 48 48"><path d="M24 6l16 7v10c0 10-7 16-16 20C15 39 8 33 8 23V13z"/></svg>Límites</div>
+          <div class="lid"></div>
+          <div class="tbox"><span>Caja de skills</span></div>
+          <div class="seal">Skill<br>1.0</div>
+        </div>
+      </div></section>
+
+      <section class="scene cls" id="s-c4" style="--cc:var(--c4)"><div class="cam">
+        <div class="stage team">
+          <svg viewBox="0 0 820 640">
+            <path class="fence draw" pathLength="1" d="M40 20 H600 V600 H40 Z" />
+            <path class="draw link" pathLength="1" d="M330 260 L185 345" />
+            <path class="draw link" pathLength="1" d="M490 260 L635 345" />
+            <path class="draw link" pathLength="1" d="M535 150 L610 140" />
+          </svg>
+          <div class="agent boss"><b>Coordinador</b><small>divide y verifica</small></div>
+          <div class="agent sub" style="left:90px"><b>Investiga</b><small>subagente</small></div>
+          <div class="agent sub" style="left:540px"><b>Redacta</b><small>subagente</small></div>
+          <div class="packet pk1" style="left:300px;top:250px"></div>
+          <div class="packet pk2" style="left:480px;top:250px"></div>
+          <div class="human"><i>✓</i>Una persona aprueba</div>
+        </div>
+      </div></section>
+
+      <!-- 7 · El edificio completo -->
+      <section class="scene" id="s-final"><div class="cam">
+        <h2 class="final-title">Así se ve tu <em>edificio</em> al terminar</h2>
+        <div class="stats">
+          <div class="stat"><b data-count="16">0</b><span>horas</span></div>
+          <div class="stat"><b data-count="21">0</b><span>temas</span></div>
+          <div class="stat"><b data-count="21">0</b><span>ejercicios</span></div>
+        </div>
+        <img class="final-logo" src="assets/logo-ai-academy.png" alt="" />
+        <p class="final-cta">Hoy empezamos por <b>los cimientos.</b></p>
+        <div class="tower">
+          <div class="story st1" style="--fc:var(--c1);top:710px"><b>1</b><span>Cimientos</span><small>5 temas</small></div>
+          <div class="story st2" style="--fc:var(--c2);top:555px"><b>2</b><span>Planos</span><small>5 temas</small></div>
+          <div class="story st3" style="--fc:var(--c3);top:400px"><b>3</b><span>Herramientas</span><small>5 temas</small></div>
+          <div class="story st4" style="--fc:var(--c4);top:245px"><b>4</b><span>Equipo</span><small>6 temas</small></div>
+          <div class="roof" style="top:115px"></div>
+          <div class="orbit-roof" style="top:-110px"><img src="assets/orbit.png" alt="" /></div>
+        </div>
+      </div></section>
+
+      <div class="wipe" id="wipe"></div>
+    </div>
+
+    <script>
+      // ---------- Contenido: los 21 puntos del taller ----------
+      const CLASSES = [
+        { id: "s-c1", n: 1, name: "Cimientos", sub: "Configuración y fundamentos", q: "¿Cómo preparo ChatGPT, Claude o Gemini para trabajar con claridad, seguridad y criterio?", take: "Te llevas: pasaporte, glosario y 20 comandos",
+          points: ["Qué es (y qué no es) una IA generativa", "Privacidad y semáforo de datos", "Configurar ChatGPT, Claude o Gemini", "El vocabulario del taller", "El recurso correcto y 20 comandos"] },
+        { id: "s-c2", n: 2, name: "Planos", sub: "Prompts que se entienden y se verifican", q: "¿Cómo convierto una idea en instrucciones que otra persona pueda ejecutar y evaluar?", take: "Te llevas: cinco prompts ROCAV probados",
+          points: ["Anatomía de un prompt", "Construir con ROCAV", "Patrones de control reutilizables", "Mejorar cambiando una sola cosa", "Evaluar y transferir un prompt"] },
+        { id: "s-c3", n: 3, name: "Herramientas", sub: "Skills reutilizables", q: "¿Cómo convierto una tarea que ya sé resolver en un procedimiento que pueda reutilizar y probar?", take: "Te llevas: tu Skill 1.0 probada",
+          points: ["Elegir el recurso mínimo", "Las ocho partes de una skill", "Trigger, hook y fallback", "De ficha portable a plataforma", "Probar, corregir y versionar"] },
+        { id: "s-c4", n: 4, name: "Equipo", sub: "Agentes y subagentes responsables", q: "¿Cómo construyo un sistema que avance solo, delegue y se detenga ante riesgos?", take: "Te llevas: un equipo de agentes y tu demo final",
+          points: ["¿Workflow o agente?", "Un loop con límite y salida", "Coordinador y dos subagentes", "Contratos de delegación", "Permisos, guardrails y humano", "Trazas y demo final"] },
+      ];
+      const CHECK = '<svg viewBox="0 0 40 40"><path d="M8 21l8 8 16-17"/></svg>';
+
+      // Arma encabezado y ladrillos de cada clase
+      CLASSES.forEach((c) => {
+        const cam = document.getElementById(c.id).querySelector(".cam");
+        const minis = [1, 2, 3, 4].map((i) => `<i class="${i <= c.n ? "on" : ""}"></i>`).join("");
+        cam.insertAdjacentHTML("afterbegin", `
+          <div class="cls-chip"><b>${c.n}</b>Clase ${c.n} · Piso ${c.n} de 4<span class="floors-mini">${minis}</span></div>
+          <h2 class="cls-title">${c.name}</h2>
+          <p class="cls-sub">${c.sub}</p>
+          <p class="cls-q">${c.q}</p>
+          <div class="takeaway">${CHECK}${c.take}</div>`);
+        cam.insertAdjacentHTML("beforeend", `<div class="bricks ${c.points.length > 5 ? "six" : ""}">${c.points.map((p, i) => `<div class="brick"><span class="n">${c.n}.${i + 1}</span><p>${p}</p></div>`).join("")}</div>`);
+      });
+
+      // Letras del título para animarlas una por una
+      document.querySelectorAll("#intro-title .w").forEach((w) => {
+        const walk = (node) => {
+          [...node.childNodes].forEach((child) => {
+            if (child.nodeType === 3) {
+              const frag = document.createDocumentFragment();
+              [...child.textContent].forEach((ch) => { const s = document.createElement("span"); s.className = "ch"; s.textContent = ch === " " ? " " : ch; frag.appendChild(s); });
+              child.replaceWith(frag);
+            } else walk(child);
+          });
+        };
+        walk(w);
+      });
+
+      // Chispas con posiciones fijas (deterministas)
+      const sparks = document.getElementById("sparks");
+      for (let i = 0; i < 42; i += 1) {
+        const s = document.createElement("i");
+        s.className = "spark";
+        s.style.left = `${(i * 467) % 1920}px`;
+        s.style.top = `${(i * 263 + 120) % 1080}px`;
+        sparks.appendChild(s);
+      }
+
+      const tl = gsap.timeline({ paused: true });
+      tl.set(".spark", { opacity: 0, y: 60 }, 0);
+      const T = { intro: 0, idea: 7.5, c1: 15.5, c2: 34, c3: 52.5, c4: 71, final: 91 };
+      const CLASS_START = [T.c1, T.c2, T.c3, T.c4];
+      const COLORS = ["#45e0a8", "#5bdcff", "#ffc45a", "#ff7ab6"];
+
+      // Fondo vivo: la cuadrícula se desplaza todo el video
+      tl.fromTo(".grid", { x: 0, y: 0 }, { x: -160, y: -96, duration: 104, ease: "none" }, 0);
+      tl.fromTo(".bg", { scale: 1 }, { scale: 1.12, duration: 52, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0);
+
+      // Chispas que suben en oleadas
+      const sparkWave = (t, color) => {
+        tl.fromTo(".spark", { opacity: 0, y: 60, backgroundColor: color, boxShadow: `0 0 14px ${color}` },
+          { opacity: .9, y: -260, duration: 2.2, stagger: .04, ease: "power1.out", immediateRender: false }, t);
+        tl.to(".spark", { opacity: 0, duration: .6, stagger: .02 }, t + 3.9);
+      };
+
+      // Cortina de color entre escenas
+      const wipe = (t, color) => {
+        tl.set("#wipe", { "--wc": color, opacity: 1 }, t - .45);
+        tl.fromTo("#wipe", { y: 1100 }, { y: -1400, duration: .95, ease: "power2.inOut" }, t - .45);
+        tl.set("#wipe", { opacity: 0 }, t + .55);
+      };
+      const showScene = (sel, t, end) => {
+        tl.set(sel, { opacity: 1 }, t);
+        tl.fromTo(`${sel} .cam`, { scale: 1 }, { scale: 1.035, duration: end - t, ease: "none" }, t);
+        tl.set(sel, { opacity: 0 }, end);
+      };
+
+      // ---------- 1 · Bienvenida (0–7,5 s) ----------
+      tl.set("#s-intro", { opacity: 1 }, 0);
+      tl.fromTo("#s-intro .cam", { scale: 1.04 }, { scale: 1, duration: 7.5, ease: "sine.out" }, 0);
+      tl.fromTo(".brick-drop", { y: -1000, rotation: -12 }, { y: 0, rotation: 0, duration: .9, ease: "bounce.out" }, .1);
+      tl.fromTo(".brick-drop", { scale: 1 }, { scale: 1.06, duration: .2, yoyo: true, repeat: 1 }, .75);
+      sparkWave(.7, "#b997ff");
+      tl.fromTo(".intro-kicker", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: .6, ease: "power3.out" }, .5);
+      tl.fromTo("#intro-title .ch", { opacity: 0, y: 120, rotationX: -80 }, { opacity: 1, y: 0, rotationX: 0, duration: .7, stagger: .045, ease: "back.out(1.8)" }, .8);
+      tl.fromTo("#intro-title .grad .ch", { color: "#f4f0ff" }, { color: "#b997ff", duration: .4, stagger: .05 }, 2.2);
+      tl.fromTo(".intro-sub", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .7, ease: "power3.out" }, 2.4);
+      tl.fromTo(".orbit-big", { opacity: 0, x: 400, y: -200, rotation: 25 }, { opacity: 1, x: 0, y: 0, rotation: 0, duration: 1.3, ease: "back.out(1.4)" }, 1.2);
+      tl.to(".orbit-big", { rotation: -6, duration: .45, yoyo: true, repeat: 5, ease: "sine.inOut", transformOrigin: "50% 90%" }, 2.6);
+      tl.fromTo(".orbit-big img", { y: 0 }, { y: -22, duration: 1.2, yoyo: true, repeat: 3, ease: "sine.inOut" }, 2.4);
+      tl.fromTo("#s-intro .ring", { rotation: 0, scale: .8, opacity: 0 }, { rotation: 90, scale: 1, opacity: 1, duration: 7, ease: "power1.out" }, .2);
+      tl.to(["#intro-title", ".intro-kicker", ".intro-sub"], { y: -40, opacity: 0, duration: .45, stagger: .05, ease: "power2.in" }, 6.8);
+      wipe(T.idea, "#7a3cff");
+      tl.set("#s-intro", { opacity: 0 }, T.idea);
+
+      // ---------- 2 · La idea (7,5–15,5 s) ----------
+      showScene("#s-idea", T.idea, T.c1);
+      tl.fromTo(".idea-title", { opacity: 0, x: -80 }, { opacity: 1, x: 0, duration: .8, ease: "power3.out" }, T.idea + .2);
+      tl.fromTo(".house .draw", { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.6, stagger: .2, ease: "power2.inOut" }, T.idea + .4);
+      tl.fromTo(".house .floor", { opacity: 0, y: -260, scale: .9 }, { opacity: 1, y: 0, scale: 1, duration: .75, stagger: { each: .55, from: "end" }, ease: "bounce.out" }, T.idea + 1.3);
+      tl.fromTo(".idea-sub", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .7, ease: "power3.out" }, T.idea + 2.6);
+      tl.to(".house .floor", { scale: 1.05, duration: .25, yoyo: true, repeat: 1, stagger: { each: .35, from: "end" } }, T.idea + 4.6);
+      tl.to(".house", { scale: 1.6, x: -60, y: -380, transformOrigin: "50% 100%", duration: 1.2, ease: "power3.in" }, T.idea + 6.7);
+      wipe(T.c1, COLORS[0]);
+
+      // ---------- 3–6 · Las cuatro clases ----------
+      CLASSES.forEach((c, i) => {
+        const t = CLASS_START[i];
+        const end = i < 3 ? CLASS_START[i + 1] : T.final;
+        const s = `#${c.id}`;
+        showScene(s, t, end);
+        tl.to(".tint", { "--tint": `${COLORS[i]}33`, opacity: 1, duration: .8 }, t);
+        tl.fromTo(`${s} .cls-chip`, { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: .5, ease: "power3.out" }, t + .15);
+        tl.fromTo(`${s} .floors-mini i`, { scaleY: 0 }, { scaleY: 1, duration: .3, stagger: .08 }, t + .4);
+        tl.fromTo(`${s} .cls-title`, { opacity: 0, y: 90, scale: .85 }, { opacity: 1, y: 0, scale: 1, duration: .8, ease: "back.out(1.6)", transformOrigin: "0% 100%" }, t + .3);
+        tl.fromTo(`${s} .cls-sub`, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .6, ease: "power3.out" }, t + .8);
+        tl.fromTo(`${s} .cls-q`, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: .7, ease: "power3.out" }, t + 1.3);
+        // Los temas caen como ladrillos, uno por uno
+        const each = c.points.length > 5 ? 1.5 : 1.75;
+        tl.fromTo(`${s} .brick`, { opacity: 0, y: -260, rotation: (k) => (k % 2 ? 6 : -6) }, { opacity: 1, y: 0, rotation: 0, duration: .85, stagger: each, ease: "bounce.out" }, t + 3.4);
+        tl.fromTo(`${s} .brick .n`, { scale: .3 }, { scale: 1, duration: .4, stagger: each, ease: "back.out(3)" }, t + 4.1);
+        tl.to(`${s} .brick`, { boxShadow: `0 0 0 4px ${COLORS[i]}, 0 0 50px ${COLORS[i]}`, duration: .25, yoyo: true, repeat: 1, stagger: each }, t + 4.0);
+        const allIn = t + 3.4 + each * (c.points.length - 1) + 1;
+        tl.to(`${s} .brick`, { y: -14, duration: .22, yoyo: true, repeat: 1, stagger: .07, ease: "sine.out" }, allIn + .4);
+        tl.fromTo(`${s} .takeaway`, { opacity: 0, scale: .6 }, { opacity: 1, scale: 1, duration: .6, ease: "back.out(2)", transformOrigin: "0% 50%" }, allIn + .8);
+        sparkWave(allIn + .8, COLORS[i]);
+        tl.to(`${s} .stage`, { y: -30, duration: 2, yoyo: true, repeat: 1, ease: "sine.inOut" }, t + 4);
+        if (i < 3) wipe(end, COLORS[i + 1]);
+      });
+
+      // Metáforas de cada piso
+      const c1 = T.c1;
+      tl.fromTo("#s-c1 .ground", { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: .7, ease: "power3.out" }, c1 + .9);
+      tl.fromTo("#s-c1 .pillar", { scaleY: 0 }, { scaleY: 1, duration: .8, stagger: .35, ease: "back.out(1.5)" }, c1 + 1.5);
+      tl.fromTo("#s-c1 .slab", { opacity: 0, y: -300 }, { opacity: 1, y: 0, duration: .8, ease: "bounce.out" }, c1 + 3.4);
+      tl.to("#s-c1 .pillar", { boxShadow: "0 0 70px rgba(69,224,168,.8)", duration: .5, yoyo: true, repeat: 3, stagger: .15 }, c1 + 7);
+
+      const c2 = T.c2;
+      tl.fromTo("#s-c2 .sheet", { opacity: 0, scaleY: .05 }, { opacity: 1, scaleY: 1, duration: 1, ease: "power3.out" }, c2 + .9);
+      tl.fromTo("#s-c2 .sheet .draw", { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.4, stagger: .25, ease: "power2.inOut" }, c2 + 1.6);
+      tl.fromTo("#s-c2 .rocav div", { opacity: 0, y: -200, rotation: -20 }, { opacity: 1, y: 0, rotation: 0, duration: .55, stagger: .22, ease: "back.out(2)" }, c2 + 2.4);
+      tl.to("#s-c2 .rocav div", { backgroundColor: "#5bdcff", duration: .25, stagger: 1.2, yoyo: true, repeat: 1 }, c2 + 5.5);
+
+      const c3 = T.c3;
+      tl.fromTo("#s-c3 .tbox, #s-c3 .lid", { opacity: 0, y: 160 }, { opacity: 1, y: 0, duration: .7, ease: "back.out(1.5)" }, c3 + .9);
+      tl.to("#s-c3 .lid", { y: -140, x: 60, rotation: 18, opacity: 0, duration: .6, ease: "power2.in" }, c3 + 1.7);
+      tl.fromTo("#s-c3 .tool", { opacity: 0, x: 250, y: 330, scale: .3, rotation: 30 }, { opacity: 1, x: 0, y: 0, scale: 1, rotation: 0, duration: .8, stagger: .3, ease: "back.out(1.4)" }, c3 + 2.1);
+      tl.fromTo("#s-c3 .seal", { opacity: 0, scale: 2.4, rotation: -40 }, { opacity: 1, scale: 1, rotation: 0, duration: .6, ease: "back.out(2.2)" }, c3 + 4);
+      tl.to("#s-c3 .tool", { y: -10, duration: .9, yoyo: true, repeat: 7, stagger: .2, ease: "sine.inOut" }, c3 + 3.4);
+
+      const c4 = T.c4;
+      tl.fromTo("#s-c4 .agent.boss", { opacity: 0, scale: .2 }, { opacity: 1, scale: 1, duration: .7, ease: "back.out(1.8)" }, c4 + .9);
+      tl.fromTo("#s-c4 .agent.sub", { opacity: 0, scale: .2 }, { opacity: 1, scale: 1, duration: .6, stagger: .3, ease: "back.out(1.8)" }, c4 + 1.5);
+      tl.fromTo("#s-c4 .draw", { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: .9, stagger: .2, ease: "power2.inOut" }, c4 + 1.4);
+      tl.fromTo("#s-c4 .pk1", { opacity: 0, x: 0, y: 0 }, { opacity: 1, x: -150, y: 110, duration: 1.1, ease: "power2.inOut", repeat: 4, repeatDelay: 1.6 }, c4 + 2.6);
+      tl.fromTo("#s-c4 .pk2", { opacity: 0, x: 0, y: 0 }, { opacity: 1, x: 150, y: 110, duration: 1.1, ease: "power2.inOut", repeat: 4, repeatDelay: 1.6 }, c4 + 3.1);
+      tl.fromTo("#s-c4 .human", { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: .6, ease: "back.out(1.6)" }, c4 + 3.6);
+      tl.to("#s-c4 .agent.boss", { scale: 1.06, duration: .6, yoyo: true, repeat: 9, ease: "sine.inOut" }, c4 + 4);
+      wipe(T.final, "#7a3cff");
+
+      // ---------- 7 · El edificio completo (91–104 s) ----------
+      const f = T.final;
+      tl.set("#s-final", { opacity: 1 }, f);
+      tl.to(".tint", { "--tint": "#7a3cff33", duration: .8 }, f);
+      tl.fromTo("#s-final .cam", { scale: 1.06 }, { scale: 1, duration: 12, ease: "sine.out" }, f);
+      tl.fromTo(".final-title", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: .8, ease: "power3.out" }, f + .3);
+      [".st1", ".st2", ".st3", ".st4"].forEach((sel, k) => {
+        tl.fromTo(sel, { opacity: 0, y: -900 }, { opacity: 1, y: 0, duration: .8, ease: "bounce.out" }, f + .6 + k * .55);
+      });
+      tl.fromTo(".roof", { opacity: 0, y: -900 }, { opacity: 1, y: 0, duration: .8, ease: "bounce.out" }, f + 2.85);
+      tl.fromTo(".orbit-roof", { opacity: 0, y: -700, rotation: -30 }, { opacity: 1, y: 0, rotation: 0, duration: 1, ease: "back.out(1.6)" }, f + 3.5);
+      tl.to(".orbit-roof", { rotation: -8, duration: .4, yoyo: true, repeat: 9, ease: "sine.inOut", transformOrigin: "50% 100%" }, f + 4.6);
+      sparkWave(f + 3.4, "#b997ff");
+      sparkWave(f + 6.4, "#45e0a8");
+      tl.fromTo(".stat", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: .6, stagger: .2, ease: "back.out(1.8)" }, f + 1.6);
+      document.querySelectorAll(".stat b").forEach((el, k) => {
+        const counter = { v: 0 };
+        tl.to(counter, { v: Number(el.dataset.count), duration: 1.6, ease: "power2.out", onUpdate: () => { el.textContent = Math.round(counter.v); } }, f + 1.8 + k * .2);
+      });
+      tl.fromTo(".final-logo", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: .6, ease: "power3.out" }, f + 4.2);
+      tl.fromTo(".final-cta", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: .6, ease: "power3.out" }, f + 4.6);
+      tl.to(".st1", { boxShadow: "0 0 0 6px #45e0a8, 0 0 90px #45e0a8", duration: .5, yoyo: true, repeat: 5 }, f + 5.4);
+      tl.to("#s-final", { opacity: 0, duration: .8, ease: "power1.in" }, 103.2);
+
+      window.__timelines["recorrido"] = tl;
+    </script>
+  </body>
+</html>

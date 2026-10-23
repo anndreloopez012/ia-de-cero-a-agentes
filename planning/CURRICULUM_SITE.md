@@ -6,7 +6,7 @@
 **Duración:** 4 clases de 4 horas; 16 horas en total.  
 **Metodología:** 50 % teoría y 50 % práctica individual. Cada clase contiene 110 minutos de teoría, 110 minutos de práctica y 20 minutos de pausas.  
 **Público:** cualquier persona adulta con ganas de aprender IA aplicada. No se requiere saber programar.  
-**Plataformas:** ChatGPT, Claude y Gemini. Las clases 1 y 2 pueden realizarse con cuentas gratuitas. Desde la clase 3 se requiere una suscripción de pago activa en al menos una de estas plataformas.  
+**Plataformas:** ChatGPT, Claude o Gemini; cada persona trabaja con una sola, la que elija. Las clases 1 y 2 pueden realizarse con cuentas gratuitas. Desde la clase 3 se requiere una suscripción de pago activa en al menos una de estas plataformas.  
 **Principio de seguridad:** todos los ejercicios utilizan datos ficticios, públicos, autorizados o anonimizados.
 
 > La IA útil se construye como una casa: primero se preparan los cimientos, después se dibujan planos claros, luego se organizan herramientas reutilizables y, por último, se coordina un equipo capaz de trabajar con autonomía limitada y supervisión humana.
@@ -17,9 +17,9 @@
 
 ### Clase 1 — Cimientos: configuración y fundamentos
 
-La persona configura ChatGPT, Claude y Gemini con criterios de privacidad, memoria y propósito; comprende cómo funciona una IA generativa; aprende el vocabulario que utilizará durante todo el taller; distingue prompt, proyecto, herramienta, skill y agente; y practica una biblioteca de 20 comandos esenciales.
+La persona configura la plataforma que eligió (ChatGPT, Claude o Gemini) con criterios de privacidad, memoria y propósito; comprende cómo funciona una IA generativa; aprende el vocabulario que utilizará durante todo el taller; distingue prompt, proyecto, herramienta, skill y agente; y practica una biblioteca de 20 comandos esenciales.
 
-**Se lleva:** pasaporte de configuración de las tres plataformas, glosario personal y biblioteca de 20 comandos con ejemplos.
+**Se lleva:** pasaporte de configuración de la plataforma que eligió, glosario personal y biblioteca de 20 comandos con ejemplos.
 
 ### Clase 2 — Planos: prompts que se pueden comprender y verificar
 
@@ -68,8 +68,8 @@ La velocidad no es el criterio de éxito. Se evalúan claridad, evidencia, capac
 
 ## Ficha de la clase
 
-**Pregunta guía:** ¿Cómo preparo ChatGPT, Claude y Gemini para trabajar con claridad, seguridad y criterio?  
-**Objetivo:** configurar las tres plataformas, comprender sus límites y usar el vocabulario y los comandos esenciales que servirán de base para el resto del taller.  
+**Pregunta guía:** ¿Cómo preparo ChatGPT, Claude o Gemini para trabajar con claridad, seguridad y criterio?  
+**Objetivo:** configurar la plataforma que elegiste (ChatGPT, Claude o Gemini), comprender sus límites y usar el vocabulario y los comandos esenciales que servirán de base para el resto del taller.  
 **Valor que se lleva:** deja de usar la IA como una caja misteriosa y comienza a tomar decisiones conscientes sobre datos, memoria, contexto, funciones y calidad de respuesta.  
 **Producto:** pasaporte de configuración, glosario personal y biblioteca de 20 comandos.  
 **Cuenta necesaria:** las actividades pueden realizarse con cuentas gratuitas.
@@ -87,7 +87,7 @@ Antes de levantar paredes se inspecciona el terreno, se decide dónde se constru
 | 30–45 | Práctica | Ejercicio 1 | Entrada, salida y control señalados |
 | 45–65 | Teoría | 2. Privacidad y clasificación de datos | Semáforo de datos |
 | 65–85 | Práctica | Ejercicio 2 | Caso anonimizado |
-| 85–115 | Teoría | 3. Configuración de ChatGPT, Claude y Gemini | Mapa comparativo |
+| 85–115 | Teoría | 3. Configuración de ChatGPT, Claude o Gemini | Mapa de ajustes de tu plataforma |
 | 115–135 | Práctica | Ejercicio 3, primera parte | Pasaporte parcial |
 | 135–145 | Pausa | — | Descanso |
 | 145–165 | Teoría | 4. Vocabulario de trabajo | Glosario comprensible |
@@ -121,7 +121,7 @@ La IA no “sabe” como una persona, no garantiza verdad y no reemplaza la resp
 **Propósito:** reconocer la diferencia entre lo que se pidió, lo que la IA produjo y lo que todavía debe verificarse.  
 **Duración total:** 25 minutos, incluyendo el diagnóstico inicial.
 
-**Caso base ficticio:** “Necesito una lista de cinco ideas para aprender una habilidad nueva durante un mes”.
+**Caso base ficticio:** Wendy atiende una tienda de barrio en Mixco y le escribe a la IA: “Necesito cinco ideas para aprender a llevar las cuentas de mi tienda durante un mes”.
 
 **Pasos:**
 
@@ -132,7 +132,7 @@ La IA no “sabe” como una persona, no garantiza verdad y no reemplaza la resp
 5. Elige una afirmación concreta y explica cómo la comprobarías sin confiar solo en el tono de la respuesta.
 6. Resume en una oración: “La IA me ayuda a ___; yo sigo siendo responsable de ___”.
 
-**Ejemplo de base:** si la IA recomienda “practicar 30 minutos diarios”, eso es una propuesta, no una regla universal. La comprobación puede ser contrastarla con la disponibilidad real de la persona y ajustar el tiempo.
+**Ejemplo de base:** si la IA recomienda “dedicar 30 minutos diarios al cierre de caja”, eso es una propuesta, no una regla universal. La comprobación puede ser contrastarla con el horario real de Wendy, que atiende de 6:00 a 21:00, y ajustar el tiempo, por ejemplo a 10 minutos al cerrar.
 
 **Evidencia:** captura o copia de la petición y la salida, con al menos un supuesto y una verificación señalados.  
 **Criterio de éxito:** la persona distingue claramente entrada, salida y control humano; no presenta la respuesta como verdad certificada.
@@ -158,7 +158,7 @@ El proceso previo es: **minimizar → anonimizar → verificar permiso → revis
 
 **Insumo ficticio:**
 
-> Ana López, teléfono 5555-0101, trabaja en Empresa Sol. Escribió que no podrá asistir a la reunión del martes porque tiene una cita médica. Pide que el resumen se envíe a ana.lopez@example.com.
+> Ana López, teléfono 5555-0101, trabaja en la cooperativa ficticia Nueva Aurora, en Xela. Escribió que no podrá asistir a la reunión de socios del martes porque tiene cita médica en el IGSS. Pide que el resumen se envíe a ana.lopez@example.com.
 
 **Pasos:**
 
@@ -173,13 +173,15 @@ El proceso previo es: **minimizar → anonimizar → verificar permiso → revis
 **Ejemplo de base:** “Redacta una nota breve y neutral indicando que `[persona]` no asistirá a `[reunión]`. No menciones motivos de salud ni inventes detalles. Marca el medio de seguimiento como `[medio autorizado]`”.
 
 **Evidencia:** caso original marcado, versión minimizada y salida final.  
-**Criterio de éxito:** la versión final conserva el propósito sin exponer nombre, teléfono, correo, empresa ni motivo médico.
+**Criterio de éxito:** la versión final conserva el propósito sin exponer nombre, teléfono, correo, cooperativa ni motivo médico.
 
-## Punto 3. Configurar ChatGPT, Claude y Gemini
+## Punto 3. Configurar ChatGPT, Claude o Gemini
 
 ### Explicación sencilla
 
 Configurar no significa activar todo. Significa elegir de forma consciente idioma, profundidad, formato, memoria, historial, uso de datos, conexiones y espacio de trabajo. Las rutas pueden variar según plan, región y actualización.
+
+Cada persona trabaja con una sola plataforma, la que elija. Las tres secciones siguientes sirven de referencia para encontrar cómo se llama cada ajuste en la suya; no hace falta configurar las tres.
 
 ### ChatGPT: intenciones de configuración
 
@@ -213,27 +215,27 @@ Desconectar una aplicación no necesariamente elimina la actividad ya guardada. 
 
 **Instrucción base recomendada:** “Responde en español claro. Comienza con una síntesis. Define tecnicismos. Usa pasos numerados. Pregunta si falta un dato material. Separa hechos, inferencias y datos por verificar. No inventes fuentes”.
 
-**Idea visual para la web:** tres paneles paralelos, uno por plataforma, conectados a cuatro decisiones comunes: personalización, memoria/actividad, privacidad y proyecto.
+**Idea visual para la web:** tres paneles de referencia, uno por plataforma; la persona elige uno y ese panel se conecta a cuatro decisiones comunes: personalización, memoria/actividad, privacidad y proyecto.
 
 ### Ejercicio individual 3 — Pasaporte de configuración
 
-**Propósito:** revisar las tres plataformas con el mismo criterio, aunque los botones sean distintos.  
+**Propósito:** revisar la plataforma que elegiste con un criterio claro, aunque los botones cambien según la cuenta.  
 **Duración:** 20 minutos de trabajo en clase; el pasaporte se puede completar después si una función no aparece.
 
 **Pasos:**
 
-1. Abre la plantilla de pasaporte con una columna por plataforma.
-2. En cada plataforma ubica y registra: idioma o estilo, instrucciones, memoria o actividad, control de datos, chat temporal, proyectos o equivalente y conexiones.
+1. Abre la plantilla de pasaporte y escribe arriba la plataforma que elegiste: ChatGPT, Claude o Gemini.
+2. En tu plataforma ubica y registra: idioma o estilo, instrucciones, memoria o actividad, control de datos, chat temporal, proyectos o equivalente y conexiones.
 3. Para cada opción marca: `activada`, `desactivada`, `no disponible` o `pendiente de revisar`.
 4. Escribe el motivo de cada decisión en una oración. No copies solo el nombre del botón.
 5. Crea un espacio llamado `Taller IA - prácticas` o su equivalente.
 6. Agrega únicamente una instrucción de prueba y ningún archivo sensible.
-7. Ejecuta la misma pregunta breve en las tres plataformas y anota una diferencia observable.
-8. Cierra con una decisión: qué plataforma usarías para el siguiente ejercicio y por qué.
+7. Ejecuta la misma pregunta breve en un chat normal y dentro del espacio del taller, por ejemplo: “Dame tres ideas de refacción para la reunión de la iglesia con Q150”, y anota una diferencia observable.
+8. Cierra con una decisión: qué ajuste conservarías para el siguiente ejercicio y por qué.
 
-**Ejemplo de base:** “Memoria: desactivada para esta práctica porque usaré casos ficticios aislados; proyecto: creado para conservar únicamente las instrucciones y ejercicios del taller”.
+**Ejemplo de base:** “Memoria: desactivada para esta práctica porque usaré casos ficticios aislados, como la tienda de Wendy; proyecto: creado para conservar únicamente las instrucciones y ejercicios del taller”.
 
-**Evidencia:** pasaporte con las tres plataformas y al menos cinco decisiones justificadas por plataforma.  
+**Evidencia:** pasaporte de tu plataforma con al menos cinco decisiones justificadas.  
 **Criterio de éxito:** la persona puede explicar la intención de cada ajuste, identifica funciones no disponibles sin inventarlas y no ha cargado datos sensibles.
 
 ## Punto 4. Vocabulario que se usará durante todo el taller
@@ -276,10 +278,10 @@ En marketing, *hook* también significa gancho de atención. En este taller, al 
 1. Dibuja cinco cajas: prompt, proyecto, herramienta, skill y agente.
 2. Debajo de cada caja escribe “sirve para” y “no sirve para”.
 3. Une trigger, hook, loop, guardrail y humano en el ciclo con el elemento donde tendrían sentido.
-4. Clasifica estos casos: una pregunta única; una carpeta con archivos; una búsqueda; un proceso repetible; una tarea con varios pasos que decide cómo continuar.
+4. Clasifica estos casos: una pregunta única, como redactar el aviso de que la tortillería cierra el Jueves Santo; una carpeta con los archivos del comité de la feria; una búsqueda del horario de atención de la municipalidad; un proceso repetible, como armar cada lunes la lista de compras del comedor; una tarea con varios pasos que decide cómo continuar, como organizar la excursión del colegio a Antigua.
 5. Escribe una explicación de 60 segundos usando la analogía de la casa.
 
-**Ejemplo de base:** “Un prompt es una orden puntual; una skill es el procedimiento reutilizable para repetir bien esa clase de orden; un agente usa procedimientos y herramientas para decidir varios pasos dentro de límites”.
+**Ejemplo de base:** “Un prompt es una orden puntual, como pedir el aviso de la tortillería; una skill es el procedimiento reutilizable para repetir bien esa clase de orden; un agente usa procedimientos y herramientas para decidir varios pasos dentro de límites”.
 
 **Evidencia:** mapa con cinco cajas, relaciones y una explicación escrita de máximo 120 palabras.  
 **Criterio de éxito:** la persona diferencia los cinco recursos y utiliza trigger, hook, loop y guardrail sin intercambiarlos.
@@ -328,7 +330,7 @@ Un comando útil combina un verbo preciso, el objeto de trabajo, criterios de ca
 **Propósito:** experimentar cómo cambia la salida al cambiar el verbo y los criterios.  
 **Duración:** 25 minutos.
 
-**Insumo ficticio:** un texto de ocho líneas sobre una biblioteca comunitaria que desea organizar actividades de lectura.
+**Insumo ficticio:** un texto de ocho líneas sobre la biblioteca comunitaria de un barrio de Cobán, que desea organizar actividades de lectura para niños durante las vacaciones de fin de año.
 
 **Pasos:**
 
@@ -408,7 +410,7 @@ Un prompt más completo aumenta claridad y consistencia, pero no vuelve infalibl
 **Propósito:** descubrir la información que el modelo está obligado a suponer.  
 **Duración:** 25 minutos.
 
-**Petición base:** “Hazme una presentación sobre inteligencia artificial”.
+**Petición base:** Mynor, maestro de un colegio en Chimaltenango, escribe: “Hazme una presentación sobre inteligencia artificial”.
 
 **Pasos:**
 
@@ -419,7 +421,7 @@ Un prompt más completo aumenta claridad y consistencia, pero no vuelve infalibl
 5. Redacta una segunda petición incluyendo entrada, restricción y criterio, sin usar todavía ROCAV completo.
 6. Compara ambas salidas en una tabla de “controlado” y “supuesto”.
 
-**Ejemplo de base:** “¿La presentación es para personas sin experiencia? ¿Debe enseñar, vender o informar? ¿Cuántas diapositivas? ¿Qué fuentes pueden usarse? ¿Cómo se verificará la comprensión?”.
+**Ejemplo de base:** “¿La presentación es para los padres de familia o para los alumnos de básicos? ¿Debe enseñar, convencer o informar? ¿Cuántas diapositivas caben en los 20 minutos de la reunión? ¿Qué fuentes pueden usarse? ¿Cómo sabrá Mynor si la entendieron?”.
 
 **Evidencia:** salida original, lista de cinco supuestos, cinco preguntas y versión revisada.  
 **Criterio de éxito:** la persona identifica que el problema no era “la IA”, sino decisiones no expresadas que el sistema tuvo que completar.
@@ -438,7 +440,7 @@ El rol no debe usarse como decoración. “Actúa como el mejor experto del mund
 
 **Ejemplo ROCAV:**
 
-> Actúa como tutor paciente de alfabetización digital. Crea una guía para que una persona adulta sin experiencia active la verificación en dos pasos de una cuenta de práctica. Usa el caso ficticio entregado. Escribe ocho pasos numerados, una acción por paso, define tecnicismos y añade una lista final de comprobación. No solicites contraseñas ni códigos reales. Antes de finalizar, verifica que cada paso sea reversible y señala qué pantallas pueden variar.
+> Actúa como tutor paciente de alfabetización digital. Crea una guía para que una persona adulta sin experiencia, como doña Marta, que vende sus tamales por WhatsApp, active la verificación en dos pasos de una cuenta de práctica. Usa el caso ficticio entregado. Escribe ocho pasos numerados, una acción por paso, define tecnicismos y añade una lista final de comprobación. No solicites contraseñas ni códigos reales. Antes de finalizar, verifica que cada paso sea reversible y señala qué pantallas pueden variar.
 
 **Idea visual para la web:** cinco vigas que forman un plano. Si se retira “V”, aparece una casa visualmente terminada pero sin inspección.
 
@@ -447,7 +449,7 @@ El rol no debe usarse como decoración. “Actúa como el mejor experto del mund
 **Propósito:** construir un prompt completo a partir de un objetivo cotidiano.  
 **Duración:** 25 minutos.
 
-**Caso base ficticio:** una persona quiere organizar un plan de estudio de siete días para aprender una herramienta nueva, con 30 minutos diarios.
+**Caso base ficticio:** Byron viaja cada día en bus de Villa Nueva a la capital y quiere aprovechar 30 minutos del trayecto, durante siete días, para aprender a usar una hoja de cálculo desde su celular.
 
 **Pasos:**
 
@@ -459,7 +461,7 @@ El rol no debe usarse como decoración. “Actúa como el mejor experto del mund
 6. Une las cinco tarjetas en un solo prompt natural.
 7. Pruébalo y etiqueta en la salida dónde se cumplió cada acuerdo.
 
-**Ejemplo de base:** `R` tutor paciente; `O` plan de siete días; `C` principiante, 30 minutos diarios; `A` tabla con día, objetivo, práctica y señal de avance; `V` no asumir herramientas pagadas y advertir si una actividad supera 30 minutos.
+**Ejemplo de base:** `R` tutor paciente; `O` plan de siete días para Byron; `C` principiante, 30 minutos diarios en el bus, solo con celular; `A` tabla con día, objetivo, práctica y señal de avance; `V` no asumir herramientas pagadas ni computadora y advertir si una actividad supera 30 minutos.
 
 **Evidencia:** tarjetas ROCAV, prompt completo y salida etiquetada.  
 **Criterio de éxito:** las cinco partes cumplen una función real, la salida puede evaluarse y los vacíos no son rellenados con datos inventados.
@@ -490,7 +492,7 @@ Los patrones son pequeñas estructuras que resuelven problemas frecuentes:
 **Propósito:** evitar que la IA complete información ausente con suposiciones.  
 **Duración:** 20 minutos.
 
-**Insumo ficticio:** una ficha de evento que incluye nombre, tema y fecha, pero no incluye lugar ni precio.
+**Insumo ficticio:** la ficha del taller “Vende más por WhatsApp” que organiza la municipalidad de Antigua Guatemala para emprendedores; incluye nombre, tema y fecha (sábado 14 de marzo), pero no incluye lugar ni precio.
 
 **Pasos:**
 
@@ -498,10 +500,10 @@ Los patrones son pequeñas estructuras que resuelven problemas frecuentes:
 2. Pide separar hecho, inferencia y recomendación.
 3. Indica que todo dato ausente se marque como `no disponible`.
 4. Solicita una pregunta de seguimiento por cada vacío material.
-5. Ejecuta el prompt y revisa si aparecieron lugar o precio inventados.
+5. Ejecuta el prompt y revisa si aparecieron lugar o precio inventados, como “salón municipal” o “Q50”.
 6. Si aparece una invención, agrega una restricción concreta y vuelve a probar.
 
-**Ejemplo de base:** “Usa exclusivamente la ficha. No uses conocimiento externo. Separa hechos, inferencias y recomendaciones. Si el lugar o el precio no aparecen, escribe ‘no disponible’ y formula una pregunta; no completes por plausibilidad”.
+**Ejemplo de base:** “Usa exclusivamente la ficha. No uses conocimiento externo. Separa hechos, inferencias y recomendaciones. Si el lugar o el precio no aparecen, escribe ‘no disponible’ y formula una pregunta; no supongas que es en el salón municipal ni que es gratis”.
 
 **Evidencia:** prompt, salida, lista de vacíos y corrección si fue necesaria.  
 **Criterio de éxito:** ningún dato ausente aparece como hecho y cada vacío material produce una marca o pregunta.
@@ -535,7 +537,7 @@ Se termina cuando la salida cumple la rúbrica o cuando falta información que e
 6. Compara ambas salidas con el mismo criterio.
 7. Conserva el cambio si mejora; si no, revierte y documenta lo aprendido.
 
-**Ejemplo de base:** hipótesis: “Si en Acuerdos pido una acción por fila y un máximo de 30 minutos, el plan será más ejecutable”. Todo lo demás permanece igual.
+**Ejemplo de base:** hipótesis: “Si en Acuerdos pido una acción por fila y un máximo de 30 minutos por trayecto en bus, el plan de Byron será más ejecutable”. Todo lo demás permanece igual.
 
 **Evidencia:** versiones 0.1 y 0.2, hipótesis, comparación y decisión.  
 **Criterio de éxito:** se puede señalar exactamente qué cambió, qué efecto tuvo y por qué se conserva o se descarta.
@@ -572,7 +574,7 @@ Cada criterio se marca `cumple`, `debe mejorar` o `no aplica`. Una respuesta flu
 5. Marca el criterio más débil y añade una última mejora solo si es necesaria.
 6. Escribe una instrucción de uso de tres líneas para otra persona.
 
-**Ejemplo de base:** un prompt creado para planificar siete días de estudio se prueba con una habilidad diferente, manteniendo el mismo tiempo y formato.
+**Ejemplo de base:** el prompt creado para que Byron aprenda hoja de cálculo en siete días se prueba con Heidy, que quiere aprender a tomar mejores fotos de sus productos para vender por WhatsApp, manteniendo el mismo tiempo y formato.
 
 **Evidencia:** entrada nueva, salida, rúbrica y breve instrucción de uso.  
 **Criterio de éxito:** otra persona puede reconocer las piezas, usar el prompt con una entrada equivalente y evaluar el resultado con los mismos criterios.
@@ -653,7 +655,7 @@ Una skill no es un prompt largo con nombre atractivo. Debe indicar cuándo se ac
 4. Justifica por qué el recurso anterior sería insuficiente y por qué el siguiente sería excesivo.
 5. Redacta una frase: “Necesito una skill porque ___ se repite y debe conservar ___”.
 
-**Ejemplo de base:** convertir notas de una reunión en acuerdos y tareas repetibles necesita una skill; no requiere un agente si no debe decidir acciones ni usar herramientas por varios ciclos.
+**Ejemplo de base:** convertir las notas de la reunión mensual del comité de la iglesia en acuerdos y tareas repetibles necesita una skill; no requiere un agente si no debe decidir acciones ni usar herramientas por varios ciclos.
 
 **Evidencia:** descripción de tarea, clasificación y justificación.  
 **Criterio de éxito:** la persona elige el recurso menos complejo que resuelve la necesidad y no utiliza “agente” como sinónimo de cualquier automatización.
@@ -695,7 +697,7 @@ Una skill no es un prompt largo con nombre atractivo. Debe indicar cuándo se ac
 7. Declara límites y una condición de pausa.
 8. Cierra con una lista de control de máximo seis ítems.
 
-**Ejemplo de salida:** resumen de contexto, tabla `tarea | responsable | fecha | fuente`, acuerdos, vacíos y siguiente revisión. Si responsable o fecha no aparecen, usar `pendiente de confirmar`.
+**Ejemplo de salida:** resumen de contexto, tabla `tarea | responsable | fecha | fuente` (por ejemplo `Cotizar el sonido para la kermés | Josué | 15 de agosto | acta del comité`), acuerdos, vacíos y siguiente revisión. Si responsable o fecha no aparecen, usar `pendiente de confirmar`.
 
 **Evidencia:** ficha con las ocho partes completas.  
 **Criterio de éxito:** una persona distinta puede entender cuándo usarla, qué entregar y cuándo detenerse sin explicación oral del autor.
@@ -729,7 +731,7 @@ Un buen trigger no depende de una frase exacta. Reconoce la intención. Un trigg
 6. Prueba los ocho casos y registra `activar`, `no activar`, `preguntar` o `detener`.
 7. Ajusta la descripción si una decisión fue incorrecta.
 
-**Ejemplo de base:** “Convierte estas notas en tareas” activa; “transcribe este audio” no activa; “crea tareas sin notas” pregunta por la fuente; notas con contraseñas detienen y solicitan una versión segura.
+**Ejemplo de base:** “Convierte en tareas estas notas del comité del barrio para la Feria de Jocotenango” activa; “transcribe el audio de la reunión” no activa; “crea las tareas de la feria” sin notas pregunta por la fuente; notas que incluyen la contraseña de la cuenta bancaria del comité detienen y solicitan una versión segura.
 
 **Evidencia:** matriz de casos, resultado esperado, resultado real y corrección.  
 **Criterio de éxito:** activa los casos pertinentes, rechaza los negativos y nunca inventa la fuente que falta.
@@ -766,7 +768,7 @@ Un paquete técnico puede contener `SKILL.md`, `references/`, `templates/` y `sc
 6. Registra qué parte depende de la plataforma y qué parte sigue siendo portable.
 7. Si la función no está disponible, implementa el equivalente con instrucciones de proyecto y documenta la diferencia.
 
-**Ejemplo de base:** la ficha `Convertir notas en plan de acción` permanece como documento neutral; en un proyecto se agregan las instrucciones y una plantilla vacía, no notas reales de una empresa.
+**Ejemplo de base:** la ficha `Convertir notas en plan de acción` permanece como documento neutral; en un proyecto se agregan las instrucciones y una plantilla vacía, no actas reales del comité de la iglesia ni notas reales de una empresa.
 
 **Evidencia:** enlace o captura de implementación y ficha portable intacta.  
 **Criterio de éxito:** el procedimiento produce el mismo tipo de salida y puede trasladarse a otra plataforma sin reconstruirse desde cero.
@@ -791,7 +793,7 @@ La versión cambia cuando se modifica el comportamiento. La evidencia incluye en
 
 **Pasos:**
 
-1. Diseña un caso feliz distinto al usado durante la construcción.
+1. Diseña un caso feliz distinto al usado durante la construcción, como las notas de la junta de padres del colegio sobre el desfile del 15 de septiembre.
 2. Diseña un borde: notas sin fechas o con tareas duplicadas.
 3. Diseña un fallo: fuente vacía o archivo ilegible.
 4. Diseña un caso de no activación.
@@ -801,7 +803,7 @@ La versión cambia cuando se modifica el comportamiento. La evidencia incluye en
 8. Repite la prueba afectada y una prueba anterior para evitar regresiones.
 9. Nombra la versión estable `Skill 1.0` y escribe qué cambió desde 0.1.
 
-**Ejemplo de base:** si faltan fechas, la skill debe marcar `pendiente de confirmar`, no asignar fechas razonables por su cuenta.
+**Ejemplo de base:** si las notas de la cooperativa dicen “Mynor lleva las sillas” sin fecha, la skill debe marcar `pendiente de confirmar`, no asignar “antes de Semana Santa” ni otra fecha razonable por su cuenta.
 
 **Evidencia:** tabla de cuatro pruebas, corrección, repetición y nota de versión.  
 **Criterio de éxito:** la skill se activa correctamente, no se activa fuera de alcance, produce una salida verificable y maneja el fallo sin inventar datos.
@@ -865,7 +867,7 @@ La autonomía no es “hacer todo sin preguntar”. Es poder elegir entre pasos 
 **Propósito:** decidir si una tarea realmente necesita un agente.  
 **Duración:** 15 minutos.
 
-**Casos ficticios:** renombrar archivos con una regla fija; clasificar solicitudes y decidir cuál especialista consulta; enviar un recordatorio idéntico cada viernes; preparar una respuesta que requiere buscar hechos autorizados y luego redactar.
+**Casos ficticios:** renombrar las fotos de los productos que se venden por WhatsApp con la regla fija `producto-precio`; clasificar los mensajes que llegan al comedor de doña Marta (pedidos, quejas o reservas) y decidir a quién pasarlos; enviar el mismo recordatorio de la cuota de la cooperativa cada viernes; preparar una respuesta a un vecino sobre los requisitos de un trámite en la municipalidad, que requiere buscar hechos autorizados y luego redactar.
 
 **Pasos:**
 
@@ -875,7 +877,7 @@ La autonomía no es “hacer todo sin preguntar”. Es poder elegir entre pasos 
 4. Elige un caso y explica cuál sería el riesgo de agregar autonomía innecesaria.
 5. Define un caso propio de bajo riesgo y justifica la elección.
 
-**Ejemplo de base:** renombrar archivos por una regla estable es workflow; decidir si una consulta necesita investigación antes de redactarse puede justificar un agente.
+**Ejemplo de base:** renombrar las fotos por una regla estable es workflow; decidir si la consulta del vecino necesita investigación antes de redactarse puede justificar un agente.
 
 **Evidencia:** clasificación de cuatro casos y justificación propia.  
 **Criterio de éxito:** la persona no confunde “varios pasos” con agente y puede señalar una decisión real basada en estado.
@@ -900,7 +902,7 @@ Todo loop necesita un máximo de pasos, tiempo o costo. El agente debe pausar cu
 **Propósito:** diseñar autonomía limitada y explicable.  
 **Duración:** 20 minutos.
 
-**Caso base:** organizar un plan de estudio usando la Skill 1.0 de la clase anterior.
+**Caso base:** convertir las notas de la reunión de la tortillería de don Carlos en un plan de trabajo para la semana de Semana Santa, usando la Skill 1.0 de la clase anterior.
 
 **Pasos:**
 
@@ -937,7 +939,7 @@ Los dos subagentes deben tener roles distintos. Duplicar roles no agrega valor y
 - Trazabilidad y evidencia.
 - Handoff o escalamiento humano.
 
-**Caso modelo de bajo riesgo:** el coordinador recibe una consulta ficticia. El subagente **Investigador** trabaja únicamente con fuentes autorizadas y devuelve hechos con evidencia. El subagente **Redactor** crea un borrador usando solo esos hechos. El coordinador integra, verifica y pide aprobación antes de cualquier envío.
+**Caso modelo de bajo riesgo:** el coordinador recibe una consulta ficticia de doña Marta, que tiene un comedor junto al mercado de la terminal y quiere saber qué necesita para renovar su licencia municipal. El subagente **Investigador** trabaja únicamente con fuentes autorizadas y devuelve hechos con evidencia. El subagente **Redactor** crea un borrador usando solo esos hechos. El coordinador integra, verifica y pide aprobación antes de cualquier envío.
 
 **Idea visual para la web:** coordinador en el centro; dos especialistas a los lados; flechas separadas para contexto enviado, resultado devuelto y aprobación humana.
 
@@ -957,7 +959,7 @@ Los dos subagentes deben tener roles distintos. Duplicar roles no agrega valor y
 7. Decide cómo el coordinador verificará y combinará ambos resultados.
 8. Agrega un punto de revisión humana antes de cualquier acción externa.
 
-**Ejemplo de base:** Investigador devuelve una tabla de hechos y fuentes; Redactor recibe solo esa tabla y produce un borrador. No busca nuevos hechos ni envía el mensaje.
+**Ejemplo de base:** Investigador devuelve una tabla de hechos y fuentes sobre los requisitos ficticios de la licencia municipal; Redactor recibe solo esa tabla y produce un borrador de respuesta para doña Marta. No busca nuevos hechos ni envía el mensaje.
 
 **Evidencia:** diagrama de arquitectura y fichas de tres roles.  
 **Criterio de éxito:** los dos subagentes aportan capacidades diferentes, reciben contexto mínimo y el coordinador conserva la responsabilidad de integrar y verificar.
@@ -993,7 +995,7 @@ Un **handoff** es el traspaso explícito de trabajo y contexto entre coordinador
 5. Simula el handoff inicial y el retorno al coordinador.
 6. Revisa si se compartió información que el especialista no necesitaba.
 
-**Ejemplo de base:** el Investigador puede usar solo dos fuentes entregadas, devuelve `afirmación | evidencia | fuente | duda`; si las fuentes se contradicen, no decide cuál es correcta y escala.
+**Ejemplo de base:** el Investigador puede usar solo dos fuentes entregadas (la hoja ficticia de requisitos de la municipalidad y el aviso ficticio del centro de salud), devuelve `afirmación | evidencia | fuente | duda`; si una dice que el pago es de Q150 y la otra de Q200, no decide cuál es correcta y escala.
 
 **Evidencia:** dos contratos completos y dos registros de handoff.  
 **Criterio de éxito:** cada subagente sabe cuándo terminar, qué no puede hacer y qué evidencia debe devolver.
@@ -1037,7 +1039,7 @@ Un **guardrail** transforma, bloquea, detiene o escala. El **humano en el ciclo*
 7. Indica dónde interviene una persona y qué debe aprobar.
 8. Simula una solicitud roja y comprueba que el sistema se detenga.
 
-**Ejemplo de base:** leer una ficha ficticia es verde; preparar un borrador es verde o amarillo según el contexto; enviarlo, pagar, cambiar permisos o usar datos personales es rojo en este prototipo y debe escalar.
+**Ejemplo de base:** leer la hoja ficticia de requisitos es verde; preparar el borrador para doña Marta es verde o amarillo según el contexto; enviarlo por WhatsApp, pagar la tasa de Q150, cambiar permisos o usar su DPI u otros datos personales es rojo en este prototipo y debe escalar.
 
 **Evidencia:** matriz de riesgo, permisos, hooks, guardrails y mensaje de pausa.  
 **Criterio de éxito:** ninguna acción roja se ejecuta, cada herramienta tiene propósito y el registro muestra por qué continuó o se detuvo.
@@ -1066,12 +1068,12 @@ El sistema se prueba con tres escenarios:
 1. Ejecuta el caso feliz y guarda la traza completa.
 2. Provoca un fallo controlado en uno de los subagentes.
 3. Comprueba que el coordinador no integre información defectuosa como si fuera válida.
-4. Introduce una acción roja, por ejemplo “envía el mensaje” o “usa esta lista con datos personales”.
+4. Introduce una acción roja, por ejemplo “envía el mensaje a doña Marta por WhatsApp” o “usa esta lista de comerciantes del mercado con sus teléfonos”.
 5. Comprueba que el sistema se detenga y solicite aprobación.
 6. Revisa objetivo, roles, contratos, permisos, trazas y pendientes.
 7. Prepara una explicación de tres minutos: problema, arquitectura, demostración, límite y siguiente mejora.
 
-**Ejemplo de base:** si el Investigador no devuelve fuente, el coordinador marca el hecho como no verificado y solicita corrección; no lo entrega al Redactor como verdad.
+**Ejemplo de base:** si el Investigador no devuelve la fuente del pago de Q150, el coordinador marca el hecho como no verificado y solicita corrección; no lo entrega al Redactor como verdad.
 
 **Evidencia:** tres trazas, resultado final, pausa ante acción roja y guion de demostración.  
 **Criterio de éxito:** el sistema funciona dentro de permisos, integra resultados verificables, registra decisiones, maneja el fallo y se detiene ante riesgo o información faltante.
@@ -1084,7 +1086,7 @@ La persona finaliza el taller cuando puede mostrar un agente coordinador, dos su
 
 # Entregables acumulados del taller
 
-1. Pasaporte de configuración de ChatGPT, Claude y Gemini.
+1. Pasaporte de configuración de la plataforma elegida: ChatGPT, Claude o Gemini.
 2. Glosario personal de conceptos esenciales.
 3. Biblioteca de 20 comandos con ejemplos.
 4. Cinco prompts ROCAV con antes/después y rúbrica.
@@ -1161,7 +1163,7 @@ Estos productos son evidencias de aprendizaje. No equivalen a software desplegad
 | Modelo | Sistema entrenado que genera una salida probable. |
 | Multimodal | Capacidad de trabajar con texto, imagen, audio u otros formatos. |
 | No activación | Prueba que demuestra que una skill no se ejecuta fuera de alcance. |
-| Pasaporte de configuración | Registro de decisiones de privacidad, memoria, instrucciones y funciones por plataforma. |
+| Pasaporte de configuración | Registro de decisiones de privacidad, memoria, instrucciones y funciones en la plataforma elegida. |
 | Plantilla | Estructura de campos que se completa de manera repetida. |
 | Prompt | Mensaje completo que orienta una interacción con la IA. |
 | Proyecto | Espacio que agrupa conversaciones, archivos e instrucciones de un trabajo. |

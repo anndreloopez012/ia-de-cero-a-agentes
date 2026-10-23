@@ -15,22 +15,25 @@ Herramienta de trabajo de **AI Academy by Campuslands** para dar el taller en el
 | **Ejercicios** | 21 ejercicios individuales guiados |
 | **Metodología** | 50 % teoría y 50 % práctica: por clase, 110 min de teoría, 110 min de práctica y 20 min de pausas |
 | **Público** | Cualquier persona adulta con ganas de aprender IA aplicada. No se necesita saber programar |
-| **Plataformas** | ChatGPT, Claude y Gemini. Clases 1 y 2 con cuentas gratuitas; desde la clase 3 se necesita una suscripción de pago en al menos una |
+| **Plataformas** | ChatGPT, Claude o Gemini: cada persona trabaja con una sola, la que elija. Clases 1 y 2 con cuenta gratuita; desde la clase 3 se necesita una suscripción de pago |
 | **Seguridad** | Todos los ejercicios usan datos ficticios, públicos, autorizados o anonimizados |
+| **Contexto** | Ejercicios con situaciones de Guatemala: la tienda de barrio, el comedor del mercado, la cooperativa, el comité de la feria, trámites en la municipalidad y montos en quetzales |
 
 Cada tema sigue el mismo ciclo: **Entender → Ver → Hacer → Probar → Explicar**.
+
+En la primera clase se proyecta el **recorrido animado del taller** (1 min 44 s): el edificio de cuatro pisos se construye clase por clase y muestra los 21 temas. Está en la portada del sitio.
 
 ## Contenido de las cuatro clases
 
 ### Clase 1 · Cimientos: configuración y fundamentos
-**Pregunta guía:** ¿Cómo preparo ChatGPT, Claude y Gemini para trabajar con claridad, seguridad y criterio?
-**Te llevas:** pasaporte de configuración, glosario personal y biblioteca de 20 comandos.
+**Pregunta guía:** ¿Cómo preparo ChatGPT, Claude o Gemini para trabajar con claridad, seguridad y criterio?
+**Te llevas:** pasaporte de configuración de tu plataforma, glosario personal y biblioteca de 20 comandos.
 
 | Punto | Tema | Analogía del video | Ejercicio |
 |---|---|---|---|
 | 1.1 | Qué es y qué no es una IA generativa | Un autocompletado gigante | Desarmar una respuesta · 25 min |
 | 1.2 | Privacidad, autorización y semáforo de datos | Una casa con tres puertas | Convertir un caso amarillo en uno verde · 20 min |
-| 1.3 | Configurar ChatGPT, Claude y Gemini | El tablero eléctrico de la casa | Pasaporte de configuración · 20 min |
+| 1.3 | Configurar ChatGPT, Claude o Gemini | El tablero eléctrico de la casa | Pasaporte de configuración · 20 min |
 | 1.4 | Vocabulario que se usará durante todo el taller | Una obra con su equipo | Mapa de conceptos con decisiones · 20 min |
 | 1.5 | Elegir el recurso correcto y usar 20 comandos esenciales | Para cada trabajo, su herramienta | Circuito de comandos · 25 min |
 
@@ -74,7 +77,7 @@ Cada tema sigue el mismo ciclo: **Entender → Ver → Hacer → Probar → Expl
 
 ## Lo que cada persona construye
 
-1. Pasaporte de configuración de ChatGPT, Claude y Gemini.
+1. Pasaporte de configuración de la plataforma elegida: ChatGPT, Claude o Gemini.
 2. Glosario personal de conceptos esenciales.
 3. Biblioteca de 20 comandos con ejemplos.
 4. Cinco prompts ROCAV con antes/después y rúbrica.
@@ -118,7 +121,7 @@ scripts/build-explainers.mjs         escenas → site/content/explainers.js (cap
 scripts/validate-site.mjs            validación del sitio
 site/                                sitio estático que publica GitHub Pages
 motion/point-explainers/             los 21 videos (una escena de HyperFrames por punto)
-motion/construction-journey/         animación del recorrido completo
+motion/recorrido-taller/             recorrido animado de la primera clase (npm run render dentro de la carpeta)
 ```
 
 ```bash
