@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1920, height=1080" />
-    <title>C1·P3 · Configurar ChatGPT, Claude y Gemini</title>
+    <title>C1·P3 · Configurar ChatGPT, Claude o Gemini</title>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <link rel="stylesheet" href="shared/teacher.css" />
     <script src="shared/teacher.js"></script>
@@ -67,7 +67,7 @@
         <div class="cell r4 c2"><span class="nm">Proyecto</span><span class="tag cyan t42" data-icon="folder" data-icon-class="ic">Creado</span></div>
         <div class="cell r4 c3"><span class="nm">Gem</span><span class="tag cyan t43" data-icon="folder" data-icon-class="ic">Creado</span></div>
 
-        <div class="card accent" id="pass"><h3>Pasaporte de configuración</h3>
+        <div class="card accent" id="pass"><h3>Pasaporte de mi plataforma</h3>
           <div class="pp p1"><b>Instrucciones · activadas</b><span>Español claro y síntesis primero.</span></div>
           <div class="pp p2"><b>Memoria · desactivada</b><span>Practico con casos ficticios.</span></div>
           <div class="pp p3"><b>Datos y apps · revisados</b><span>Solo conecto lo necesario.</span></div>
@@ -82,8 +82,8 @@
       const T = Teacher.setup({
         cls: 1, point: 3,
         title: "¿Configurar la IA es <em>activar todo</em>?",
-        headTitle: "Configurar ChatGPT, Claude y Gemini",
-        question: "No. Es decidir con intención qué recuerda, qué guarda y con qué se conecta. El mismo criterio sirve en las tres.",
+        headTitle: "Configurar ChatGPT, Claude o Gemini",
+        question: "No. Es decidir con intención qué recuerda, qué guarda y con qué se conecta. Eliges una plataforma y configuras la tuya.",
         analogy: {
           art: `<div class="breakers"><div class="title">Tablero de la casa</div>
             <div class="brk b1"><div class="track"><div class="knob"></div></div><div class="led"></div><em>OFF</em><em class="on">ON</em><span>Cocina</span></div>
@@ -95,14 +95,14 @@
           text: "No enciendes todos los circuitos: solo los que vas a usar. Y sabes <em>por qué</em> cada uno quedó encendido o apagado.",
         },
         steps: [
-          { label: "Instrucciones", caption: "Empieza por las <em>instrucciones</em>: idioma, claridad y qué hacer si falta un dato." },
+          { label: "Instrucciones", caption: "En la tuya, empieza por las <em>instrucciones</em>: idioma, claridad y qué hacer si falta un dato." },
           { label: "Memoria", caption: "Para practicar, <em>memoria apagada</em>. ¿No encuentras la opción? Márcala pendiente." },
           { label: "Datos y apps", caption: "Revisa qué se usa para mejorar el modelo y conecta <em>solo lo necesario</em>." },
           { label: "Proyecto", caption: "Crea un <em>proyecto</em> para el taller: sus reglas y archivos quedan aparte." },
         ],
         takeaway: {
           title: "Configurar no es activar todo: es <em>decidir</em> y saber <em>por qué</em>.",
-          text: "Mismo criterio en ChatGPT, Claude y Gemini, aunque los botones se llamen distinto.",
+          text: "Mismo criterio en la que uses: ChatGPT, Claude o Gemini, aunque los botones se llamen distinto.",
         },
       });
 

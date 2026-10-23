@@ -55,14 +55,14 @@
         <div class="say hide colh" id="h3">Esperado</div><div class="say hide colh" id="h4">Real</div>
 
         <div class="lane hide" id="ln1"><div class="ty"><i>1</i><b>Caso feliz</b></div>
-          <div class="cell in hide">«Notas completas de la reunión del lunes»</div>
+          <div class="cell in hide">«Junta de padres: desfile del 15 de septiembre»</div>
           <div class="cell ex hide">Tabla con tareas, dueños y fechas</div>
           <div class="cell re"><div class="okmark hide" data-icon="check" data-icon-class=""></div><span class="hide">Como se esperaba</span></div></div>
 
         <div class="lane hide" id="ln2"><div class="ty"><i>2</i><b>Caso borde</b></div>
-          <div class="cell in hide">«Notas sin fechas»</div>
+          <div class="cell in hide">«Cooperativa: Mynor lleva las sillas»</div>
           <div class="cell ex hide">Marcar «pendiente de confirmar»</div>
-          <div class="cell re"><div class="nomark hide" data-icon="x" data-icon-class=""></div><span class="bad hide">Inventó fechas</span>
+          <div class="cell re"><div class="nomark hide" data-icon="x" data-icon-class=""></div><span class="bad hide">Puso «antes de Semana Santa»</span>
             <div class="okmark fix hide" data-icon="check" data-icon-class=""></div><span class="good fixtxt hide">Ahora marca «pendiente»</span></div></div>
 
         <div class="lane hide" id="ln3"><div class="ty"><i>3</i><b>Fallo</b></div>
@@ -71,7 +71,7 @@
           <div class="cell re"><div class="okmark hide" data-icon="check" data-icon-class=""></div><span class="hide">No inventó nada</span></div></div>
 
         <div class="lane hide" id="ln4"><div class="ty"><i>4</i><b>No activación</b></div>
-          <div class="cell in hide">«Transcribe este audio»</div>
+          <div class="cell in hide">«Transcribe el audio de la reunión»</div>
           <div class="cell ex hide">La skill no se activa</div>
           <div class="cell re"><div class="okmark hide" data-icon="check" data-icon-class=""></div><span class="hide">No se activó</span></div></div>
 
@@ -107,10 +107,10 @@
           text: "Antes de venderse, una escalera pasa cuatro pruebas: uso normal, peso al límite, una pieza floja y mal uso. Solo entonces lleva el <em>sello</em>.",
         },
         steps: [
-          { label: "Caso feliz", caption: "Caso feliz: entrada <em>completa y normal</em>. Antes de correrla, escribe qué esperas." },
-          { label: "Caso borde", caption: "Caso borde: <em>notas sin fechas</em>. Esperabas «pendiente», pero inventó fechas: falla." },
+          { label: "Caso feliz", caption: "Caso feliz: las notas de la <em>junta de padres</em> del colegio. Antes, escribe qué esperas." },
+          { label: "Caso borde", caption: "Borde: <em>«Mynor lleva las sillas»</em>, sin fecha. Debía marcar «pendiente» y la inventó." },
           { label: "Fallo", caption: "Fallo: <em>archivo vacío</em>. Debe pedir la fuente y detenerse, nunca rellenar." },
-          { label: "No activación", caption: "No activación: <em>«transcribe este audio»</em> se parece, pero no debe activarla." },
+          { label: "No activación", caption: "No activación: <em>«transcribe el audio de la reunión»</em> se parece, pero no debe activarla." },
           { label: "Corregir y versionar", caption: "Corrige solo la causa y repite esa prueba y una anterior. Ahora sí: <em>Skill 1.0</em>." },
         ],
         takeaway: {

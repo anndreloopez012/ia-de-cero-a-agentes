@@ -13,15 +13,17 @@
       #h-a { left: 0; } #h-b { left: 560px; } #h-c { left: 1120px; }
 
       /* Columna A: la petición vaga y su radiografía */
-      #vague { left: 0; top: 52px; width: 500px; font-size: 29px; line-height: 1.38; }
+      #vague { left: 0; top: 52px; width: 540px; padding: 22px 28px; font-size: 27px; line-height: 1.34; }
       #scan { position: absolute; left: -10px; top: 52px; width: 520px; height: 8px; border-radius: 8px; background: var(--cyan); box-shadow: 0 0 30px var(--cyan); z-index: 9; }
       #t-tema { left: 0; top: 248px; }
       #say-sup, #say-ctrl { left: 0; top: 322px; font-size: 26px; }
       #say-sup { color: #ffe2ad; } #say-ctrl { color: #b5ffe2; }
-      .q { height: 54px; font-size: 26px; padding: 0 20px; }
-      .q .ok { display: inline-flex; }
-      #q1 { left: 0; top: 368px; } #q2 { left: 252px; top: 368px; }
-      #q3 { left: 0; top: 434px; } #q4 { left: 252px; top: 434px; }
+      #vague small { display: block; margin-bottom: 6px; font-family: "Figtree"; font-size: 26px; font-weight: 800; color: #7a3cff; }
+      .q { height: 54px; font-size: 26px; padding: 0 18px; }
+      .q .ok { position: absolute; right: -10px; top: -12px; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: #45e0a8; color: #062418; }
+      .q .ok .ic { width: 22px; height: 22px; }
+      #q1 { left: 0; top: 368px; } #q2 { left: 300px; top: 368px; }
+      #q3 { left: 0; top: 434px; } #q4 { left: 300px; top: 434px; }
       #q5 { left: 0; top: 500px; }
 
       /* Columna B: las capas del prompt */
@@ -63,16 +65,16 @@
         <div class="say col-h hide" id="h-b">Capas del prompt</div>
         <div class="say col-h hide" id="h-c">Prompt armado por capas</div>
 
-        <div class="paper hide" id="vague">“Hazme una presentación sobre inteligencia artificial.”</div>
+        <div class="paper hide" id="vague"><small>Mynor, maestro en Chimaltenango:</small>“Hazme una presentación sobre inteligencia artificial.”</div>
         <div class="hide" id="scan"></div>
         <span class="tag green hide" id="t-tema" data-icon="check" data-icon-class="ic">Explícito: el tema</span>
         <div class="say hide" id="say-sup">Lo tuvo que suponer la IA:</div>
         <div class="say hide" id="say-ctrl">Ahora lo decides tú:</div>
-        <span class="tag yellow q hide" id="q1">¿Para quién?<span class="ok hide" data-icon="check" data-icon-class="ic"></span></span>
+        <span class="tag yellow q hide" id="q1">¿Padres o alumnos?<span class="ok hide" data-icon="check" data-icon-class="ic"></span></span>
         <span class="tag yellow q hide" id="q2">¿Para qué?<span class="ok hide" data-icon="check" data-icon-class="ic"></span></span>
-        <span class="tag yellow q hide" id="q3">¿Cuántas?<span class="ok hide" data-icon="check" data-icon-class="ic"></span></span>
-        <span class="tag yellow q hide" id="q4">¿Qué tono?<span class="ok hide" data-icon="check" data-icon-class="ic"></span></span>
-        <span class="tag yellow q hide" id="q5">¿Con qué fuentes?<span class="ok hide" data-icon="check" data-icon-class="ic"></span></span>
+        <span class="tag yellow q hide" id="q3">¿Cuántas en 20 min?<span class="ok hide" data-icon="check" data-icon-class="ic"></span></span>
+        <span class="tag yellow q hide" id="q4">¿Qué fuentes?<span class="ok hide" data-icon="check" data-icon-class="ic"></span></span>
+        <span class="tag yellow q hide" id="q5">¿Cómo sabrá si entendieron?<span class="ok hide" data-icon="check" data-icon-class="ic"></span></span>
 
         <div class="layer hide" id="L1"><b>Instrucción</b><span>la regla: qué hacer</span></div>
         <div class="layer hide" id="L2"><b>Contexto</b><span>datos para interpretar</span></div>
@@ -83,9 +85,9 @@
 
         <div class="paper hide" id="built">
           <div class="ln" id="P1">Explica qué es la IA en una presentación.</div>
-          <div class="ln" id="P2">Es para adultos sin experiencia.</div>
+          <div class="ln" id="P2">Es para padres de familia de básicos.</div>
           <div class="ln" id="P3">Usa solo el texto que te adjunto.</div>
-          <div class="ln" id="P4">Máximo 8 diapositivas. Sin jerga.</div>
+          <div class="ln" id="P4">Máximo 8 diapositivas: 20 minutos.</div>
           <div class="ln" id="P5">Cierra con 3 preguntas de comprensión.</div>
           <div class="ln" id="P6">Sigue este ejemplo: título + 3 viñetas.</div>
         </div>
@@ -111,7 +113,7 @@
           text: "Si solo dices “hazme una mesa”, el carpintero <em>decide por ti</em> medidas, madera y fecha. Cada dato que das es una decisión que <em>ya no tiene que suponer</em>.",
         },
         steps: [
-          { label: "Petición vaga", caption: "Una petición vaga obliga a la IA a <em>suponer</em> audiencia, propósito, tono y formato." },
+          { label: "Petición vaga", caption: "Mynor solo dio el tema; la IA <em>supuso</em> público, propósito, duración y fuentes." },
           { label: "Capas", caption: "Un prompt completo tiene capas: instrucción, contexto, entrada, <em>restricción</em>, criterio y ejemplo." },
           { label: "Armar por capas", caption: "Cada capa agrega <em>una línea</em> al prompt y elimina una suposición." },
           { label: "Comparar", caption: "Ahora tú controlas lo que antes era supuesto: <em>más claro</em>, aunque nunca infalible." },

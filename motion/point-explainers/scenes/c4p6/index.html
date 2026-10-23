@@ -91,24 +91,24 @@
         <div class="nd r2n" style="left:696px;top:242px"><span data-icon="wrench" data-icon-class="ic"></span></div>
         <div class="nd r2n" id="r2n4" style="left:884px;top:242px"><span data-icon="doc" data-icon-class="ic"></span></div>
         <div class="nd r2n" id="r2n5" style="left:1072px;top:242px"><span data-icon="question" data-icon-class="ic"></span></div>
-        <span class="tag yellow st low" id="t2a" style="left:832px;top:318px">sin fuente</span>
+        <span class="tag yellow st low" id="t2a" style="left:810px;top:318px">Q150 sin fuente</span>
         <span class="tag yellow st" id="t2end" style="left:1176px;top:247px" data-icon="return" data-icon-class="ic">Corrección</span>
 
         <!-- Traza 3 · acción sensible -->
         <div class="nd r3n" style="left:320px;top:406px"><span data-icon="target" data-icon-class="ic"></span></div>
         <div class="nd r3n" style="left:508px;top:406px"><span data-icon="users" data-icon-class="ic"></span></div>
         <div class="nd r3n" id="r3n3" style="left:696px;top:406px"><span data-icon="chat" data-icon-class="ic"></span></div>
-        <span class="tag red st low mono-t" id="t3a" style="left:593px;top:482px">enviar_mensaje</span>
+        <span class="tag red st low mono-t" id="t3a" style="left:585px;top:482px">enviar_whatsapp</span>
         <span class="tag red st" id="t3end" style="left:900px;top:411px" data-icon="clock" data-icon-class="ic">Esperando aprobación</span>
 
         <div id="lupa"><i data-layout-allow-overflow></i></div>
 
         <div class="card" id="detail"><span class="dk">Detalle</span>
-          <div class="dt" id="d1"><h3>Objetivo</h3><p>Resumir 2 fuentes para el boletín</p></div>
+          <div class="dt" id="d1"><h3>Objetivo</h3><p>Responder a doña Marta sobre su licencia</p></div>
           <div class="dt" id="d2"><h3>Delegación</h3><p>Coordinador → Investigador. Permiso: <b>solo lectura</b></p></div>
-          <div class="dt" id="d3"><h3>Herramienta</h3><p>leer_fuente(A): OK. Clave oculta: <b>••••••</b></p></div>
-          <div class="dt" id="d6"><h3>Falta la fuente</h3><p>El dato queda <b>«no verificado»</b>: no pasa como verdad.</p></div>
-          <div class="dt" id="d7"><h3>Acción roja</h3><p>«Envía el mensaje»: <b>pausa</b> hasta que alguien apruebe.</p></div>
+          <div class="dt" id="d3"><h3>Herramienta</h3><p>leer_hoja(requisitos): OK. Clave oculta: <b>••••••</b></p></div>
+          <div class="dt" id="d6"><h3>Falta la fuente</h3><p>El pago de Q150 queda <b>«no verificado»</b>: no va al Redactor.</p></div>
+          <div class="dt" id="d7"><h3>Acción roja</h3><p>«Envíalo por WhatsApp»: <b>pausa</b> hasta que alguien apruebe.</p></div>
         </div>
 
         <div class="card accent" id="demo"><h3>Demo de 3 min</h3>
@@ -138,8 +138,8 @@
         steps: [
           { label: "La traza", caption: "Una <em>traza</em> registra cada decisión: objetivo, delegación, herramienta, resultado y cierre." },
           { label: "Caso feliz", caption: "Prueba 1, <em>caso feliz</em>: los dos subagentes cumplen y el coordinador integra." },
-          { label: "Fallo de subagente", caption: "Prueba 2, <em>fallo controlado</em>: sin fuente, el dato no pasa como verdad; se pide corrección." },
-          { label: "Acción sensible", caption: "Prueba 3, <em>acción roja</em>: «envía el mensaje» detiene todo hasta que alguien apruebe." },
+          { label: "Fallo de subagente", caption: "Prueba 2, <em>fallo controlado</em>: el pago de Q150 llega sin fuente; se pide corrección." },
+          { label: "Acción sensible", caption: "Prueba 3, <em>acción roja</em>: «envía el mensaje a doña Marta por WhatsApp» espera aprobación." },
           { label: "Demostración", caption: "En la demo final muestras las <em>tres trazas</em> y explicas el límite y la siguiente mejora." },
         ],
         takeaway: {

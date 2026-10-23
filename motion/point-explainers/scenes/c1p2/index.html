@@ -22,15 +22,15 @@
       #lbl-r { top: 356px; } #lbl-r h4 { color: var(--red); }
 
       #case, #safe { top: 20px; font-family: "Figtree", sans-serif; font-size: 28px; line-height: 1.6; font-weight: 600; padding: 24px 30px 28px; }
-      #case { left: 530px; width: 590px; }
+      #case { left: 530px; width: 590px; font-size: 26px; line-height: 1.5; padding-bottom: 22px; }
       #safe { left: 1200px; width: 576px; }
       .ph { display: block; margin-bottom: 6px; font-family: "Bricolage"; font-size: 30px; letter-spacing: .01em; }
       #case .d { position: relative; display: inline-block; padding: 0 6px; border-radius: 8px; line-height: 1.3; }
       #case .cut { position: absolute; left: -2px; right: -2px; top: 50%; height: 5px; margin-top: -2px; border-radius: 3px; background: var(--red); }
       #safe .mk { display: inline-block; padding: 0 10px; border-radius: 10px; line-height: 1.3; background: var(--purple); color: #fff; font-weight: 800; }
-      #goal { left: 530px; top: 364px; }
+      #goal { left: 530px; top: 378px; }
       #note-red { left: 1180px; top: 250px; max-width: 400px; }
-      #note-anon { left: 530px; top: 440px; max-width: 590px; }
+      #note-anon { left: 530px; top: 456px; max-width: 590px; }
       #chk { left: 1214px; top: 352px; }
       #chk li i { color: transparent; }
       #ok { left: 1700px; top: -18px; }
@@ -71,7 +71,7 @@
         <div class="lbl" id="lbl-r"><h4>Rojo · no se carga</h4><p>Claves, datos bancarios, salud, secretos</p></div>
 
         <div class="paper" id="case"><b class="ph">Caso original</b>
-          <span class="d name">Ana López<i class="cut"></i></span>, <span class="d phone">teléfono 5555-0101<i class="cut"></i></span>, trabaja en <span class="d org">Empresa Sol<i class="cut"></i></span>. No podrá asistir a la reunión del martes porque tiene <span class="d med">una cita médica<i class="cut"></i></span>. Pide el resumen en <span class="d mail">ana.lopez@example.com<i class="cut"></i></span>.</div>
+          <span class="d name">Ana López<i class="cut"></i></span>, <span class="d phone">teléfono 5555-0101<i class="cut"></i></span>, trabaja en <span class="d org">la cooperativa Nueva Aurora, en Xela<i class="cut"></i></span>. No podrá asistir a la reunión de socios del martes porque tiene <span class="d med">cita médica en el IGSS<i class="cut"></i></span>. Pide el resumen en <span class="d mail">ana.lopez@example.com<i class="cut"></i></span>.</div>
 
         <span class="tag cyan" id="goal" data-icon="target" data-icon-class="ic">Objetivo: nota neutral de ausencia</span>
 
@@ -86,7 +86,7 @@
         <div class="okmark" id="ok" data-icon="check" data-icon-class=""></div>
 
         <div class="note red" id="note-red">Motivo de salud: dato sensible, va en rojo.</div>
-        <div class="note purple" id="note-anon">Anonimizar no es solo borrar el nombre: también teléfono, correo y empresa.</div>
+        <div class="note purple" id="note-anon">Anonimizar no es solo borrar el nombre: también teléfono, correo y cooperativa.</div>
       </div>
     </div>
     <script>
