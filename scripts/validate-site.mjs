@@ -20,7 +20,8 @@ const required = [
   "assets/fonts/bricolage-grotesque-latin-wght-normal.woff2",
   "assets/fonts/figtree-latin-wght-normal.woff2",
   "assets/fonts/jetbrains-mono-latin-wght-normal.woff2",
-  "assets/motion/construccion-aprendizaje.mp4",
+  "assets/motion/recorrido-taller.mp4",
+  "assets/motion/recorrido-taller.jpg",
 ];
 
 for (let classNumber = 1; classNumber <= 4; classNumber += 1) {

@@ -9,7 +9,7 @@
     <script src="shared/teacher.js"></script>
     <style>
       /* Pizarra: rueda del loop con contador, presupuesto, causas de pausa y dos salidas */
-      #interp { left: 0; top: 0; width: 300px; height: 200px; padding: 22px 24px; gap: 6px; }
+      #interp { left: 0; top: 0; width: 300px; height: 218px; padding: 22px 24px; gap: 6px; }
       #interp h3 { font-size: 34px; }
       .node { position: absolute; z-index: 4; display: flex; align-items: center; justify-content: center; gap: 12px; width: 224px; height: 80px; border-radius: 22px; border: 2px solid var(--line); background: linear-gradient(155deg, rgba(41, 29, 63, .97), rgba(13, 10, 19, .97)); font-family: "Bricolage"; font-weight: 700; font-size: 32px; color: var(--ink); box-shadow: 0 16px 34px rgba(0, 0, 0, .4); }
       .node .ic { width: 36px; height: 36px; stroke-width: 7; color: var(--lavender); }
@@ -70,7 +70,7 @@
           <path class="w-esc yellow" pathLength="1" d="M902 312C930 312 920 400 952 400" />
         </svg>
 
-        <div class="card accent hide" id="interp"><span data-icon="search" data-icon-class="ic sm"></span><h3>Interpretar</h3><p>Plan de estudio de 4 semanas</p></div>
+        <div class="card accent hide" id="interp"><span data-icon="search" data-icon-class="ic sm"></span><h3>Interpretar</h3><p>Notas de don Carlos → plan de Semana Santa</p></div>
         <div class="node hide" id="nd-plan"><span data-icon="map" data-icon-class="ic"></span>Planear</div>
         <div class="node hide" id="nd-act"><span data-icon="bolt" data-icon-class="ic"></span>Actuar</div>
         <div class="node hide" id="nd-obs"><span data-icon="eye" data-icon-class="ic"></span>Observar</div>
@@ -82,7 +82,7 @@
 
         <div class="card green hide" id="done"><h3>Terminar</h3><p>Si cumple el criterio: entrega el plan, las trazas y lo pendiente.</p></div>
         <div class="card yellow hide" id="escal"><h3>Escalar</h3><p>Pausa y le pregunta a la persona:</p>
-          <div class="paper">No puedo seguir: falta la fecha del examen. ¿La confirmas?</div></div>
+          <div class="paper">No puedo seguir: falta cuándo llega la harina. ¿Lo confirmas?</div></div>
 
         <div class="card cyan hide" id="budget"><h3>Presupuesto</h3><div class="bud-bar"><i></i></div>
           <div class="bud-lbl"><span class="b1">Quedan 12 de 20 min</span><span class="b2">Quedan 8 de 20 min</span><span class="b3">Quedan 4 de 20 min</span></div></div>
@@ -111,7 +111,7 @@
           { label: "La rueda", caption: "Primero interpreta el objetivo. Luego gira: <em>planear, actuar, observar y ajustar</em>." },
           { label: "Contador", caption: "Cada vuelta suma al contador. El máximo se fija antes de empezar: <em>cuatro ciclos</em>." },
           { label: "Presupuesto", caption: "Cada vuelta también gasta <em>presupuesto</em> de tiempo o costo. Si se agota, se detiene." },
-          { label: "Cuándo pausar", caption: "En la vuelta 4 observa que <em>falta la fecha</em> del examen: es motivo de pausa." },
+          { label: "Cuándo pausar", caption: "En la vuelta 4 observa que <em>falta saber</em> cuándo llega la harina: es motivo de pausa." },
           { label: "Terminar o escalar", caption: "Toda vuelta acaba en una salida: <em>terminar</em> con evidencia o <em>escalar</em> a una persona." },
         ],
         takeaway: {

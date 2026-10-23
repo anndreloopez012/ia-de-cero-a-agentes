@@ -85,13 +85,13 @@
         </svg>
 
         <div class="lane g"><div class="lv"><h4>Verde</h4><p>Reversible y sin impacto externo</p></div>
-          <div class="act"><span data-icon="doc"></span>Leer ficha ficticia</div>
+          <div class="act"><span data-icon="doc"></span>Leer hoja de requisitos</div>
           <span class="tag green out" id="o1" data-icon="check" data-icon-class="ic">Avanza y registra</span></div>
         <div class="lane y"><div class="lv"><h4>Amarillo</h4><p>Ambiguo o difícil de revertir</p></div>
-          <div class="act"><span data-icon="pencil"></span>Preparar borrador</div>
+          <div class="act"><span data-icon="pencil"></span>Borrador para doña Marta</div>
           <span class="tag yellow out" id="o2" data-icon="hand" data-icon-class="ic">Prepara y pide confirmación</span></div>
         <div class="lane r"><div class="lv"><h4>Rojo</h4><p>Personas, dinero, accesos, datos</p></div>
-          <div class="act"><span data-icon="chat"></span>Enviar a 40 clientes</div>
+          <div class="act"><span data-icon="chat"></span>Enviar por WhatsApp</div>
           <span class="tag red out" id="o3" data-icon="stop" data-icon-class="ic">No ejecuta: escala</span></div>
 
         <span class="tag" id="gate-tag" data-icon="lock" data-icon-class="ic">Control antes de actuar</span>
@@ -112,11 +112,11 @@
         <div class="hk on" id="h4">after_tool</div><div class="hk" id="h5">on_handoff</div><div class="hk" id="h6">on_end</div>
 
         <div class="card" id="reg"><h3>Registro</h3><span class="mono">after_tool</span>
-          <div class="lg"><i></i>leer ficha: OK</div><div class="lg"><i></i>borrador: en pausa</div><div class="lg"><i></i>enviar: bloqueado</div></div>
+          <div class="lg"><i></i>leer hoja: OK</div><div class="lg"><i></i>borrador: en pausa</div><div class="lg"><i></i>enviar: bloqueado</div></div>
 
         <div class="card yellow" id="human">
           <div class="who"><div class="face"><span data-icon="user"></span></div><b>Persona responsable</b></div>
-          <p>¿Enviar a 40 clientes?</p>
+          <p>¿Enviar a doña Marta?</p>
           <div class="btns"><span class="tag green" id="b-ok">Aprobar</span><span class="tag red" id="b-no">Rechazar</span></div>
         </div>
       </div>
@@ -126,7 +126,7 @@
         cls: 4, point: 5,
         title: "¿Qué puede hacer un agente <em>solo</em> y cuándo debe parar?",
         headTitle: "Herramientas, permisos, hooks y humano en el ciclo",
-        question: "Leer un archivo no es lo mismo que escribirle a tus clientes. El permiso depende del riesgo.",
+        question: "Leer una hoja de requisitos no es lo mismo que pagar una tasa por alguien. El permiso depende del riesgo.",
         analogy: {
           art: `<div class="rack"><h5>Llavero del edificio</h5>
             <div class="kr k1"><i class="peg"></i><div class="key"><i class="bow"></i><i class="shaft"></i><i class="t1"></i><i class="t2"></i></div><div class="kl"><b>Bodega</b><span>Cualquier empleado</span></div></div>
@@ -136,9 +136,9 @@
           text: "Nadie recibe el llavero completo: cada quien tiene <em>solo las llaves que necesita</em>, y la caja fuerte se abre <em>solo con el dueño presente</em>.",
         },
         steps: [
-          { label: "Verde", caption: "Lo <em>reversible</em> y sin impacto externo, como leer una ficha ficticia, avanza y queda registrado." },
-          { label: "Amarillo", caption: "Lo ambiguo o difícil de revertir se <em>prepara y se muestra</em>: espera tu confirmación." },
-          { label: "Rojo", caption: "Personas, dinero, accesos o datos sensibles: el <em>guardrail</em> bloquea y el agente escala." },
+          { label: "Verde", caption: "Lo <em>reversible</em> y sin impacto externo, como leer la hoja de requisitos, avanza y se registra." },
+          { label: "Amarillo", caption: "El borrador para doña Marta se <em>prepara y se muestra</em>: espera tu confirmación." },
+          { label: "Rojo", caption: "Enviarlo por WhatsApp, pagar la tasa de Q150 o usar su DPI: el <em>guardrail</em> bloquea y escala." },
           { label: "Hooks", caption: "Los <em>hooks</em> son controles fijos: before_tool revisa el permiso; after_tool registra." },
           { label: "Humano en el ciclo", caption: "La persona no es decoración: <em>aprueba o rechaza</em> justo donde hay riesgo." },
         ],

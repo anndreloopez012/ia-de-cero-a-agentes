@@ -69,9 +69,9 @@
           <path class="w-safe yellow dash" pathLength="1" d="M546 336V448" />
         </svg>
 
-        <div class="req hide" id="q1"><small>Petición</small><span>«Convierte estas notas en tareas»</span><em>notas-lunes.txt</em></div>
-        <div class="req hide" id="q2"><small>Petición</small><span>«Transcribe este audio»</span><em>reunion.mp3</em></div>
-        <div class="req hide" id="q3"><small>Petición</small><span>«Crea las tareas de la reunión»</span><em class="no">sin notas</em></div>
+        <div class="req hide" id="q1"><small>Petición</small><span>«Convierte estas notas en tareas»</span><em>notas-feria-jocotenango.txt</em></div>
+        <div class="req hide" id="q2"><small>Petición</small><span>«Transcribe el audio de la reunión»</span><em>reunion.mp3</em></div>
+        <div class="req hide" id="q3"><small>Petición</small><span>«Crea las tareas de la feria»</span><em class="no">sin notas</em></div>
         <div class="note purple hide" id="alt">También activa: «Sácame los pendientes»</div>
 
         <div class="belt hide"></div>
@@ -91,9 +91,9 @@
         <div class="token tk hide" id="tk3"><span data-icon="doc" data-icon-class="ic sm"></span></div>
 
         <div class="card red zone hide" id="out-scope"><h4>Fuera de alcance</h4><p>Transcribir no es su tarea.</p></div>
-        <span class="tag red hide" id="tag-stop" data-icon="stop">Con contraseñas: detener</span>
+        <span class="tag red hide" id="tag-stop" data-icon="stop">Contraseña del banco: detener</span>
         <div class="card yellow zone hide" id="safe"><h4>Fallback · zona segura</h4><p>Pregunta: «Faltan las notas, ¿me las compartes?»</p></div>
-        <div class="card green zone hide" id="result"><p>Enviar acta → <b>Ana · 12 oct</b></p><p>Reservar sala → <b>pendiente</b></p></div>
+        <div class="card green zone hide" id="result"><p>Toldos → <b>Josué · 15 ago</b></p><p>Permiso muni → <b>pendiente</b></p></div>
       </div>
     </div>
     <script>
@@ -113,11 +113,11 @@
           text: "Tu pase te deja entrar, el escáner revisa antes de abordar y, si falta algo, te mandan al <em>mostrador</em>, no al avión equivocado.",
         },
         steps: [
-          { label: "Trigger positivo", caption: "El <em>trigger</em> lee la intención: «convierte estas notas» o «sácame pendientes» la activan." },
-          { label: "Trigger negativo", caption: "Un <em>trigger negativo</em> la frena: «transcribe este audio» se parece, pero no es su tarea." },
-          { label: "Hook de entrada", caption: "El <em>hook de entrada</em> revisa antes de trabajar: que haya fuente y nada sensible." },
+          { label: "Trigger positivo", caption: "El <em>trigger</em> lee la intención: notas del comité de la feria + «conviértelas en tareas»." },
+          { label: "Trigger negativo", caption: "Un <em>trigger negativo</em> la frena: «transcribe el audio de la reunión» no es su tarea." },
+          { label: "Hook de entrada", caption: "El <em>hook de entrada</em> revisa: que haya fuente y ninguna contraseña del banco." },
           { label: "Hook de salida", caption: "El <em>hook de salida</em> revisa antes de entregar: cada tarea con dueño o «pendiente»." },
-          { label: "Fallback", caption: "Si falta la fuente, el <em>fallback</em> lleva a una zona segura: pregunta, nunca inventa." },
+          { label: "Fallback", caption: "Sin notas de la feria, el <em>fallback</em> pregunta por la fuente: nunca inventa." },
         ],
         takeaway: {
           title: "Se activa por <em>intención</em> y, si algo falta, <em>pregunta</em>: nunca inventa.",
@@ -150,7 +150,7 @@
       T.to("#tk1", s(0, 1.5), { x: 300, duration: .9 });
       T.slide("#alt", s(0, 2.5), { x: 30, y: 0 });
 
-      // Paso 2 · Trigger negativo: «transcribe este audio» rebota
+      // Paso 2 · Trigger negativo: «transcribe el audio de la reunión» rebota
       T.fadeOut("#alt", s(1, 0), 0, .3);
       T.fadeOut("#q1", s(1, 0), 0, .3);
       T.slide("#q2", s(1, .2), { x: -30, y: 0 });

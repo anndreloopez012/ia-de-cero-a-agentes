@@ -176,6 +176,7 @@
           <p class="lead">Aprender IA se parece a construir una casa: primero los cimientos, después los planos, luego las herramientas y al final un equipo que trabaja con reglas claras. Cada tema trae un video que lo explica y una hoja de trabajo para practicarlo.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#/clase/${resume.cls.number}/punto/${resume.point.number}">${icon("play")}${started ? `Continuar en ${resume.cls.number}.${resume.point.number}` : "Empezar por los cimientos"}</a>
+            <a class="btn" href="#recorrido" data-scroll="recorrido">${icon("screen")}Ver el recorrido</a>
             <button class="btn" type="button" data-set-mode="ejercicios">${icon("pencil")}Ver solo los ejercicios</button>
           </div>
           <div class="hero-facts">
@@ -221,10 +222,10 @@
 
       <section class="section">
         <div class="journey">
-          <video controls playsinline preload="none" poster="assets/images/04-equipo-agentes.jpg" aria-label="Animación del recorrido completo del taller"><source src="assets/motion/construccion-aprendizaje.mp4" type="video/mp4" /></video>
+          <video id="recorrido" controls playsinline preload="none" poster="assets/motion/recorrido-taller.jpg${MV}" aria-label="Recorrido animado por las cuatro clases y los 21 temas del taller"><source src="assets/motion/recorrido-taller.mp4${MV}" type="video/mp4" /></video>
           <div>
-            <span class="eyebrow">Recorrido en 19 segundos</span>
-            <h2 class="h-section">Nadie levanta el techo primero</h2>
+            <span class="eyebrow">Recorrido de la primera clase · 1 min 44 s</span>
+            <h2 class="h-section">Los 4 pisos y los 21 temas en un vistazo</h2>
             <dl class="facts-list">
               ${["Metodología", "Público", "Plataformas", "Principio de seguridad"].filter((k) => facts[k]).map((k) => `<div><dt>${k}</dt><dd>${inline(cap(facts[k]))}</dd></div>`).join("")}
             </dl>
@@ -480,7 +481,12 @@
     }
     const sheet = $(".sheet", view);
     if (sheet) bindSheet(sheet);
-    $$("[data-scroll]", view).forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); document.getElementById(a.dataset.scroll)?.scrollIntoView({ behavior: reduced ? "auto" : "smooth" }); }));
+    $$("[data-scroll]", view).forEach((a) => a.addEventListener("click", (e) => {
+      e.preventDefault();
+      const target = document.getElementById(a.dataset.scroll);
+      target?.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
+      if (target?.tagName === "VIDEO") target.play().catch(() => {});
+    }));
   }
 
   function bindPlayer(root) {
