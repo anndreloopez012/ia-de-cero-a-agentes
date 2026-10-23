@@ -11,3 +11,5 @@ motion/point-explainers/scenes/*/renders/
 .DS_Store
 graphify-out
 site/assets/motion/points/.*.hf-transaction-*/
+motion/recorrido-taller/.hyperframes/
+motion/recorrido-taller/renders/
