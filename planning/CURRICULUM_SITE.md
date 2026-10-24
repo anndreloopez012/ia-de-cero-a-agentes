@@ -123,6 +123,8 @@ La IA no “sabe” como una persona, no garantiza verdad y no reemplaza la resp
 
 **Caso base ficticio:** Wendy atiende una tienda de barrio en Mixco y le escribe a la IA: “Necesito cinco ideas para aprender a llevar las cuentas de mi tienda durante un mes”.
 
+**Pega en la IA:** Necesito cinco ideas para aprender a llevar las cuentas de mi tienda durante un mes
+
 **Pasos:**
 
 1. Antes de abrir una IA, escribe qué esperarías recibir y qué podría salir mal.
@@ -332,6 +334,15 @@ Un comando útil combina un verbo preciso, el objeto de trabajo, criterios de ca
 
 **Insumo ficticio:** un texto de ocho líneas sobre la biblioteca comunitaria de un barrio de Cobán, que desea organizar actividades de lectura para niños durante las vacaciones de fin de año.
 
+**Pega en la IA:** La Biblioteca Comunitaria El Esfuerzo, del barrio San Marcos en Cobán, quiere animar a los niños a leer durante las vacaciones de fin de año.
+El comité propone tres actividades: hora del cuento, club de lectura y feria del libro usado.
+La hora del cuento sería los martes y jueves a las 10:00, para niños de 5 a 8 años.
+El club de lectura sería los sábados a las 9:00, para jóvenes de 9 a 14 años.
+La feria del libro usado se haría el último domingo de noviembre en el patio de la biblioteca.
+Doña Elena coordina la hora del cuento y Josué el club de lectura.
+Todavía no saben cuántos voluntarios tendrán ni si habrá refacción.
+La biblioteca abre de lunes a sábado de 8:00 a 16:00.
+
 **Pasos:**
 
 1. Elige cinco comandos de categorías diferentes.
@@ -411,6 +422,8 @@ Un prompt más completo aumenta claridad y consistencia, pero no vuelve infalibl
 **Duración:** 25 minutos.
 
 **Petición base:** Mynor, maestro de un colegio en Chimaltenango, escribe: “Hazme una presentación sobre inteligencia artificial”.
+
+**Pega en la IA:** Hazme una presentación sobre inteligencia artificial
 
 **Pasos:**
 
@@ -493,6 +506,12 @@ Los patrones son pequeñas estructuras que resuelven problemas frecuentes:
 **Duración:** 20 minutos.
 
 **Insumo ficticio:** la ficha del taller “Vende más por WhatsApp” que organiza la municipalidad de Antigua Guatemala para emprendedores; incluye nombre, tema y fecha (sábado 14 de marzo), pero no incluye lugar ni precio.
+
+**Pega en la IA:** FICHA DEL TALLER
+Nombre: Vende más por WhatsApp
+Organiza: Municipalidad de Antigua Guatemala
+Tema: cómo usar el catálogo, las respuestas rápidas y las etiquetas de WhatsApp Business para emprendedores
+Fecha: sábado 14 de marzo
 
 **Pasos:**
 
