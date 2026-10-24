@@ -336,13 +336,18 @@
         <div><h2 id="sheet-title">Ejercicio ${ex.number ?? p.number} · ${esc(ex.title)}</h2>${ex.purpose ? `<p class="sheet-purpose"><b>Para qué:</b> ${inline(cap(ex.purpose))}</p>` : ""}</div>
         ${timerMarkup(id, ex.minutes)}
       </div>
-      ${ex.context.length ? `<div class="sheet-block"><h3>${icon("file")}Material del caso</h3>${ex.context.map((b) => `<div class="case-card">${b.label ? `<h4>${esc(b.label)}</h4>` : ""}<div class="md">${markdown(b.body)}</div></div>`).join("")}</div>` : ""}
+      ${flowMarkup(ex)}
+      ${ex.context.length ? `<div class="sheet-block"><h3><span class="flow-n">1</span>${icon("file")}El caso</h3>${ex.context.map((b) => /^Pega en la IA/i.test(b.label)
+        ? `<div class="case-card paste-card"><h4>${icon("copy")}Pega esto en la IA</h4><button class="copy-btn paste-copy" type="button" data-copy-raw="${esc(b.body)}">${icon("copy")}Copiar</button><pre class="paste-text">${esc(b.body)}</pre></div>`
+        : `<div class="case-card">${b.label ? `<h4>${esc(b.label)}<span class="hint">Léelo · no lo pegues tal cual</span></h4>` : ""}<div class="md">${markdown(b.body)}</div></div>`).join("")}</div>` : ""}
       <div class="sheet-block">
-        <div class="steps-head"><h3>${icon("flag")}Pasos</h3><span class="steps-count"><span class="bar"><i style="width:${(checked.size / ex.steps.length) * 100}%"></i></span><span data-steps-count>${checked.size} de ${ex.steps.length}</span></span></div>
+        <div class="steps-head"><h3><span class="flow-n">2</span>${icon("flag")}Pasos</h3><span class="steps-count"><span class="bar"><i style="width:${(checked.size / ex.steps.length) * 100}%"></i></span><span data-steps-count>${checked.size} de ${ex.steps.length}</span></span></div>
         <ol class="steps">${ex.steps.map((s, i) => `<li><label><input type="checkbox" data-step="${i}" ${checked.has(i) ? "checked" : ""} /><span class="step-text">${inline(s)}</span><span class="step-box">${icon("check")}</span></label></li>`).join("")}</ol>
         ${ex.stepsNote ? `<div class="md steps-note">${markdown(ex.stepsNote)}</div>` : ""}
       </div>
-      ${ex.examples.map((e) => `<div class="sheet-block"><div class="example"><h4>${esc(e.label)}</h4><button class="copy-btn" type="button" data-copy>${icon("copy")}Copiar</button><div class="md">${markdown(cap(e.body))}</div></div></div>`).join("")}
+      ${ex.examples.length ? `<div class="sheet-block"><h3><span class="flow-n">3</span>${icon("eye")}Así se ve un buen resultado</h3><p class="block-hint">Úsalo para comparar o si te trabas. No es lo que pegas al inicio.</p></div>` : ""}
+      ${ex.examples.map((e) => `<div class="sheet-block"><div class="example"><h4>${esc(e.label)}</h4><button class="copy-btn" type="button" data-copy>${icon("copy")}Copiar ejemplo</button><div class="md">${markdown(cap(e.body))}</div></div></div>`).join("")}
+      <div class="sheet-block"><h3><span class="flow-n">4</span>${icon("gift")}Entrega</h3></div>
       <div class="deliver">
         ${ex.evidence ? `<article class="ev"><h3>${icon("file")}Qué entregas</h3><p>${inline(cap(ex.evidence))}</p></article>` : ""}
         ${ex.success ? `<article class="ok"><h3>${icon("target")}Lo lograste si…</h3><p>${inline(ex.success)}</p></article>` : ""}
@@ -354,6 +359,18 @@
         <button class="btn btn-sm" type="button" data-action="print">${icon("printer")}Imprimir hoja</button>
       </div>
     </section>`;
+  }
+
+  // Ruta fija de cada hoja para que nadie se pierda: qué leer, qué pegar, qué hacer y qué entregar.
+  function flowMarkup(ex) {
+    const paste = ex.context.some((b) => /^Pega en la IA/i.test(b.label));
+    const steps = [
+      paste ? "Copia el texto morado y pégalo en tu IA" : "Lee el caso",
+      "Sigue los pasos y márcalos",
+      ex.examples.length ? "Compara con el ejemplo" : "Revisa tu resultado",
+      "Entrega la evidencia",
+    ];
+    return `<ol class="sheet-flow" aria-label="Cómo hacer este ejercicio">${steps.map((t, i) => `<li><b>${i + 1}</b>${t}</li>`).join("")}</ol>`;
   }
 
   function timerMarkup(id, minutes) {
@@ -549,6 +566,9 @@
     };
     boxes.forEach((b) => b.addEventListener("change", sync));
     $('[data-action="reset-steps"]', sheet)?.addEventListener("click", () => { boxes.forEach((b) => { b.checked = false; }); sync(); });
+    $$("[data-copy-raw]", sheet).forEach((btn) => btn.addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(btn.dataset.copyRaw); toast("Texto copiado: pégalo en tu IA"); } catch (e) { toast("No se pudo copiar; selecciónalo manualmente"); }
+    }));
     $$("[data-copy]", sheet).forEach((btn) => btn.addEventListener("click", async () => {
       const text = btn.parentElement.querySelector(".md").innerText.replace(/^[“"]|[”"]$/g, "");
       try { await navigator.clipboard.writeText(text); toast("Ejemplo copiado"); } catch (e) { toast("No se pudo copiar; selecciónalo manualmente"); }
