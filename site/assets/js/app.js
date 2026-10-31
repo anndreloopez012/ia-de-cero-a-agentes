@@ -257,7 +257,7 @@
     return `<a class="point-tile reveal ${isDone(id) ? "is-complete" : ""}" href="#/clase/${c.number}/punto/${p.number}">
       <div class="pt-media"><img src="assets/motion/points/posters/${id}.jpg${MV}" alt="" loading="lazy" /><span class="pt-num">Punto ${c.number}.${p.number}</span><span class="pt-play">${icon("play")}</span><span class="pt-done" title="Completo">${icon("check")}</span></div>
       <div class="pt-body"><h3>${esc(p.title)}</h3>
-        ${ex ? `<p class="pt-purpose">${inline(cap(ex.purpose))}<span>${ex.steps.length} pasos · evidencia y criterio de éxito</span></p>` : ""}
+        ${ex ? `<p class="pt-purpose">${inline(cap(ex.purpose))}<span>${ex.prompts.length ? `${ex.prompts.length} prompt${ex.prompts.length > 1 ? "s" : ""} para copiar` : `${ex.steps.length} pasos`} · evidencia y criterio de éxito</span></p>` : ""}
         <div class="pt-parts">
           <span class="pt-part th only-th ${progress.th[id] ? "is-done" : ""}">${icon("book")}Teoría con video<em>${X[id] ? Math.round(X[id].duration) + " s" : ""}</em><svg class="tick"><use href="#i-check"/></svg></span>
           ${ex ? `<span class="pt-part ex only-ex ${progress.ex[id] ? "is-done" : ""}">${icon("pencil")}${esc(ex.title)}<em>${ex.minutes ? ex.minutes + " min" : ""}</em><svg class="tick"><use href="#i-check"/></svg></span>` : ""}
@@ -337,17 +337,18 @@
         ${timerMarkup(id, ex.minutes)}
       </div>
       ${flowMarkup(ex)}
-      ${ex.context.length ? `<div class="sheet-block"><h3><span class="flow-n">1</span>${icon("file")}El caso</h3>${ex.context.map((b) => /^Pega en la IA/i.test(b.label)
+      ${ex.context.length ? `<div class="sheet-block"><h3>${ex.prompts.length ? "" : '<span class="flow-n">1</span>'}${icon("file")}El caso</h3>${ex.context.map((b) => /^Pega en la IA/i.test(b.label)
         ? `<div class="case-card paste-card"><h4>${icon("copy")}Pega esto en la IA</h4><button class="copy-btn paste-copy" type="button" data-copy-raw="${esc(b.body)}">${icon("copy")}Copiar</button><pre class="paste-text">${esc(b.body)}</pre></div>`
-        : `<div class="case-card">${b.label ? `<h4>${esc(b.label)}<span class="hint">Léelo · no lo pegues tal cual</span></h4>` : ""}<div class="md">${markdown(b.body)}</div></div>`).join("")}</div>` : ""}
-      <div class="sheet-block">
+        : `<div class="case-card">${b.label ? `<h4>${esc(b.label)}<span class="hint">${ex.prompts.length ? "Para ubicarte" : "Léelo · no lo pegues tal cual"}</span></h4>` : ""}<div class="md">${markdown(b.body)}</div></div>`).join("")}</div>` : ""}
+      ${ex.prompts.length ? ex.prompts.map((pr, i) => promptMarkup(pr, i, ex.prompts.length)).join("") : ""}
+      ${ex.steps.length ? `      <div class="sheet-block">
         <div class="steps-head"><h3><span class="flow-n">2</span>${icon("flag")}Pasos</h3><span class="steps-count"><span class="bar"><i style="width:${(checked.size / ex.steps.length) * 100}%"></i></span><span data-steps-count>${checked.size} de ${ex.steps.length}</span></span></div>
         <ol class="steps">${ex.steps.map((s, i) => `<li><label><input type="checkbox" data-step="${i}" ${checked.has(i) ? "checked" : ""} /><span class="step-text">${inline(s)}</span><span class="step-box">${icon("check")}</span></label></li>`).join("")}</ol>
         ${ex.stepsNote ? `<div class="md steps-note">${markdown(ex.stepsNote)}</div>` : ""}
-      </div>
-      ${ex.examples.length ? `<div class="sheet-block"><h3><span class="flow-n">3</span>${icon("eye")}Así se ve un buen resultado</h3><p class="block-hint">Úsalo para comparar o si te trabas. No es lo que pegas al inicio.</p></div>` : ""}
+      </div>` : ""}
+      ${ex.examples.length ? `<div class="sheet-block"><h3><span class="flow-n">${ex.prompts.length ? 3 : 3}</span>${icon("eye")}Así se ve un buen resultado</h3><p class="block-hint">Úsalo para comparar o si te trabas. No es lo que pegas al inicio.</p></div>` : ""}
       ${ex.examples.map((e) => `<div class="sheet-block"><div class="example"><h4>${esc(e.label)}</h4><button class="copy-btn" type="button" data-copy>${icon("copy")}Copiar ejemplo</button><div class="md">${markdown(cap(e.body))}</div></div></div>`).join("")}
-      <div class="sheet-block"><h3><span class="flow-n">4</span>${icon("gift")}Entrega</h3></div>
+      <div class="sheet-block"><h3><span class="flow-n">${ex.prompts.length ? 3 : 4}</span>${icon("gift")}Entrega</h3></div>
       <div class="deliver">
         ${ex.evidence ? `<article class="ev"><h3>${icon("file")}Qué entregas</h3><p>${inline(cap(ex.evidence))}</p></article>` : ""}
         ${ex.success ? `<article class="ok"><h3>${icon("target")}Lo lograste si…</h3><p>${inline(ex.success)}</p></article>` : ""}
@@ -355,7 +356,7 @@
       <div class="sheet-foot">
         <button class="btn btn-done ${done ? "is-done" : ""}" type="button" data-action="toggle-ex" aria-pressed="${done}">${icon("check")}${done ? "Ejercicio completado" : "Marcar ejercicio como completado"}</button>
         <span class="spacer"></span>
-        <button class="btn btn-sm" type="button" data-action="reset-steps">${icon("reset")}Reiniciar pasos</button>
+        ${ex.steps.length ? `<button class="btn btn-sm" type="button" data-action="reset-steps">${icon("reset")}Reiniciar pasos</button>` : ""}
         <button class="btn btn-sm" type="button" data-action="print">${icon("printer")}Imprimir hoja</button>
       </div>
     </section>`;
@@ -364,13 +365,34 @@
   // Ruta fija de cada hoja para que nadie se pierda: qué leer, qué pegar, qué hacer y qué entregar.
   function flowMarkup(ex) {
     const paste = ex.context.some((b) => /^Pega en la IA/i.test(b.label));
-    const steps = [
-      paste ? "Copia el texto morado y pégalo en tu IA" : "Lee el caso",
-      "Sigue los pasos y márcalos",
-      ex.examples.length ? "Compara con el ejemplo" : "Revisa tu resultado",
-      "Entrega la evidencia",
-    ];
-    return `<ol class="sheet-flow" aria-label="Cómo hacer este ejercicio">${steps.map((t, i) => `<li><b>${i + 1}</b>${t}</li>`).join("")}</ol>`;
+    const steps = ex.prompts.length
+      ? ["Copia el prompt y pégalo en tu IA", "Mira qué hace cada parte", "Entrega tu resultado"]
+      : [
+        paste ? "Copia el texto morado y pégalo en tu IA" : "Lee el caso",
+        "Sigue los pasos y márcalos",
+        ex.examples.length ? "Compara con el ejemplo" : "Revisa tu resultado",
+        "Entrega la evidencia",
+      ];
+    return `<ol class="sheet-flow ${ex.prompts.length ? "three" : ""}" aria-label="Cómo hacer este ejercicio">${steps.map((t, i) => `<li><b>${i + 1}</b>${t}</li>`).join("")}</ol>`;
+  }
+
+  // Colores fijos para ROCAV (los mismos de los videos); el resto rota por orden.
+  const ROCAV_TONE = { rol: 0, objetivo: 1, contexto: 2, acuerdos: 3, verificacion: 4 };
+  const partTone = (part, i) => ROCAV_TONE[fold(part.tag).split(" ")[0]] ?? i % 6;
+  function refLink(ref) {
+    const m = /^(\d)\.(\d+)$/.exec(ref);
+    return m && findPoint(+m[1], +m[2]) ? `<a class="part-ref" href="#/clase/${m[1]}/punto/${m[2]}">Punto ${esc(ref)}</a>` : `<span class="part-ref">${esc(ref)}</span>`;
+  }
+  const coloredPrompt = (pr) => pr.parts.map((part, i) => `<span class="pp t${partTone(part, i)}" data-part="${i}"><sup>${i + 1}</sup>${esc(part.text)}</span>${i === pr.parts.length - 1 ? "" : /[.:?!»”)]$/.test(part.text) ? "\n" : " "}`).join("");
+
+  function promptMarkup(pr, i, total) {
+    const name = total > 1 ? `Prompt ${i + 1} de ${total}${pr.title ? ` · ${esc(pr.title)}` : ""}` : (pr.title ? esc(pr.title) : "Tu prompt");
+    return `<div class="sheet-block prompt-block" data-prompt>
+      <h3><span class="flow-n">1</span>${icon("copy")}Copia y pega este prompt</h3>
+      <div class="case-card paste-card"><h4>${name}</h4><button class="copy-btn paste-copy" type="button" data-copy-raw="${esc(pr.text)}">${icon("copy")}Copiar prompt</button><pre class="paste-text">${coloredPrompt(pr)}</pre></div>
+      <h3 class="parts-title"><span class="flow-n">2</span>${icon("eye")}Qué hace cada parte</h3>
+      <ol class="parts">${pr.parts.map((part, k) => `<li class="t${partTone(part, k)}" data-part="${k}"><span class="part-n">${k + 1}</span><div><b>${esc(part.tag)}</b>${refLink(part.ref)}<p>${inline(part.why)}</p></div></li>`).join("")}</ol>
+    </div>`;
   }
 
   function timerMarkup(id, minutes) {
@@ -556,7 +578,16 @@
     const boxes = $$("[data-step]", sheet);
     const count = $("[data-steps-count]", sheet);
     const bar = $(".steps-count .bar i", sheet);
+    // Al pasar sobre una parte explicada se resalta su trozo en el prompt, y al revés.
+    $$("[data-prompt]", sheet).forEach((block) => {
+      const mark = (el, on) => $$(`[data-part="${el.dataset.part}"]`, block).forEach((node) => node.classList.toggle("is-on", on));
+      $$("[data-part]", block).forEach((el) => {
+        el.addEventListener("mouseenter", () => mark(el, true));
+        el.addEventListener("mouseleave", () => mark(el, false));
+      });
+    });
     const sync = () => {
+      if (!count) return;
       const on = boxes.filter((b) => b.checked).map((b) => +b.dataset.step);
       progress.steps[id] = on;
       saveProgress();
@@ -640,7 +671,7 @@
   /* ---------------- Búsqueda ---------------- */
   const index = [
     ...allPoints.map((x) => ({ kind: "th", title: x.point.title, text: plain(x.point.theory), where: `${x.cls.number}.${x.point.number}`, href: `#/clase/${x.cls.number}/punto/${x.point.number}` })),
-    ...allPoints.filter((x) => x.point.exercise).map((x) => ({ kind: "ex", title: `Ejercicio · ${x.point.exercise.title}`, text: plain([x.point.exercise.purpose, ...x.point.exercise.steps].join(" ")), where: `${x.cls.number}.${x.point.number}`, href: `#/clase/${x.cls.number}/punto/${x.point.number}`, ex: true })),
+    ...allPoints.filter((x) => x.point.exercise).map((x) => ({ kind: "ex", title: `Ejercicio · ${x.point.exercise.title}`, text: plain([x.point.exercise.purpose, ...x.point.exercise.steps, ...x.point.exercise.prompts.map((pr) => pr.text)].join(" ")), where: `${x.cls.number}.${x.point.number}`, href: `#/clase/${x.cls.number}/punto/${x.point.number}`, ex: true })),
     ...C.extras.glossary.map((g) => ({ kind: "gl", title: g.term, text: g.definition, where: "Glosario", term: g.term })),
   ].map((it) => ({ ...it, ft: fold(it.title), fx: fold(it.text) }));
 
@@ -735,7 +766,7 @@
     const pts = allPoints.filter((x) => !clsNumber || x.cls.number === clsNumber);
     return pts.flatMap((x) => [
       ...(m !== "ejercicios" ? [{ kind: "th", x }] : []),
-      ...(m !== "teoria" && x.point.exercise ? [{ kind: "ex", x }] : []),
+      ...(m !== "teoria" && x.point.exercise ? (x.point.exercise.prompts.length ? x.point.exercise.prompts.map((pr) => ({ kind: "ex", x, pr })) : [{ kind: "ex", x }]) : []),
     ]);
   }
   function openStage(clsNumber, startId) {
@@ -761,10 +792,11 @@
     const body = s.kind === "th"
       ? `<div class="stage-video"><video controls playsinline autoplay preload="auto" poster="assets/motion/points/posters/${x.id}.jpg${MV}"><source src="assets/motion/points/${x.id}.mp4${MV}" type="video/mp4" /></video></div>`
       : `<div class="stage-ex">
-          <div><span class="eyebrow" style="--accent:#f4c66b">Ejercicio ${ex.number ?? x.point.number} · ${ex.minutes || ""} min</span><h2>${esc(ex.title)}</h2>${ex.purpose ? `<p class="st-purpose">${inline(cap(ex.purpose))}</p>` : ""}<ol>${ex.steps.map((st) => `<li><span>${inline(st)}</span></li>`).join("")}</ol></div>
+          <div><span class="eyebrow" style="--accent:#f4c66b">Ejercicio ${ex.number ?? x.point.number} · ${ex.minutes || ""} min</span><h2>${esc(ex.title)}</h2>${ex.purpose ? `<p class="st-purpose">${inline(cap(ex.purpose))}</p>` : ""}${s.pr ? `<pre class="stage-prompt">${coloredPrompt(s.pr)}</pre>` : `<ol>${ex.steps.map((st) => `<li><span>${inline(st)}</span></li>`).join("")}</ol>`}</div>
           <div class="stage-side">${ex.minutes ? `<div class="stage-timer" data-stage-timer="${x.id}"><b data-timer-read>${fmtTime(timerState(x.id, ex.minutes * 60).left)}</b><small>Tiempo de práctica · tecla T</small><div class="timer-btns"><button type="button" data-timer-act="toggle" aria-label="Iniciar o pausar">${icon("play")}</button><button type="button" data-timer-act="reset" aria-label="Reiniciar">${icon("reset")}</button></div></div>` : ""}
-            ${ex.evidence ? `<div class="stage-card"><h4>Qué entregas</h4>${inline(cap(ex.evidence))}</div>` : ""}
-            ${ex.success ? `<div class="stage-card ok"><h4>Lo lograste si…</h4>${inline(ex.success)}</div>` : ""}</div>
+            ${s.pr ? `<div class="stage-card"><h4>Qué hace cada parte</h4><ol class="stage-parts">${s.pr.parts.map((part, k) => `<li class="t${partTone(part, k)}"><b>${k + 1}. ${esc(part.tag)}</b> · ${esc(part.ref)}</li>`).join("")}</ol></div>` : ""}
+            ${!s.pr && ex.evidence ? `<div class="stage-card"><h4>Qué entregas</h4>${inline(cap(ex.evidence))}</div>` : ""}
+            ${!s.pr && ex.success ? `<div class="stage-card ok"><h4>Lo lograste si…</h4>${inline(ex.success)}</div>` : ""}</div>
         </div>`;
     stage.dataset.cls = x.cls.number;
     stage.innerHTML = `
