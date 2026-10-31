@@ -47,7 +47,12 @@ if (course.classes.length !== 4) errors.push(`Se esperaban 4 clases; se detectar
 if (points.length !== 21) errors.push(`Se esperaban 21 puntos; se detectaron ${points.length}.`);
 for (const { id, p } of points) {
   if (!p.theory) errors.push(`${id}: falta la teoría.`);
-  if (!p.exercise?.steps?.length) errors.push(`${id}: el ejercicio no tiene pasos.`);
+  const practice = p.exercise?.prompts?.length;
+  if (!p.exercise?.steps?.length && !practice) errors.push(`${id}: el ejercicio no tiene pasos ni prompt.`);
+  if (/^c[234]/.test(id) && !practice) errors.push(`${id}: desde la clase 2 cada ejercicio trae un prompt para copiar.`);
+  for (const prompt of p.exercise?.prompts ?? []) {
+    if (prompt.parts.some((part) => !part.tag || !part.ref || !part.why)) errors.push(`${id}: cada parte del prompt necesita tema, punto y explicación.`);
+  }
   if (!explainers[id]) errors.push(`${id}: falta el explicador en content/explainers.js (node scripts/build-explainers.mjs).`);
   else if (explainers[id].steps.length < 3) errors.push(`${id}: el explicador tiene menos de 3 pasos.`);
 }
