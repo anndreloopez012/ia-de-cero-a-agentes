@@ -418,26 +418,28 @@ Un prompt más completo aumenta claridad y consistencia, pero no vuelve infalibl
 
 ### Ejercicio individual 1 — Radiografía de una petición vaga
 
-**Propósito:** descubrir la información que el modelo está obligado a suponer.  
+**Propósito:** ver cuántas decisiones toma la IA por su cuenta ante una petición vaga y cuáles recuperas al darle cada capa del prompt.  
 **Duración:** 25 minutos.
 
-**Petición base:** Mynor, maestro de un colegio en Chimaltenango, escribe: “Hazme una presentación sobre inteligencia artificial”.
+**Caso base ficticio:** Mynor, maestro de un colegio en Chimaltenango, le escribe a la IA para preparar una charla sobre inteligencia artificial.
 
-**Pega en la IA:** Hazme una presentación sobre inteligencia artificial
+**Prompt para copiar — La petición vaga de Mynor:**
 
-**Pasos:**
+- Instrucción ::: 2.1 ::: Hazme una presentación ::: Pide un producto, pero no dice para quién ni para qué. Sin esos datos, la IA decide sola la audiencia, el propósito, el tono y la duración.
+- Entrada ::: 2.1 ::: sobre inteligencia artificial ::: Es todo el material que recibe: un tema enorme. Sin puntos concretos, la IA elige por su cuenta qué contar y a qué nivel.
 
-1. Envía la petición sin modificarla y guarda la salida.
-2. Señala todas las decisiones que la IA tomó sin permiso: audiencia, propósito, duración, tono, nivel y formato.
-3. Marca qué partes sí estaban explícitas y cuáles fueron supuestas.
-4. Escribe cinco preguntas que reducirían la ambigüedad.
-5. Redacta una segunda petición incluyendo entrada, restricción y criterio, sin usar todavía ROCAV completo.
-6. Compara ambas salidas en una tabla de “controlado” y “supuesto”.
+**Prompt para copiar — La versión por capas, en el mismo chat:**
 
-**Ejemplo de base:** “¿La presentación es para los padres de familia o para los alumnos de básicos? ¿Debe enseñar, convencer o informar? ¿Cuántas diapositivas caben en los 20 minutos de la reunión? ¿Qué fuentes pueden usarse? ¿Cómo sabrá Mynor si la entendieron?”.
+- Instrucción ::: 2.1 ::: Ahora hazme de nuevo la presentación sobre inteligencia artificial, esta vez con los datos que siguen. ::: Es la regla principal: dice qué hacer. Sin ella, la IA no sabría si debe rehacer la presentación o solo comentar los datos.
+- Contexto ::: 2.1 ::: Soy Mynor, maestro de un colegio en Chimaltenango. La daré a padres de familia en una reunión de 20 minutos. Casi todos usan WhatsApp, pero nunca han usado una IA. ::: Son los datos para interpretar la tarea. Sin ellos, la IA imagina otro público, como alumnos o colegas, y otra duración.
+- Entrada ::: 2.1 ::: Quiero tratar estos tres puntos: qué es la inteligencia artificial, cómo pueden usarla sus hijos para las tareas y qué reglas sencillas se pueden poner en casa. ::: Es el material concreto de trabajo. Sin estos puntos, la IA escoge los temas y puede dejar fuera lo que a Mynor le importa.
+- Restricción ::: 2.1 ::: Usa un máximo de ocho diapositivas y ningún tecnicismo sin explicar. No inventes cifras ni cites estudios. ::: Pone límites a lo que no quieres. Sin ella, la presentación puede salir larga, técnica o con datos que nadie comprobó.
+- Criterio ::: 2.1 ::: Estará bien si, al terminar, un padre o una madre puede explicar con sus palabras qué es la inteligencia artificial y nombrar una regla para su casa. ::: Dice cómo juzgar si sirvió. Sin él, la IA solo cumple con entregar diapositivas, aunque nadie las entienda.
+- Ejemplo ::: 2.1 ::: Usa esta forma en cada diapositiva: Título: ¿Qué es la inteligencia artificial? / Ideas: tres frases cortas / Qué diré: dos oraciones sencillas. ::: Muestra la forma esperada. Sin él, cada diapositiva puede salir con una estructura distinta y cuesta más usarla.
+- Instrucción ::: 2.1 ::: Al final, compara esta versión con la primera en una tabla de dos columnas, «controlado» y «supuesto»: indica qué decisiones de audiencia, propósito, duración, tono, nivel y formato di yo y cuáles tuviste que suponer tú en la primera. Cierra con cinco preguntas que me habrías hecho para no suponer. ::: Otra regla, ahora para comparar. La IA te muestra lo que supuso; sin esto tendrías dos presentaciones, pero no verías qué cambió ni por qué.
 
-**Evidencia:** salida original, lista de cinco supuestos, cinco preguntas y versión revisada.  
-**Criterio de éxito:** la persona identifica que el problema no era “la IA”, sino decisiones no expresadas que el sistema tuvo que completar.
+**Evidencia:** la respuesta de tu IA a los dos prompts, con la tabla de «controlado» y «supuesto» y las cinco preguntas.  
+**Criterio de éxito:** la tabla señala al menos cinco decisiones que la IA supuso en la primera versión y que quedaron controladas en la segunda, y se nota que el problema no era la IA sino lo que no se había dicho.
 
 ## Punto 2. Construir con ROCAV
 
@@ -459,25 +461,21 @@ El rol no debe usarse como decoración. “Actúa como el mejor experto del mund
 
 ### Ejercicio individual 2 — Del deseo al plano ROCAV
 
-**Propósito:** construir un prompt completo a partir de un objetivo cotidiano.  
+**Propósito:** ver en vivo cómo las cinco partes de ROCAV cambian lo que responde la IA.  
 **Duración:** 25 minutos.
 
 **Caso base ficticio:** Byron viaja cada día en bus de Villa Nueva a la capital y quiere aprovechar 30 minutos del trayecto, durante siete días, para aprender a usar una hoja de cálculo desde su celular.
 
-**Pasos:**
+**Prompt para copiar — El plan de Byron:**
 
-1. Escribe el resultado esperado en una oración observable.
-2. Completa una tarjeta por letra de ROCAV.
-3. Revisa el contexto y elimina cualquier dato que no cambie la respuesta.
-4. En “Acuerdos”, fija audiencia, formato, tono, longitud y límites.
-5. En “Verificación”, incluye al menos un criterio y una conducta ante datos faltantes.
-6. Une las cinco tarjetas en un solo prompt natural.
-7. Pruébalo y etiqueta en la salida dónde se cumplió cada acuerdo.
+- Rol ::: 2.2 ::: Actúa como tutor paciente de hojas de cálculo para personas principiantes. ::: Da una perspectiva útil, no un título rimbombante. Por eso dice «tutor paciente» y no «el mejor experto del mundo».
+- Objetivo ::: 2.2 ::: Crea un plan de siete días para que Byron aprenda a usar una hoja de cálculo. ::: Dice qué resultado debe salir. Sin esto, la IA adivina si quieres un resumen, un curso o una lista de consejos.
+- Contexto ::: 2.2 ::: Byron es principiante, solo tiene celular y estudia 30 minutos diarios en el bus de Villa Nueva a la capital. ::: Son los datos que cambian la respuesta. Si quitas «solo celular», la IA puede mandarlo a usar una computadora.
+- Acuerdos ::: 2.2 ::: Entrégalo en una tabla con día, objetivo, práctica y señal de avance. Usa lenguaje sencillo y una sola práctica por día. ::: Fija el formato, el tono y los límites. Así la respuesta sale como tú la necesitas y no como la IA prefiera.
+- Verificación ::: 2.2 ::: Antes de terminar, revisa que ninguna práctica pase de 30 minutos ni necesite computadora o herramientas pagadas. Si te falta un dato, pregúntalo y no lo inventes. ::: Es la inspección final. La IA se revisa a sí misma y te avisa si falta algo en lugar de rellenar.
 
-**Ejemplo de base:** `R` tutor paciente; `O` plan de siete días para Byron; `C` principiante, 30 minutos diarios en el bus, solo con celular; `A` tabla con día, objetivo, práctica y señal de avance; `V` no asumir herramientas pagadas ni computadora y advertir si una actividad supera 30 minutos.
-
-**Evidencia:** tarjetas ROCAV, prompt completo y salida etiquetada.  
-**Criterio de éxito:** las cinco partes cumplen una función real, la salida puede evaluarse y los vacíos no son rellenados con datos inventados.
+**Evidencia:** la respuesta de tu IA con el plan de siete días.  
+**Criterio de éxito:** el plan viene en tabla, cada práctica cabe en 30 minutos y se puede hacer solo con el celular.
 
 ## Punto 3. Patrones de control que se pueden reutilizar
 
@@ -502,30 +500,22 @@ Los patrones son pequeñas estructuras que resuelven problemas frecuentes:
 
 ### Ejercicio individual 3 — Fuente cerrada y vacíos visibles
 
-**Propósito:** evitar que la IA complete información ausente con suposiciones.  
+**Propósito:** comprobar que la IA puede trabajar sin inventar: lo que falta en la ficha queda marcado y no rellenado.  
 **Duración:** 20 minutos.
 
-**Insumo ficticio:** la ficha del taller “Vende más por WhatsApp” que organiza la municipalidad de Antigua Guatemala para emprendedores; incluye nombre, tema y fecha (sábado 14 de marzo), pero no incluye lugar ni precio.
+**Caso base ficticio:** la municipalidad de Antigua Guatemala organiza el taller “Vende más por WhatsApp” para emprendedores. La ficha trae nombre, tema y fecha, pero no trae lugar ni precio.
 
-**Pega en la IA:** FICHA DEL TALLER
-Nombre: Vende más por WhatsApp
-Organiza: Municipalidad de Antigua Guatemala
-Tema: cómo usar el catálogo, las respuestas rápidas y las etiquetas de WhatsApp Business para emprendedores
-Fecha: sábado 14 de marzo
+**Prompt para copiar — Invitación al taller con fuente cerrada:**
 
-**Pasos:**
+- Objetivo ::: 2.2 ::: Prepara un resumen para invitar a emprendedores a este taller. Debe cubrir qué aprenderán, quién organiza, la fecha, el lugar y el precio. ::: Pide a propósito lugar y precio, que no están en la ficha. Es la prueba: sin esa presión no sabrías si la IA inventa o se detiene.
+- Entrada ::: 2.1 ::: FICHA DEL TALLER. Nombre: Vende más por WhatsApp. Organiza: Municipalidad de Antigua Guatemala. Tema: cómo usar el catálogo, las respuestas rápidas y las etiquetas de WhatsApp Business para emprendedores. Fecha: sábado 14 de marzo. ::: Es el material de trabajo y va dentro del prompt. Sin la ficha, la IA no tendría de dónde sacar los datos del taller.
+- Fuente cerrada ::: 2.3 ::: Usa únicamente esta ficha. No uses conocimiento externo ni lo que sepas de Antigua Guatemala. ::: Limita la información a lo entregado. Sin esto, la IA completa con lo que le suena probable, y suena tan seguro como un dato real.
+- Hecho / inferencia / recomendación ::: 2.3 ::: Ordena tu respuesta en tres apartados: Hechos, con lo que dice la ficha; Inferencias, con lo que deduces de ella; y Recomendaciones, con lo que sugieres hacer. ::: Separa lo observado de lo deducido y lo sugerido. Sin esto, una suposición se lee igual que un dato de la ficha.
+- Verificación ::: 2.2 ::: Si un dato no aparece en la ficha, escribe «no disponible». Antes de terminar, revisa que cada hecho esté de verdad en la ficha. ::: Hace visible cada vacío y revisa el resultado. Sin esto, el hueco se tapa con algo creíble, como un salón o un precio, y nadie lo nota.
+- Aclara primero ::: 2.3 ::: Cierra con una pregunta concreta por cada vacío, para aclararla con la municipalidad antes de publicar la invitación. ::: Convierte cada vacío en una pregunta. Sin ella sabrías qué falta, pero no a quién preguntar ni qué pedirle.
 
-1. Redacta un prompt que solo permita utilizar la ficha entregada.
-2. Pide separar hecho, inferencia y recomendación.
-3. Indica que todo dato ausente se marque como `no disponible`.
-4. Solicita una pregunta de seguimiento por cada vacío material.
-5. Ejecuta el prompt y revisa si aparecieron lugar o precio inventados, como “salón municipal” o “Q50”.
-6. Si aparece una invención, agrega una restricción concreta y vuelve a probar.
-
-**Ejemplo de base:** “Usa exclusivamente la ficha. No uses conocimiento externo. Separa hechos, inferencias y recomendaciones. Si el lugar o el precio no aparecen, escribe ‘no disponible’ y formula una pregunta; no supongas que es en el salón municipal ni que es gratis”.
-
-**Evidencia:** prompt, salida, lista de vacíos y corrección si fue necesaria.  
-**Criterio de éxito:** ningún dato ausente aparece como hecho y cada vacío material produce una marca o pregunta.
+**Evidencia:** la respuesta de tu IA con los tres apartados, las marcas «no disponible» y las preguntas.  
+**Criterio de éxito:** lugar y precio aparecen como «no disponible», sin datos inventados como “salón municipal” o “Q50”, y cada vacío tiene su pregunta.
 
 ## Punto 4. Loop de mejora: cambiar una variable y aprender
 
@@ -541,25 +531,38 @@ Se termina cuando la salida cumple la rúbrica o cuando falta información que e
 
 ### Ejercicio individual 4 — Comparación A/B controlada
 
-**Propósito:** demostrar qué ajuste produjo una mejora observable.  
+**Propósito:** ver en dos respuestas qué efecto tiene cambiar una sola parte del prompt y decidir si ese cambio se queda.  
 **Duración:** 25 minutos.
 
-**Caso base:** el prompt ROCAV creado en el ejercicio 2.
+**Caso base ficticio:** es el plan de Byron del ejercicio 2, que estudia 30 minutos diarios en el bus de Villa Nueva a la capital. La hipótesis es que si cambia Acuerdos, el plan será más ejecutable.
 
-**Pasos:**
+**Prompt para copiar — Versión 0.1 del plan de Byron:**
 
-1. Nombra la primera versión `0.1` y ejecútala.
-2. Evalúa la salida y elige una sola falla: claridad, formato, longitud, exactitud o manejo de vacíos.
-3. Formula una hipótesis: “Si cambio ___, entonces mejorará ___”.
-4. Modifica únicamente una sección de ROCAV.
-5. Nombra la nueva versión `0.2` y ejecútala con la misma entrada.
-6. Compara ambas salidas con el mismo criterio.
-7. Conserva el cambio si mejora; si no, revierte y documenta lo aprendido.
+- Rol ::: 2.2 ::: Actúa como tutor paciente de hojas de cálculo para personas principiantes. ::: Da la perspectiva para enseñar. Es la versión 0.1: se queda fija para que luego tengas contra qué comparar.
+- Objetivo ::: 2.2 ::: Crea un plan de siete días para que Byron aprenda a usar una hoja de cálculo. ::: Dice qué resultado debe salir. Sin un mismo objetivo en las dos versiones, no podrías compararlas.
+- Contexto ::: 2.2 ::: Byron es principiante, solo tiene celular y estudia 30 minutos diarios en el bus de Villa Nueva a la capital. ::: Son los datos que cambian la respuesta. Las dos versiones trabajan con la misma entrada, igual que dos pruebas con la misma medida.
+- Acuerdos ::: 2.2 ::: Entrégalo en una tabla con día, objetivo, práctica y señal de avance. Usa lenguaje sencillo y una sola práctica por día. ::: Fija formato y límites. Es la parte que vas a cambiar en la versión 0.2, así que fíjate bien en cómo sale aquí.
+- Verificación ::: 2.2 ::: Antes de terminar, revisa que ninguna práctica pase de 30 minutos ni necesite computadora o herramientas pagadas. Si te falta un dato, pregúntalo y no lo inventes. ::: Es la inspección final. Sin ella, el plan podría pedir computadora o más tiempo del que Byron tiene.
 
-**Ejemplo de base:** hipótesis: “Si en Acuerdos pido una acción por fila y un máximo de 30 minutos por trayecto en bus, el plan de Byron será más ejecutable”. Todo lo demás permanece igual.
+**Prompt para copiar — Versión 0.2 con un solo cambio, en el mismo chat:**
 
-**Evidencia:** versiones 0.1 y 0.2, hipótesis, comparación y decisión.  
-**Criterio de éxito:** se puede señalar exactamente qué cambió, qué efecto tuvo y por qué se conserva o se descarta.
+- Rol ::: 2.2 ::: Actúa como tutor paciente de hojas de cálculo para personas principiantes. ::: No cambia. Si también lo tocaras, no sabrías cuál de los ajustes produjo la diferencia.
+- Objetivo ::: 2.2 ::: Crea un plan de siete días para que Byron aprenda a usar una hoja de cálculo. ::: No cambia. Con otro objetivo estarías midiendo otra tarea y no una mejora de la misma.
+- Contexto ::: 2.2 ::: Byron es principiante, solo tiene celular y estudia 30 minutos diarios en el bus de Villa Nueva a la capital. ::: No cambia. Es la misma entrada de la versión 0.1, condición para que la comparación sea justa.
+- Acuerdos ::: 2.2 ::: Entrégalo en una tabla con día, objetivo, práctica y señal de avance. Usa lenguaje sencillo, una sola acción por fila y un máximo de 30 minutos por trayecto en bus. ::: Lo único que cambia: es el patrón Cambio único. Al tocar solo esta frase, cualquier diferencia en la salida se puede atribuir a ella.
+- Verificación ::: 2.2 ::: Antes de terminar, revisa que ninguna práctica pase de 30 minutos ni necesite computadora o herramientas pagadas. Si te falta un dato, pregúntalo y no lo inventes. ::: No cambia. Mantiene la misma inspección, y así las dos versiones pasan por el mismo filtro.
+
+**Prompt para copiar — Comparación de las dos salidas, en el mismo chat:**
+
+- Objetivo ::: 2.2 ::: Compara las dos versiones del plan de Byron que acabas de crear en este chat: la primera es la 0.1 y la segunda es la 0.2. ::: Dice qué debe salir ahora: una comparación. Sin esto, la IA podría hacer un tercer plan en lugar de evaluar los dos.
+- Cambio único ::: 2.3 ::: Entre ambas solo cambió una parte, Acuerdos: «una sola práctica por día» pasó a ser «una sola acción por fila y un máximo de 30 minutos por trayecto en bus». ::: Nombra la variable que se modificó. Sin esto, la IA puede atribuir la diferencia a cualquier otra cosa.
+- Loop de mejora ::: 2.4 ::: Mi hipótesis es esta: si cambio Acuerdos, el plan de Byron será más ejecutable. ::: Es el paso de probar lo que crees. Sin una hipótesis clara, solo mirarías cuál te gusta más y no aprenderías qué funcionó.
+- Criterio ::: 2.1 ::: Juzga las dos versiones con un solo criterio: Byron puede hacer lo que dice cada fila en el bus, con su celular y sin tener que adivinar qué hacer. ::: Da una misma vara para las dos. Sin un criterio, la IA elige por gusto o premia a la versión más larga.
+- Acuerdos ::: 2.2 ::: Entrégalo en una tabla por día con la práctica de la 0.1, la de la 0.2, cuál cumple mejor el criterio y por qué en una frase. ::: Fija la forma de comparar. Sin la tabla, recibes un párrafo general y no ves en qué días hubo diferencia.
+- Verificación ::: 2.2 ::: Cierra con una decisión: conservar el cambio o revertirlo, con el motivo en una frase. Si las dos salidas casi no difieren, dilo y no inventes una mejora. ::: Te obliga a decidir y deja lugar a un resultado honesto. Sin esto, la IA tiende a decir que lo nuevo siempre es mejor.
+
+**Evidencia:** la respuesta de tu IA a los tres prompts, con la tabla comparativa y la decisión final.  
+**Criterio de éxito:** se puede señalar exactamente qué cambió, qué efecto tuvo en la tabla y por qué el cambio se conserva o se descarta.
 
 ## Punto 5. Evaluar y transferir un prompt
 
@@ -581,22 +584,31 @@ Cada criterio se marca `cumple`, `debe mejorar` o `no aplica`. Una respuesta flu
 
 ### Ejercicio individual 5 — Prueba de transferencia
 
-**Propósito:** comprobar que el prompt funciona más allá del ejemplo de su autor.  
+**Propósito:** comprobar con la rúbrica si un prompt funciona más allá del caso de quien lo escribió.  
 **Duración:** 15 minutos.
 
-**Pasos:**
+**Caso base ficticio:** el prompt que se creó para Byron se prueba con Heidy, que quiere aprender a tomar mejores fotos de sus productos para vender por WhatsApp.
 
-1. Selecciona uno de tus prompts finales.
-2. Reemplaza la entrada original por un caso equivalente pero distinto.
-3. Ejecuta sin explicación oral adicional.
-4. Evalúa la salida con los siete lentes.
-5. Marca el criterio más débil y añade una última mejora solo si es necesaria.
-6. Escribe una instrucción de uso de tres líneas para otra persona.
+**Prompt para copiar — Revisión con los siete lentes:**
 
-**Ejemplo de base:** el prompt creado para que Byron aprenda hoja de cálculo en siete días se prueba con Heidy, que quiere aprender a tomar mejores fotos de sus productos para vender por WhatsApp, manteniendo el mismo tiempo y formato.
+- Rol ::: 2.2 ::: Actúa como revisor de calidad de prompts que señala fallas concretas, sin adornos. ::: Da una perspectiva útil para evaluar. Sin ella, la IA tiende a elogiar el texto en lugar de revisarlo.
+- Objetivo ::: 2.2 ::: Evalúa el prompt que sigue para saber si otra persona podría usarlo sin que nadie se lo explique. ::: Dice qué se busca: que el prompt sirva a otros. Sin esto, la IA podría mejorarlo o ejecutarlo en lugar de evaluarlo.
+- Entrada ::: 2.1 ::: PROMPT A EVALUAR: Actúa como tutor paciente de hojas de cálculo para personas principiantes. Crea un plan de siete días para que Byron aprenda a usar una hoja de cálculo. Byron es principiante, solo tiene celular y estudia 30 minutos diarios en el bus de Villa Nueva a la capital. Entrégalo en una tabla con día, objetivo, práctica y señal de avance. Usa lenguaje sencillo y una sola práctica por día. Antes de terminar, revisa que ninguna práctica pase de 30 minutos ni necesite computadora o herramientas pagadas. Si te falta un dato, pregúntalo y no lo inventes. ::: Es el material por revisar y va completo aquí. Sin él, la IA no tendría nada concreto que evaluar.
+- Rúbrica ::: 2.5 ::: Revísalo con estos siete lentes: Exactitud (no presentar como hecho lo que no está sostenido), Relevancia (responder al objetivo, no solo al tema), Claridad (que la audiencia lo comprenda), Completitud (cubrir lo requerido o marcar vacíos), Formato (estructura, longitud y tono acordados), Riesgos (no exponer datos ni ejecutar acciones no autorizadas) y Fuentes (poder rastrear las afirmaciones). ::: Son los siete lentes de calidad. Sin ellos, la IA da una opinión general, y una respuesta fluida no siempre es correcta.
+- Acuerdos ::: 2.2 ::: Entrégalo en una tabla con el lente, una marca («cumple», «debe mejorar» o «no aplica») y el motivo en una frase. ::: Fija las tres marcas de la rúbrica. Sin ellas, recibes comentarios sueltos y no puedes ver de un vistazo qué falla.
+- Verificación ::: 2.2 ::: Antes de terminar, cita la frase del prompt que sostiene cada marca y señala cuál es el lente más débil. No reescribas el prompt todavía. ::: Obliga a mostrar de dónde sale cada marca. Sin la cita, un «cumple» sería una afirmación que no puedes comprobar.
 
-**Evidencia:** entrada nueva, salida, rúbrica y breve instrucción de uso.  
-**Criterio de éxito:** otra persona puede reconocer las piezas, usar el prompt con una entrada equivalente y evaluar el resultado con los mismos criterios.
+**Prompt para copiar — Transferencia al caso de Heidy, en el mismo chat:**
+
+- Objetivo ::: 2.2 ::: Ahora prueba si ese prompt sirve para otra persona: ejecútalo con el caso nuevo que sigue y entrega el plan de siete días. ::: Pasa de evaluar a usar el prompt. Sin esto, la IA seguiría opinando y no sabrías si de verdad funciona fuera del caso de Byron.
+- Entrada ::: 2.1 ::: Caso nuevo: Heidy vende sus productos por WhatsApp, es principiante en fotografía, solo tiene celular y quiere aprender a tomar mejores fotos de sus productos, 30 minutos diarios. ::: Es un caso equivalente pero distinto. Si usaras otra vez a Byron, solo probarías que el prompt funciona con su ejemplo.
+- Cambio único ::: 2.3 ::: Cambia solo lo que depende del caso, incluido el tema del tutor. Mantén el mismo tiempo, la misma tabla y la misma revisión final. ::: Deja fija la estructura. Si cambiaras también el tiempo o el formato, no sabrías si lo que se transfiere es el prompt o algo nuevo.
+- Rúbrica ::: 2.5 ::: Evalúa el plan de Heidy con los mismos siete lentes y marca cada uno como «cumple», «debe mejorar» o «no aplica». ::: Aplica la misma vara a la salida nueva. Sin esto, un plan que se lee bien pasaría como bueno sin revisión.
+- Autoevaluación ::: 2.3 ::: Señala el criterio más débil y propón una última mejora solo si de verdad hace falta. ::: La IA compara su salida contra la rúbrica. Sin el «solo si hace falta», agregaría cambios por agregar y el prompt crecería sin razón.
+- Transferencia ::: 2.5 ::: Termina con una instrucción de uso de tres líneas para otra persona: qué debe cambiar, qué debe mantener y cómo revisar el resultado. ::: Deja el prompt listo para otros. Sin esta guía, solo su autor sabría qué piezas se pueden cambiar y cuáles no.
+
+**Evidencia:** la respuesta de tu IA a los dos prompts, con la tabla de los siete lentes, el plan de Heidy y la instrucción de uso.  
+**Criterio de éxito:** el plan de Heidy conserva el mismo tiempo y formato, cada lente tiene su marca y la instrucción de uso permite que otra persona use el prompt sin explicación adicional.
 
 ## Cierre de la clase 2
 
@@ -663,21 +675,25 @@ Una skill no es un prompt largo con nombre atractivo. Debe indicar cuándo se ac
 
 ### Ejercicio individual 1 — Diagnóstico del recurso mínimo
 
-**Propósito:** evitar complejidad innecesaria.  
+**Propósito:** ver qué recurso basta para cada tarea y comprobar que no todo problema necesita un agente.  
 **Duración:** 20 minutos.
 
-**Pasos:**
+**Caso base ficticio:** siete tareas que se repiten en la comunidad, entre ellas convertir las notas de la reunión mensual del comité de la iglesia en acuerdos y tareas.
 
-1. Escribe una tarea que repites al menos dos veces al mes, sin usar palabras vagas como “bien” o “profesional”.
-2. Divide la tarea en entradas, pasos y salida.
-3. Clasifica si se resuelve con prompt, plantilla, proyecto, herramienta, workflow, skill o agente.
-4. Justifica por qué el recurso anterior sería insuficiente y por qué el siguiente sería excesivo.
-5. Redacta una frase: “Necesito una skill porque ___ se repite y debe conservar ___”.
+**Prompt para copiar — El recurso mínimo:**
 
-**Ejemplo de base:** convertir las notas de la reunión mensual del comité de la iglesia en acuerdos y tareas repetibles necesita una skill; no requiere un agente si no debe decidir acciones ni usar herramientas por varios ciclos.
+- Rol ::: 2.2 ::: Actúa como consultor práctico que ayuda a personas que no programan a elegir el recurso de IA más simple para cada tarea. ::: Pone a la IA a buscar lo sencillo. Sin este rol, suele recomendar la solución más vistosa aunque sobre.
+- Objetivo ::: 2.2 ::: Diagnostica las siete tareas de abajo y elige para cada una el recurso mínimo, es decir, el menos complejo que la resuelve. ::: Dice qué debe salir: una elección por tarea. Sin esto, la IA daría una explicación general de los recursos y no decidiría nada.
+- Prompt y plantilla ::: 3.1 ::: Usa estas definiciones. Un prompt responde a «¿qué quiero obtener ahora?». Una plantilla responde a «¿qué campos debo completar?». ::: Son los dos recursos más simples. Si no se definen, la IA puede saltárselos y proponer algo más grande para una tarea de una sola vez.
+- Proyecto y herramienta ::: 3.1 ::: Un proyecto responde a «¿qué contexto pertenece a este trabajo?». Una herramienta responde a «¿con qué capacidad puedo leer, buscar, calcular o actuar?». ::: Separa guardar información de tener una capacidad. Sin esta distinción, la IA mezcla «tener los datos a mano» con «poder sumarlos».
+- Workflow y skill ::: 3.1 ::: Un workflow responde a «¿qué secuencia fija debo seguir?». Una skill responde a «¿cómo hago bien esta tarea repetible en distintos contextos?» y dice cuándo se activa, cuándo no, qué necesita, qué entrega y cómo demuestra que terminó bien. ::: Marca la diferencia entre seguir un orden fijo y resolver bien una tarea que cambia. Sin ella, cualquier lista de pasos parece una skill.
+- Agente ::: 3.1 ::: Un agente responde a «¿cómo decide el sistema el siguiente paso mediante ciclos y herramientas?». No es sinónimo de automatización: solo corresponde si hay que decidir sobre la marcha. ::: Pone el freno. Sin esta aclaración, «agente» termina usándose para cualquier cosa que se haga sola.
+- Entrada ::: 3.1 ::: Las tareas son ficticias. 1) Cada mes, convertir las notas de la reunión del comité de la iglesia en acuerdos y tareas con responsable y fecha, aunque cada reunión trate temas distintos. 2) Redactar hoy, una sola vez, un aviso de WhatsApp para invitar a la kermés. 3) Doña Marta quiere sumar sin errores los pedidos de tamales de la semana, que tiene en una hoja de cálculo. 4) Cada mes, llenar el mismo aviso de reunión de la cooperativa, cambiando solo fecha, lugar y tema. 5) Durante tres meses, el comité del barrio organiza la Feria de Jocotenango y quiere tener a mano su presupuesto, sus puestos y sus acuerdos en todas sus conversaciones. 6) Al cerrar cada mes, la cooperativa sigue siempre el mismo orden: revisar pagos, avisar a quien debe y anotar quién respondió. 7) Buscar en internet proveedores de sonido para la kermés, comparar precios y, según lo que aparezca, decidir si buscar otra vez o preguntar al comité, hasta tener tres opciones. ::: Son los casos a diagnosticar, en desorden para que nada se resuelva por posición. Sin ellos, la IA no tendría nada concreto que clasificar.
+- Acuerdos ::: 2.2 ::: Entrégalo en una tabla con tarea, entradas, pasos, salida, recurso elegido, por qué el recurso anterior no alcanza y por qué el siguiente sobra, en el orden prompt, plantilla, proyecto, herramienta, workflow, skill y agente. Cierra con esta frase completa para la tarea 1: «Necesito una skill porque ___ se repite y debe conservar ___». ::: Obliga a justificar hacia los dos lados. Sin esas columnas, la IA nombra un recurso y tú no sabrías por qué ese y no otro.
+- Verificación ::: 2.2 ::: Antes de terminar, revisa que ninguna elección sea más compleja de lo necesario. Si dudas entre dos recursos, elige el menor y di qué dato cambiaría tu decisión. ::: Es la inspección final. Hace que la IA baje de nivel cuando puede y te avise de las dudas en lugar de esconderlas.
 
-**Evidencia:** descripción de tarea, clasificación y justificación.  
-**Criterio de éxito:** la persona elige el recurso menos complejo que resuelve la necesidad y no utiliza “agente” como sinónimo de cualquier automatización.
+**Evidencia:** la respuesta de tu IA con la tabla de las siete tareas y la frase final.  
+**Criterio de éxito:** las notas del comité quedan como skill y no como agente, cada elección explica por qué el recurso vecino no sirve, y «agente» aparece solo donde hay que decidir el siguiente paso.
 
 ## Punto 2. Las ocho partes de una skill
 
@@ -700,26 +716,25 @@ Una skill no es un prompt largo con nombre atractivo. Debe indicar cuándo se ac
 
 ### Ejercicio individual 2 — Construir la ficha 0.1
 
-**Propósito:** convertir un prompt útil en un procedimiento completo.  
+**Propósito:** ver cómo un prompt útil se convierte en un procedimiento completo de ocho partes y probarlo de inmediato.  
 **Duración:** 25 minutos.
 
-**Caso base:** skill `Convertir notas en plan de acción`.
+**Caso base ficticio:** la skill «Convertir notas en plan de acción», probada con las notas del comité de la iglesia que prepara la kermés.
 
-**Pasos:**
+**Prompt para copiar — La ficha de ocho partes:**
 
-1. Nombra la skill con verbo y objeto.
-2. Escribe una descripción que incluya tres peticiones que deben activarla y dos que no.
-3. Define entradas obligatorias y opcionales; marca cualquier entrada sensible que deba excluirse.
-4. Redacta entre cinco y ocho pasos. Incluye al menos una decisión y una pregunta.
-5. Diseña la salida con campos observables.
-6. Enumera recursos permitidos. Si no necesita una herramienta, indícalo.
-7. Declara límites y una condición de pausa.
-8. Cierra con una lista de control de máximo seis ítems.
+- Nombre ::: 3.2 ::: Construye la ficha 0.1 de una skill, que es un procedimiento reutilizable para una tarea repetible. Nombre: «Convertir notas en plan de acción», con verbo y objeto. ::: Da una etiqueta corta y distinta de otras. Sin un nombre claro, nadie sabe qué hace la skill ni cómo encontrarla después.
+- Descripción ::: 3.2 ::: Descripción: escribe qué hace, con tres peticiones que deben activarla y dos parecidas que no, como transcribir un audio o redactar un contrato. ::: Explica cuándo usarla y cuándo no. Sin esto, la skill se activaría también en tareas que no le tocan.
+- Entradas ::: 3.2 ::: Entradas: como obligatorias, las notas de la reunión en texto; como opcionales, la fecha de la reunión y la lista de asistentes. Marca como sensibles, para retirar antes de procesar, las contraseñas, los números de DPI y los datos bancarios. ::: Dice qué necesita la skill y qué no debe recibir. Sin esto, la IA trabajaría con lo que haya, aunque falte algo o venga un dato delicado.
+- Pasos ::: 3.2 ::: Pasos: redacta entre cinco y ocho pasos en orden, con al menos una decisión, como qué hacer si una tarea no tiene responsable, y al menos una pregunta para quien la usa. ::: Fija cómo se trabaja cada vez. Sin pasos, cada uso sale distinto; sin decisión ni pregunta, la IA rellena lo que no sabe.
+- Salida ::: 3.2 ::: Salida: resumen de contexto, tabla con tarea, responsable, fecha y fuente, acuerdos, vacíos y siguiente revisión. Si responsable o fecha no aparecen, escribe «pendiente de confirmar». ::: Define qué se entrega y con qué campos. Así puedes comparar dos usos; sin esto, una vez sale un párrafo y otra una lista.
+- Recursos ::: 3.2 ::: Recursos: solo las notas entregadas y la plantilla de esa tabla. Indica que no necesita herramientas externas ni conexiones. ::: Declara con qué cuenta la skill. Decir que no necesita conexiones también es información: evita dar permisos que no hacen falta.
+- Límites ::: 3.2 ::: Límites: queda fuera transcribir, redactar documentos legales y evaluar el desempeño de personas. No inventes datos. Condición de pausa: si no hay notas o aparece información sensible, detente y pide una versión segura. ::: Marca dónde termina el trabajo y cuándo parar. Sin límites, la IA sigue adelante aunque no deba, y lo hace con mucha seguridad.
+- Control ::: 3.2 ::: Control: cierra la ficha con una lista de revisión de máximo seis puntos que demuestre que el trabajo terminó bien. ::: Es la prueba de que terminó bien. Sin control, «ya quedó» es solo una opinión; con la lista, otra persona puede revisar.
+- Entrada ::: 3.2 ::: Cuando la ficha esté lista, úsala una vez con estas notas ficticias: Reunión del comité de la iglesia, 3 de agosto. Asistieron Josué, doña Carmen, Luis y Ana. Se acordó hacer la kermés el 30 de agosto en el salón de la iglesia, con un presupuesto de Q2,500. Josué cotiza el sonido para el 15 de agosto. Doña Carmen coordina la venta de comida. Luis imprime los volantes, aún sin fecha. Hay que pedir permiso a la municipalidad para cerrar la calle, pero nadie quedó a cargo. Próxima reunión: 17 de agosto. ::: Es la primera prueba de la ficha, con vacíos a propósito. Sin notas verías un documento bonito, pero no sabrías si funciona.
 
-**Ejemplo de salida:** resumen de contexto, tabla `tarea | responsable | fecha | fuente` (por ejemplo `Cotizar el sonido para la kermés | Josué | 15 de agosto | acta del comité`), acuerdos, vacíos y siguiente revisión. Si responsable o fecha no aparecen, usar `pendiente de confirmar`.
-
-**Evidencia:** ficha con las ocho partes completas.  
-**Criterio de éxito:** una persona distinta puede entender cuándo usarla, qué entregar y cuándo detenerse sin explicación oral del autor.
+**Evidencia:** la respuesta de tu IA con la ficha 0.1 y el plan de acción de la kermés.  
+**Criterio de éxito:** la ficha trae las ocho partes y otra persona podría usarla sin explicación; en el plan, los volantes y el permiso dicen «pendiente de confirmar» en lo que falta.
 
 ## Punto 3. Trigger, hook, fallback y límites de activación
 
@@ -737,23 +752,25 @@ Un buen trigger no depende de una frase exacta. Reconoce la intención. Un trigg
 
 ### Ejercicio individual 3 — Matriz de activación
 
-**Propósito:** demostrar que la skill se activa por intención y se abstiene cuando corresponde.  
+**Propósito:** ver que la skill se activa por la intención de la petición y se abstiene cuando corresponde.  
 **Duración:** 25 minutos.
 
-**Pasos:**
+**Caso base ficticio:** el comité del barrio prepara la Feria de Jocotenango y le hace a la skill ocho peticiones distintas.
 
-1. Escribe tres formas distintas de pedir la tarea correcta.
-2. Escribe dos peticiones muy parecidas que deben quedar fuera de alcance.
-3. Diseña un caso con fuente incompleta.
-4. Diseña un caso con información sensible que debe retirarse.
-5. Define el mensaje de fallback para cada problema.
-6. Prueba los ocho casos y registra `activar`, `no activar`, `preguntar` o `detener`.
-7. Ajusta la descripción si una decisión fue incorrecta.
+**Prompt para copiar — Ocho peticiones de la feria:**
 
-**Ejemplo de base:** “Convierte en tareas estas notas del comité del barrio para la Feria de Jocotenango” activa; “transcribe el audio de la reunión” no activa; “crea las tareas de la feria” sin notas pregunta por la fuente; notas que incluyen la contraseña de la cuenta bancaria del comité detienen y solicitan una versión segura.
+- Objetivo ::: 2.2 ::: Actúa como probador de skills. Revisa si la skill de abajo responde a la intención de cada caso y no a una frase exacta. En cada caso, escribe primero el resultado esperado y después aplica la skill. ::: Convierte a la IA en revisora. Sin esto, resolvería la tarea sin mostrarte qué decidió ni por qué.
+- Entrada ::: 3.2 ::: Skill «Convertir notas en plan de acción»: se usa cuando alguien entrega notas de una reunión y pide acuerdos, tareas o seguimiento; no se usa para transcribir, redactar documentos legales ni evaluar personas; entrega resumen, tabla con tarea, responsable, fecha y fuente, acuerdos y vacíos. Notas de la feria, ficticias: Reunión del comité del barrio. Carlos consigue el permiso de la municipalidad para el 5 de agosto. Doña Lety organiza los puestos de comida. Hay que alquilar las tarimas, pero nadie quedó a cargo. ::: Trae la ficha resumida y las notas para que funcione en un chat nuevo. Sin esto, la IA tendría que imaginar la skill que va a probar.
+- Trigger positivo ::: 3.3 ::: Casos 1 a 3, cada uno con las notas de la feria: «Convierte en tareas estas notas del comité del barrio para la Feria de Jocotenango»; «¿Quién quedó de hacer qué? Aquí están las notas»; «Ordéname esto para darle seguimiento». ::: Tres formas distintas de pedir lo mismo. Si solo funcionara con una frase exacta, la skill fallaría cuando alguien lo pida con otras palabras.
+- Trigger negativo ::: 3.3 ::: Casos 4 y 5: «Transcribe el audio de la reunión»; «Redacta el contrato de alquiler de las tarimas de la feria». ::: Peticiones parecidas que no le tocan a la skill. Sin ellas no sabrías si se activa con cualquier cosa que hable de reuniones o de la feria.
+- Hook de entrada ::: 3.3 ::: Hook de entrada: antes de procesar cualquier caso, comprueba que exista una fuente con contenido útil y retira los datos sensibles. Aplícalo también a los casos 6 a 8: «Crea las tareas de la feria», sin notas; «Aquí van las notas: hablamos de muchas cosas»; «Haz el plan con estas notas: doña Lety compra las mantas. La contraseña ficticia de la cuenta bancaria del comité es FERIA123». ::: Es el guardia de la puerta: revisa antes de empezar. Sin él, la IA inventaría las tareas que faltan o trabajaría con una contraseña.
+- Hook de salida ::: 3.3 ::: Hook de salida: antes de entregar un plan, confirma que cada tarea tenga responsable y fecha o que diga «pendiente de confirmar». ::: Es la revisión antes de entregar. Sin ella, una tarea sin dueño, como las tarimas, puede salir con un nombre puesto al azar.
+- Fallback ::: 3.3 ::: Fallback: si falta la fuente o no sirve, no la inventes y pide las notas. Si aparece información sensible, detente, no la repitas y pide una versión segura. Escribe el mensaje exacto para cada problema. ::: Es la salida segura cuando algo falla. Sin fallback, la IA preferiría entregar algo inventado antes que decir que no puede seguir.
+- Acuerdos ::: 2.2 ::: Entrega una matriz con caso, resultado esperado, resultado real y corrección, usando solo activar, no activar, preguntar o detener. Después muestra una sola tabla de tareas de las notas de la feria, porque los casos 1 a 3 comparten esas notas. ::: Fija el formato del resultado. Las cuatro palabras permiten revisar de un vistazo, y la tabla única evita leer tres veces lo mismo.
+- Verificación ::: 2.2 ::: Antes de terminar, revisa que ningún dato de la tabla venga de fuera de las notas. Si un resultado real no coincidió con el esperado, propón un solo cambio a la descripción de la skill. ::: Es la inspección final. Busca datos inventados y, si algo falló, deja una mejora concreta en lugar de rehacerlo todo.
 
-**Evidencia:** matriz de casos, resultado esperado, resultado real y corrección.  
-**Criterio de éxito:** activa los casos pertinentes, rechaza los negativos y nunca inventa la fuente que falta.
+**Evidencia:** la respuesta de tu IA con la matriz de ocho casos, los mensajes de fallback y la tabla de tareas.  
+**Criterio de éxito:** activa los casos 1 a 3, no activa el 4 ni el 5, pregunta en el 6 y el 7, se detiene en el 8 sin repetir la contraseña y nunca inventa la fuente que falta.
 
 ## Punto 4. De ficha portable a implementación
 
@@ -774,23 +791,24 @@ Un paquete técnico puede contener `SKILL.md`, `references/`, `templates/` y `sc
 
 ### Ejercicio individual 4 — Implementar sin perder portabilidad
 
-**Propósito:** adaptar la ficha a la plataforma disponible manteniendo una versión independiente.  
+**Propósito:** ver la misma skill adaptada a tu plataforma mientras la versión neutral queda intacta.  
 **Duración:** 20 minutos.
 
-**Pasos:**
+**Caso base ficticio:** la ficha «Convertir notas en plan de acción» se conserva como documento neutral y se prueba con notas inventadas del comité de la iglesia, nunca con actas reales.
 
-1. Guarda la ficha 0.1 en un documento neutral.
-2. Identifica la función disponible en tu cuenta: skill nativa, proyecto, Gem u otra personalización equivalente.
-3. Copia únicamente las instrucciones y recursos necesarios.
-4. No conectes servicios externos ni cargues datos sensibles para esta práctica.
-5. Ejecuta una petición positiva y revisa que siga el procedimiento.
-6. Registra qué parte depende de la plataforma y qué parte sigue siendo portable.
-7. Si la función no está disponible, implementa el equivalente con instrucciones de proyecto y documenta la diferencia.
+**Prompt para copiar — Una ficha, tu plataforma:**
 
-**Ejemplo de base:** la ficha `Convertir notas en plan de acción` permanece como documento neutral; en un proyecto se agregan las instrucciones y una plantilla vacía, no actas reales del comité de la iglesia ni notas reales de una empresa.
+- Objetivo ::: 2.2 ::: Adapta la skill de abajo a la plataforma en la que me estás respondiendo, que puede ser ChatGPT, Claude o Gemini, sin perder la versión neutral que sirve en cualquier otra. ::: Pide las dos cosas a la vez. Sin esto, la IA reescribiría la ficha para su plataforma y perderías la versión que puedes llevarte.
+- Entrada ::: 3.2 ::: Ficha neutral de «Convertir notas en plan de acción». Descripción: se usa cuando alguien entrega notas de una reunión y pide acuerdos, tareas o seguimiento; no se usa para transcribir, redactar documentos legales ni evaluar personas. Entradas: notas en texto, sin datos sensibles. Pasos: revisar la fuente, retirar datos sensibles, extraer acuerdos y tareas, marcar vacíos, preguntar lo que falte y revisar. Salida: resumen, tabla con tarea, responsable, fecha y fuente, acuerdos, vacíos y siguiente revisión; lo que falte dice «pendiente de confirmar». Recursos: solo las notas y la plantilla de la tabla. Límites: no inventa datos; sin notas o con datos sensibles se detiene. Control: cada tarea tiene fuente y los vacíos están marcados. ::: Trae la ficha resumida para que funcione en un chat nuevo. Sin ella, la IA adaptaría una skill imaginada y no la tuya.
+- Portable ::: 3.4 ::: Primero copia esa ficha, sin cambiar una palabra, bajo el título «Ficha portable». Esa es la versión que guardo en un documento aparte. ::: Protege tu trabajo. Si mañana cambias de plataforma, esta copia viaja contigo y no reconstruyes nada desde cero.
+- ChatGPT, Claude o Gemini ::: 3.4 ::: Después escribe la versión adaptada a tu plataforma y explica dónde pegarla. En ChatGPT, Skills si mi espacio las tiene, o Projects si no aparecen. En Claude, Agent Skills si mi experiencia las permite, o las instrucciones de un proyecto. En Gemini, Skills en Gemini Spark si mi cuenta es elegible, o un Gem. Da siempre las dos opciones. ::: Es el adaptador. Trae la opción nativa y una alternativa, porque no todas las cuentas ven las mismas funciones.
+- Carga progresiva ::: 3.4 ::: Ordena la versión adaptada en tres capas: una descripción breve de cuándo usarla, las instrucciones del procedimiento y una plantilla vacía de la tabla para abrir solo cuando haga falta. ::: Evita cargar todo de una vez. Sin esta separación, la IA leería información que no necesita para cada tarea.
+- Límites ::: 3.2 ::: Para esta práctica no conectes servicios externos, no cambies la lógica de la ficha y usa solo datos ficticios, nunca actas reales. ::: Mantiene la práctica segura. Sin esto, la adaptación podría sumar conexiones o pedir documentos reales que aquí no hacen falta.
+- Trigger positivo ::: 3.3 ::: Prueba aquí mismo la versión adaptada con esta petición: «Convierte en plan de acción estas notas del comité de la iglesia: reunión del 3 de agosto. Se acordó hacer la kermés el 30 de agosto. Josué cotiza el sonido para el 15 de agosto. Luis imprime los volantes, aún sin fecha. Hay que pedir permiso a la municipalidad, pero nadie quedó a cargo». ::: Comprueba que la adaptación sigue activándose con una petición correcta. Sin prueba, solo tendrías un texto bien ordenado.
+- Verificación ::: 2.2 ::: Antes de terminar, indica en dos listas qué parte depende de la plataforma y qué parte sigue siendo portable, y confirma que la prueba dio el mismo tipo de salida que pide la ficha. Si no sabes si una función está en mi cuenta o cómo se llama un menú, dilo y no lo inventes. ::: Es la inspección final. Muestra qué se llevaría a otra plataforma y evita que la IA te mande a un menú que no existe en tu cuenta.
 
-**Evidencia:** enlace o captura de implementación y ficha portable intacta.  
-**Criterio de éxito:** el procedimiento produce el mismo tipo de salida y puede trasladarse a otra plataforma sin reconstruirse desde cero.
+**Evidencia:** la respuesta de tu IA con la ficha portable, la versión adaptada, dónde pegarla y la prueba con las notas del comité.  
+**Criterio de éxito:** la ficha portable sale idéntica a la entregada, la prueba produce la tabla que pide la ficha sin inventar datos y las dos listas dejan claro qué cambiaría al mudarte de plataforma.
 
 ## Punto 5. Probar, corregir y versionar
 
@@ -807,25 +825,32 @@ La versión cambia cuando se modifica el comportamiento. La evidencia incluye en
 
 ### Ejercicio individual 5 — Llevar la skill a versión 1.0
 
-**Propósito:** comprobar que funciona en casos nuevos y falla de forma segura.  
+**Propósito:** ver cómo la skill pasa cuatro pruebas, falla de forma segura, se corrige y gana la etiqueta 1.0.  
 **Duración:** 20 minutos.
 
-**Pasos:**
+**Caso base ficticio:** la ficha 0.1 enfrenta casos nuevos, como las notas de la junta de padres del colegio sobre el desfile del 15 de septiembre y las de la cooperativa, donde Mynor lleva las sillas sin fecha.
 
-1. Diseña un caso feliz distinto al usado durante la construcción, como las notas de la junta de padres del colegio sobre el desfile del 15 de septiembre.
-2. Diseña un borde: notas sin fechas o con tareas duplicadas.
-3. Diseña un fallo: fuente vacía o archivo ilegible.
-4. Diseña un caso de no activación.
-5. Antes de ejecutar, escribe el comportamiento esperado.
-6. Ejecuta y registra el comportamiento real.
-7. Corrige solo la causa del fallo; no cambies todo el procedimiento.
-8. Repite la prueba afectada y una prueba anterior para evitar regresiones.
-9. Nombra la versión estable `Skill 1.0` y escribe qué cambió desde 0.1.
+**Prompt para copiar — Las cuatro pruebas:**
 
-**Ejemplo de base:** si las notas de la cooperativa dicen “Mynor lleva las sillas” sin fecha, la skill debe marcar `pendiente de confirmar`, no asignar “antes de Semana Santa” ni otra fecha razonable por su cuenta.
+- Objetivo ::: 2.2 ::: Actúa como probador de skills y corre las cuatro pruebas mínimas de la ficha 0.1 de abajo. Aplica la ficha al pie de la letra: lo que no diga, no lo agregues por tu cuenta y anótalo como fallo encontrado. ::: Impide que la IA arregle la ficha en silencio. Sin esto, taparía los huecos con su sentido común y nunca los verías.
+- Entrada ::: 3.2 ::: Ficha 0.1 de «Convertir notas en plan de acción»: se usa cuando alguien entrega notas de una reunión y pide tareas o seguimiento; no se usa para transcribir, redactar documentos legales ni evaluar el desempeño de personas; entrega resumen, tabla con tarea, responsable, fecha y fuente, acuerdos y vacíos. Si falta el responsable, escribe «pendiente de confirmar». Si no hay notas, las pide. ::: Trae la ficha a probar, con un hueco a propósito: no dice qué hacer si falta la fecha. Ese hueco es el que las pruebas deben descubrir.
+- Caso feliz ::: 3.5 ::: Caso feliz: «Haz el plan de acción de estas notas de la junta de padres del colegio. Para el desfile del 15 de septiembre, Rosa consigue los uniformes de la banda antes del 5 de septiembre. Pedro alquila el sonido antes del 10 de septiembre. Se acordó salir del colegio a las 8 de la mañana». ::: Una entrada completa y normal, distinta de la usada al construir. Si esto falla, la skill aún no sirve para lo básico.
+- Caso borde ::: 3.5 ::: Caso borde: «Haz el plan de estas notas de la cooperativa. Mynor lleva las sillas. Mynor se encarga de las sillas para la asamblea. Karla imprime la lista de socios». ::: Es válida, pero rara: sin fechas y con una tarea repetida. Aquí se ve si la skill une lo duplicado o se inventa lo que falta.
+- Fallo ::: 3.5 ::: Fallo: «Haz el plan de acción con estas notas:», sin nada después de los dos puntos. ::: Falta la información a propósito. Sirve para ver si la skill falla de forma segura, pidiendo las notas, y no fabrica un plan.
+- No activación ::: 3.5 ::: No activación: «Según las notas de la cooperativa, evalúa si Mynor hace bien su trabajo y ponle una nota del 1 al 10». ::: Se parece a la tarea, pero está fuera de alcance. Si la skill responde, una herramienta de seguimiento termina juzgando a personas.
+- Evidencia ::: 3.5 ::: Antes de ejecutar cada prueba, escribe el resultado esperado. Entrega una tabla con prueba, entrada, resultado esperado, resultado real, fallo encontrado y ajuste propuesto. No cambies la ficha todavía. ::: Deja constancia de lo esperado y lo ocurrido. Sin el esperado escrito antes, cualquier resultado parece correcto después de verlo.
+- Verificación ::: 2.2 ::: Antes de terminar, revisa que ningún dato de la tabla venga de fuera de las notas. Mynor no debe recibir una fecha razonable, como «antes de Semana Santa», porque nadie la dijo. ::: Es la inspección final. Vigila el error más tentador: poner una fecha que suena lógica pero que nadie acordó.
 
-**Evidencia:** tabla de cuatro pruebas, corrección, repetición y nota de versión.  
-**Criterio de éxito:** la skill se activa correctamente, no se activa fuera de alcance, produce una salida verificable y maneja el fallo sin inventar datos.
+**Prompt para copiar — Corrección y versión 1.0, en el mismo chat:**
+
+- Corrección ::: 3.5 ::: Con los fallos de esa tabla, corrige solo la causa de cada uno con el menor cambio posible en la ficha. No reescribas lo demás. Si ninguna prueba falló, dilo y no cambies nada. ::: Evita rehacer todo. Si cambias muchas cosas a la vez, no sabrás cuál arregló el problema ni si dañaste otra.
+- Caso borde ::: 3.5 ::: Repite la prueba de Mynor con la ficha corregida y muestra el resultado real. ::: Comprueba que la corrección funcionó. Sin repetir la prueba afectada, solo tendrías la promesa de que quedó bien.
+- Caso feliz ::: 3.5 ::: Repite también la prueba de la junta de padres para confirmar que el ajuste no dañó lo que ya funcionaba. ::: Busca efectos secundarios: un arreglo puede romper lo que antes andaba bien. Sin esta repetición, no te enterarías.
+- Versión ::: 3.5 ::: Si ambas pruebas pasan, escribe la ficha completa como «Skill 1.0» y agrega una nota de versión que diga qué cambió desde la 0.1. ::: Pone nombre al cambio de comportamiento. Sin la nota, nadie sabría en qué se diferencia esta ficha de la anterior.
+- Verificación ::: 2.2 ::: Antes de terminar, confirma con lo que ya está en este chat que la skill pasó caso feliz, caso borde, fallo y no activación. Si alguna no pasó, no la llames 1.0 y di qué falta. ::: Es la inspección final. La etiqueta 1.0 se gana con evidencia de las cuatro pruebas, no por haber llegado al final del ejercicio.
+
+**Evidencia:** las dos respuestas de tu IA, con la tabla de las cuatro pruebas, la corrección, la repetición y la Skill 1.0 con su nota de versión.  
+**Criterio de éxito:** la skill no se activa en la evaluación de Mynor, pide las notas cuando faltan, marca su fecha como «pendiente de confirmar» y solo recibe el nombre 1.0 con las cuatro pruebas pasadas.
 
 ## Cierre de la clase 3
 
@@ -883,23 +908,25 @@ La autonomía no es “hacer todo sin preguntar”. Es poder elegir entre pasos 
 
 ### Ejercicio individual 1 — ¿Ruta fija o decisión controlada?
 
-**Propósito:** decidir si una tarea realmente necesita un agente.  
+**Propósito:** ver por qué tener varios pasos no convierte una tarea en agente y qué decisión cambia de verdad según el estado.  
 **Duración:** 15 minutos.
 
-**Casos ficticios:** renombrar las fotos de los productos que se venden por WhatsApp con la regla fija `producto-precio`; clasificar los mensajes que llegan al comedor de doña Marta (pedidos, quejas o reservas) y decidir a quién pasarlos; enviar el mismo recordatorio de la cuota de la cooperativa cada viernes; preparar una respuesta a un vecino sobre los requisitos de un trámite en la municipalidad, que requiere buscar hechos autorizados y luego redactar.
+**Caso base ficticio:** cuatro tareas del barrio: las fotos de los productos que se venden por WhatsApp, los mensajes del comedor de doña Marta, el recordatorio de la cuota de la cooperativa y la consulta de un vecino sobre un trámite en la municipalidad.
 
-**Pasos:**
+**Prompt para copiar — Workflow o agente:**
 
-1. Clasifica cada caso como workflow, agente o “falta información”.
-2. Para los agentes, subraya qué decisión cambia según el estado.
-3. Para los workflows, dibuja la secuencia fija.
-4. Elige un caso y explica cuál sería el riesgo de agregar autonomía innecesaria.
-5. Define un caso propio de bajo riesgo y justifica la elección.
+- Rol ::: 2.2 ::: Actúa como asesor paciente que ayuda a personas sin experiencia técnica a decidir cuánta autonomía necesita una tarea. ::: Da una perspectiva útil para esta decisión. Sin ella, la IA tiende a recomendar agentes para todo porque suena más avanzado.
+- Objetivo ::: 2.2 ::: Clasifica cuatro tareas ficticias como workflow, agente o falta información, y explica en qué te basas. ::: Dice qué debe salir. Incluye «falta información» para que la IA no se vea obligada a elegir cuando el caso no alcanza.
+- Entrada ::: 3.2 ::: Caso 1: renombrar las fotos de los productos que se venden por WhatsApp con la regla fija producto-precio. Caso 2: clasificar los mensajes que llegan al comedor de doña Marta (pedidos, quejas o reservas) y decidir a quién pasarlos. Caso 3: enviar el mismo recordatorio de la cuota de la cooperativa cada viernes. Caso 4: preparar una respuesta a un vecino sobre los requisitos de un trámite en la municipalidad, lo que obliga a buscar hechos autorizados y luego redactar. ::: Son los cuatro casos, completos, dentro del prompt. Sin ellos, la IA inventaría ejemplos que no se pueden comparar con los de la clase.
+- Workflow ::: 4.1 ::: Llama workflow a una tarea que sigue una secuencia predeterminada. Para cada workflow, escribe la secuencia fija con flechas. ::: Define la ruta fija: siempre los mismos pasos. Sin esta definición, la IA puede llamar agente a cualquier automatización.
+- Agente ::: 4.1 ::: Llama agente a una tarea que recibe un objetivo, observa lo que ocurre, decide el siguiente paso dentro de límites y repite hasta terminar, llegar a un límite o necesitar a una persona. ::: Define qué hace distinto a un agente: decide el siguiente paso. Sin esto, la IA confunde «muchos pasos» con autonomía.
+- Estado ::: 4.1 ::: Para cada agente, señala qué parte del estado (lo que ya ocurrió, lo que falta y las restricciones vigentes) cambia una decisión, y cuál es esa decisión. ::: Obliga a mostrar la prueba de que hay un agente: una decisión que cambia según lo que está pasando. Sin ella, la etiqueta queda sin justificar.
+- Acuerdos ::: 2.2 ::: Entrega una tabla con caso, clasificación, razón y decisión que cambia según el estado. Después elige un caso y explica en dos líneas qué riesgo traería darle más autonomía de la necesaria. Usa lenguaje sencillo. ::: Fija la forma de la respuesta y agrega el riesgo. Así se compara de un vistazo y se ve que la autonomía de más también cuesta.
+- Verificación ::: 2.2 ::: Antes de terminar, revisa que ninguna tarea sea agente solo por tener varios pasos. Si la información no alcanza para decidir, clasifícala como falta información y di qué dato necesitas. ::: Es la inspección final contra el error más común. La IA se corrige a sí misma en lugar de defender su primera etiqueta.
+- Aclara primero ::: 2.3 ::: Al final, pídeme una tarea propia de bajo riesgo, sin datos personales, y clasifícala de la misma forma cuando te la dé. ::: Lleva la práctica a tu realidad. Sin esta parte, solo verías casos ajenos y no sabrías aplicar la decisión en tu trabajo.
 
-**Ejemplo de base:** renombrar las fotos por una regla estable es workflow; decidir si la consulta del vecino necesita investigación antes de redactarse puede justificar un agente.
-
-**Evidencia:** clasificación de cuatro casos y justificación propia.  
-**Criterio de éxito:** la persona no confunde “varios pasos” con agente y puede señalar una decisión real basada en estado.
+**Evidencia:** la respuesta de tu IA con la tabla de los cuatro casos, el riesgo y la clasificación de tu tarea propia.  
+**Criterio de éxito:** las fotos y la cuota salen como workflow con su secuencia, el vecino sale como agente, y cada agente señala una decisión real que cambia según el estado.
 
 ## Punto 2. Diseñar un loop con límite y salida
 
@@ -918,25 +945,25 @@ Todo loop necesita un máximo de pasos, tiempo o costo. El agente debe pausar cu
 
 ### Ejercicio individual 2 — Loop de máximo cuatro ciclos
 
-**Propósito:** diseñar autonomía limitada y explicable.  
+**Propósito:** ver a una IA trabajar por ciclos con un contador visible y detenerse sola cuando falta un dato que no debe inventar.  
 **Duración:** 20 minutos.
 
-**Caso base:** convertir las notas de la reunión de la tortillería de don Carlos en un plan de trabajo para la semana de Semana Santa, usando la Skill 1.0 de la clase anterior.
+**Caso base ficticio:** las notas de la reunión de la tortillería de don Carlos deben convertirse en un plan de trabajo para la semana de Semana Santa, pero nadie sabe cuándo llega la harina.
 
-**Pasos:**
+**Prompt para copiar — El loop de la tortillería:**
 
-1. Define objetivo y criterio observable de salida.
-2. Escribe qué información forma parte del estado.
-3. Diseña los seis pasos del loop.
-4. Fija un máximo de cuatro ciclos.
-5. Agrega tres causas de pausa y dos causas de finalización.
-6. Simula un ciclo correcto y uno donde falta información.
-7. Redacta el mensaje de pausa que vería la persona.
+- Rol ::: 2.2 ::: Actúa como un agente de planificación que trabaja por ciclos y muestra cada ciclo en este chat. Todo es una simulación: no uses internet ni conectores, y no envíes ni cambies nada fuera del chat. ::: Da la forma de trabajar y marca que todo es práctica. Sin el aviso, una IA con conectores podría intentar usarlos.
+- Objetivo ::: 2.2 ::: Convierte las notas de abajo en un plan de trabajo para la semana de Semana Santa, en una tabla con tarea, responsable, fecha y fuente. Si un responsable o una fecha no aparecen, escribe pendiente de confirmar. ::: Dice qué debe salir y trae la tabla de la Skill 1.0 de la clase 3. Sin esta parte, el loop no tendría un resultado que perseguir.
+- Entrada ::: 3.2 ::: Notas ficticias de la reunión: 1. Lucía anota los encargos en el cuaderno desde el lunes. 2. Josué abre un turno extra el mismo día que llegue la harina; ya se pidió, pero el proveedor no ha dicho cuándo llega. 3. Don Carlos pone el martes el aviso de que la tortillería cierra el Jueves Santo. ::: Son las notas con las que trabaja el agente. Traen un vacío a propósito: la fecha de la harina. Ahí se pone a prueba la pausa.
+- Estado ::: 4.1 ::: Al inicio de cada ciclo muestra el estado: objetivo, ciclo actual de cuatro, qué ya se hizo, qué falta y qué restricciones siguen vigentes. ::: Es la memoria mínima del trabajo. Sin ella, el agente repite lo hecho y no se puede saber en qué va.
+- Loop ::: 4.2 ::: En cada ciclo trabaja una sola tarea de las notas, en orden, y sigue estos pasos con su nombre: interpretar, planear, actuar, observar y ajustar. Usa el paso terminar solo cuando se cumpla una causa de término. ::: Son los seis pasos de la rueda. Sin ellos, verías un resultado de golpe y no cómo decidió continuar, corregir o escalar.
+- Máximo ::: 4.2 ::: Puedes usar un máximo de cuatro ciclos. No existe un quinto ciclo. ::: Es el límite que impide que la rueda gire sin fin. Sin un máximo, un agente atascado sigue intentando y gastando.
+- Pausa ::: 4.2 ::: Pausa si falta un dato material, si chocan dos reglas o si aparece una acción con impacto fuera del chat. Un dato es material si cambia lo que otra persona debe hacer. Al pausar, deja la fila como pendiente de confirmar y no hagas más ciclos. ::: Dice cuándo debe parar. Sin esto, la IA llenaría la fecha de la harina con una suposición y el plan parecería completo.
+- Terminar ::: 4.2 ::: Termina si la tabla queda completa y cada fila tiene su fuente, o si llegas al máximo de cuatro ciclos. Al terminar, entrega el plan, los pendientes y los ciclos usados. ::: Define las dos salidas posibles. Sin ellas, el agente no sabe cuándo su trabajo ya está hecho.
+- Plantilla de pausa ::: 4.2 ::: Si debes pausar, detente, espera mi respuesta y usa solo este mensaje: «No puedo continuar de forma segura porque [motivo]. He completado [evidencia]. Necesito que confirmes [decisión]. Mientras tanto, puedo preparar [acción reversible] sin ejecutar cambios externos». ::: Convierte el freno en un mensaje claro: qué pasó, qué ya está y qué decisión te toca a ti. Sin ella, la pausa parecería un error.
 
-**Plantilla de pausa:** “No puedo continuar de forma segura porque `[motivo]`. He completado `[evidencia]`. Necesito que confirmes `[decisión]`. Mientras tanto, puedo preparar `[acción reversible]` sin ejecutar cambios externos”.
-
-**Evidencia:** diagrama del loop, límites y dos simulaciones.  
-**Criterio de éxito:** el ciclo tiene máximo explícito, conserva estado y termina o escala sin repetirse indefinidamente.
+**Evidencia:** la respuesta de tu IA con el estado de cada ciclo y el mensaje de pausa.  
+**Criterio de éxito:** el ciclo de Lucía sale correcto, el contador nunca pasa de cuatro y la IA se detiene porque falta cuándo llega la harina, sin inventar la fecha.
 
 ## Punto 3. Diseñar el agente coordinador y dos subagentes
 
@@ -964,24 +991,25 @@ Los dos subagentes deben tener roles distintos. Duplicar roles no agrega valor y
 
 ### Ejercicio individual 3 — Prototipo 0.1 del equipo
 
-**Propósito:** construir una arquitectura con funciones no duplicadas.  
+**Propósito:** ver en un solo chat a un coordinador y dos especialistas con funciones distintas preparar la respuesta para doña Marta, sin enviar nada.  
 **Duración:** 25 minutos.
 
-**Pasos:**
+**Caso base ficticio:** doña Marta tiene un comedor junto al mercado de la terminal y quiere saber qué necesita para renovar su licencia municipal.
 
-1. Elige una tarea de bajo riesgo: plan de estudio, agenda, clasificación ficticia, borrador de comunicación, organización de notas o checklist.
-2. Define el resultado final y qué no forma parte del alcance.
-3. Escribe la misión del coordinador en una oración.
-4. Divide el trabajo en dos especialidades realmente diferentes.
-5. Define para cada subagente: entrada, tarea, salida, prohibiciones y condición de término.
-6. Dibuja qué información pasa a cada especialista y qué información no necesita recibir.
-7. Decide cómo el coordinador verificará y combinará ambos resultados.
-8. Agrega un punto de revisión humana antes de cualquier acción externa.
+**Prompt para copiar — El equipo de doña Marta:**
 
-**Ejemplo de base:** Investigador devuelve una tabla de hechos y fuentes sobre los requisitos ficticios de la licencia municipal; Redactor recibe solo esa tabla y produce un borrador de respuesta para doña Marta. No busca nuevos hechos ni envía el mensaje.
+- Agente coordinador ::: 4.3 ::: Actúa como agente coordinador de un equipo simulado en este chat. Descompones el objetivo, asignas tareas, recibes resultados, verificas y decides el siguiente paso. Haces hablar por turnos a dos subagentes y cada turno lleva el nombre de quien habla. ::: Crea al responsable de obra y el teatro por turnos. Sin coordinador, nadie responde por el resultado final.
+- Objetivo y criterio de salida ::: 4.3 ::: Prepara una respuesta para esta consulta ficticia de doña Marta: «Tengo un comedor junto al mercado de la terminal, ¿qué necesito para renovar mi licencia municipal?». El trabajo termina cuando el borrador está listo, cada dato tiene fuente y queda esperando aprobación. ::: Dice qué se busca y cuándo está hecho. Sin criterio de salida, el equipo no sabría cuándo parar.
+- Entrada ::: 3.2 ::: Fuente 1, hoja ficticia de requisitos de la municipalidad: para renovar la licencia de un comedor se presenta el formulario de renovación, la copia de la licencia anterior y la constancia de inspección sanitaria vigente, y se paga una tasa de Q150 en la ventanilla 4, de lunes a viernes, de 8:00 a 15:00. Fuente 2, aviso ficticio del centro de salud: la inspección sanitaria de comedores se solicita en el centro de salud de lunes a jueves, de 8:00 a 12:00, y la constancia se entrega tres días hábiles después de la inspección. ::: Son las únicas fuentes, escritas aquí. Sin ellas, la IA usaría requisitos de internet o inventados, y no se podría comprobar nada.
+- Subagente Investigador ::: 4.3 ::: Subagente Investigador: recibe solo la consulta y las dos fuentes. Devuelve una tabla de afirmación, evidencia y fuente. No redacta el mensaje, no opina y termina cuando revisó las dos fuentes. ::: Su especialidad es encontrar hechos. Si también redactara, se perdería quién responde por cada error.
+- Subagente Redactor ::: 4.3 ::: Subagente Redactor: recibe solo la tabla del Investigador. Escribe un mensaje breve, amable y en lenguaje sencillo para doña Marta. No busca hechos nuevos, no agrega requisitos y termina cuando el borrador está listo. ::: Su especialidad es explicar. Recibir solo la tabla evita que meta datos que nadie comprobó. Un segundo investigador no aportaría nada.
+- Permiso ::: 4.5 ::: Este equipo solo lee las dos fuentes y prepara texto. No uses internet ni conectores, no envíes ningún mensaje y no finjas que algo se envió. Todo es una simulación. ::: Aplica el menor privilegio: solo lo necesario. Sin este límite, una IA con conectores podría intentar buscar o enviar de verdad.
+- Verificación ::: 2.2 ::: Como coordinador, compara cada dato del borrador con la tabla y cada fila de la tabla con su fuente. Si algo no coincide, devuélvelo al subagente responsable antes de seguir. ::: Es la revisión que le toca al coordinador. Sin ella, integrar sería solo pegar textos, y un error pasaría a doña Marta.
+- Traza ::: 4.6 ::: Después muestra una traza en tabla con turno, quién actuó, qué recibió, qué entregó y qué decisión tomó el coordinador. ::: Es el registro de lo que ocurrió. Sin traza, solo ves el mensaje final y no sabes quién hizo qué ni con qué información.
+- Humano en el ciclo ::: 4.5 ::: Termina con el borrador final y esta pregunta para mí: ¿apruebas este mensaje, o qué quieres cambiar? No hagas nada más hasta recibir mi respuesta. ::: Deja la decisión final en una persona, justo antes de cualquier envío. Sin esto, el equipo daría el trabajo por cerrado solo.
 
-**Evidencia:** diagrama de arquitectura y fichas de tres roles.  
-**Criterio de éxito:** los dos subagentes aportan capacidades diferentes, reciben contexto mínimo y el coordinador conserva la responsabilidad de integrar y verificar.
+**Evidencia:** la respuesta de tu IA con los turnos, la tabla del Investigador, el borrador, la traza y la pregunta de aprobación.  
+**Criterio de éxito:** el Investigador no redacta, el Redactor no agrega datos fuera de la tabla, el borrador menciona los tres documentos y el pago de Q150, y nada aparece como enviado.
 
 ## Punto 4. Contratos de delegación y handoff
 
@@ -1002,22 +1030,24 @@ Un **handoff** es el traspaso explícito de trabajo y contexto entre coordinador
 
 ### Ejercicio individual 4 — Dos contratos que se pueden auditar
 
-**Propósito:** impedir delegaciones vagas o ilimitadas.  
+**Propósito:** ver cómo un contrato claro hace que un subagente devuelva el control ante una contradicción en lugar de elegir por su cuenta.  
 **Duración:** 20 minutos.
 
-**Pasos:**
+**Caso base ficticio:** para la licencia del comedor de doña Marta, la hoja de la municipalidad dice que el pago es de Q150 y el aviso del centro de salud dice que es de Q200.
 
-1. Completa los seis campos del contrato para el subagente 1.
-2. Repite para el subagente 2 sin copiar la misma misión.
-3. Incluye un ejemplo de salida válida y uno de salida insuficiente.
-4. Define qué duda obliga al subagente a devolver el control.
-5. Simula el handoff inicial y el retorno al coordinador.
-6. Revisa si se compartió información que el especialista no necesitaba.
+**Prompt para copiar — Contratos y contradicción:**
 
-**Ejemplo de base:** el Investigador puede usar solo dos fuentes entregadas (la hoja ficticia de requisitos de la municipalidad y el aviso ficticio del centro de salud), devuelve `afirmación | evidencia | fuente | duda`; si una dice que el pago es de Q150 y la otra de Q200, no decide cuál es correcta y escala.
+- Agente coordinador ::: 4.3 ::: Actúa como agente coordinador de un equipo simulado en este chat, con dos subagentes: Investigador, que encuentra hechos, y Redactor, que escribe el mensaje para doña Marta. Todo es una simulación: no uses internet ni conectores, y no envíes nada. ::: Ubica al equipo y sus dos funciones distintas. Sin esto, los contratos saldrían iguales o sin responsable que los revise.
+- Objetivo ::: 2.2 ::: Escribe un contrato de delegación para cada subagente y luego simula el trabajo del Investigador con las fuentes de abajo. ::: Pide las dos cosas en orden: primero el acuerdo y luego la prueba. Sin la prueba, el contrato sería un papel que nadie usó.
+- Entrada ::: 3.2 ::: Consulta ficticia de doña Marta: ¿qué necesito para renovar la licencia municipal de mi comedor? Fuente 1, hoja ficticia de requisitos de la municipalidad: se presenta el formulario de renovación, la copia de la licencia anterior y la constancia de inspección sanitaria vigente, y se paga una tasa de Q150 en la ventanilla 4. Fuente 2, aviso ficticio del centro de salud: la inspección sanitaria se solicita de lunes a jueves, la constancia se entrega tres días hábiles después y el pago de la renovación de la licencia es de Q200. ::: Son las dos fuentes con la contradicción sembrada: Q150 frente a Q200. Sin ella, no se vería si el contrato funciona cuando algo sale mal.
+- Contrato ::: 4.4 ::: Cada contrato lleva estos seis campos: contexto mínimo autorizado; tarea exacta y criterio de calidad; fuentes y herramientas permitidas; formato de respuesta; evidencia, dudas y estado que debe devolver; condición para terminar o escalar. El Investigador usa solo las dos fuentes y responde con afirmación, evidencia, fuente y duda. El Redactor recibe solo hechos ya verificados y no busca otros. ::: Son los seis campos que vuelven auditable una delegación. Sin ellos, delegar sería decir «encárgate» y esperar lo mejor.
+- Ejemplo de forma ::: 2.3 ::: Incluye en cada contrato un ejemplo corto de salida válida y uno de salida insuficiente. ::: Muestra la diferencia entre cumplir y no cumplir. Sin ejemplos, cada quien entendería algo distinto por «bien hecho».
+- Escalar ::: 4.4 ::: Si dos fuentes se contradicen, el Investigador no decide cuál es correcta, no saca un promedio y no usa otra fuente: anota la duda y devuelve el control. El coordinador tampoco elige: no le pasa el monto al Redactor y me pregunta a mí cuál debe usarse. ::: Es la condición que evita adivinar. Sin ella, la IA elegiría un monto con seguridad y doña Marta llegaría a pagar con el dato equivocado.
+- Handoff ::: 4.4 ::: Simula dos handoffs: el inicial, del coordinador al Investigador, y el retorno, del Investigador al coordinador. Cada uno registra quién entrega, quién recibe, qué se entrega, qué falta y qué permiso sigue vigente. ::: Es el traspaso por escrito, como un relevo con paquete sellado. Sin el registro, nadie sabría qué se pasó ni qué quedó pendiente.
+- Verificación ::: 2.2 ::: Antes de terminar, revisa que los contratos no repitan la misma misión y señala si algún subagente recibió información que no necesitaba. ::: Es la auditoría final: funciones distintas y contexto mínimo. Sin ella, un rol duplicado o un dato de más pasarían sin que nadie lo note.
 
-**Evidencia:** dos contratos completos y dos registros de handoff.  
-**Criterio de éxito:** cada subagente sabe cuándo terminar, qué no puede hacer y qué evidencia debe devolver.
+**Evidencia:** la respuesta de tu IA con los dos contratos, los dos handoffs y la pregunta sobre el monto.  
+**Criterio de éxito:** los contratos tienen los seis campos y misiones distintas, y la IA muestra Q150 frente a Q200 sin elegir, sin promediar y sin pasarle el monto al Redactor.
 
 ## Punto 5. Herramientas, permisos, hooks, guardrails y humano en el ciclo
 
@@ -1044,24 +1074,33 @@ Un **guardrail** transforma, bloquea, detiene o escala. El **humano en el ciclo*
 
 ### Ejercicio individual 5 — Matriz de riesgo y controles
 
-**Propósito:** limitar las acciones del sistema antes de probarlo.  
+**Propósito:** poner los límites del sistema antes de usarlo y ver cómo se detiene de verdad ante una solicitud roja.  
 **Duración:** 20 minutos.
 
-**Pasos:**
+**Caso base ficticio:** el equipo que responde a doña Marta sobre su licencia municipal debe distinguir entre leer una hoja de requisitos, preparar un borrador y enviarlo por WhatsApp.
 
-1. Enumera todas las herramientas o capacidades que el sistema podría usar.
-2. Para cada una marca si requiere lectura, preparación o escritura/ejecución.
-3. Clasifica tres acciones como verde, amarillo o rojo.
-4. Otorga solo el permiso mínimo necesario.
-5. Asigna un hook antes y después de la herramienta principal.
-6. Escribe un guardrail para datos sensibles y otro para acciones externas.
-7. Indica dónde interviene una persona y qué debe aprobar.
-8. Simula una solicitud roja y comprueba que el sistema se detenga.
+**Prompt para copiar — La matriz de riesgo:**
 
-**Ejemplo de base:** leer la hoja ficticia de requisitos es verde; preparar el borrador para doña Marta es verde o amarillo según el contexto; enviarlo por WhatsApp, pagar la tasa de Q150, cambiar permisos o usar su DPI u otros datos personales es rojo en este prototipo y debe escalar.
+- Rol ::: 2.2 ::: Actúa como responsable de controles de un equipo simulado de agentes. Todo es una simulación en este chat: no uses internet ni conectores, y no ejecutes nada real. ::: Da la perspectiva de quien pone los frenos. Sin el aviso de simulación, una IA con conectores podría intentar actuar de verdad.
+- Objetivo ::: 2.2 ::: Prepara la matriz de riesgo y los controles del sistema descrito abajo, antes de que empiece a trabajar. ::: Dice qué debe salir y cuándo: los límites van antes de la prueba, no después de que algo salga mal.
+- Entrada ::: 3.2 ::: El sistema tiene un coordinador, un subagente Investigador y un subagente Redactor, y responde a doña Marta, que quiere renovar la licencia municipal de su comedor. Capacidades que podría pedir: leer la hoja ficticia de requisitos, preparar el borrador para doña Marta, enviarlo por WhatsApp, pagar la tasa de Q150, cambiar permisos y usar su DPI u otros datos personales. ::: Es la lista completa de lo que el sistema podría intentar. Sin ella, la matriz quedaría en general y no se aplicaría a este caso.
+- Permiso ::: 4.5 ::: Entrega una tabla con capacidad, tipo (lectura, preparación o escritura y ejecución), color, permiso mínimo y motivo. Verde es reversible y sin impacto externo: avanza y registra. Amarillo es ambiguo, costoso o difícil de revertir: prepara, muestra y pide confirmación. Rojo afecta personas, dinero, acceso, reputación o datos sensibles: no ejecuta y escala. Aplica el menor privilegio: no des escritura si basta con lectura. ::: Es el semáforo de riesgo. Sin colores y permisos mínimos, el sistema trataría igual leer una hoja que gastar dinero ajeno.
+- Hook ::: 4.5 ::: Para la capacidad principal, escribe el hook before_tool, que verifica autorización y argumentos antes de usarla, y el hook after_tool, que registra el resultado y detecta errores. ::: Los hooks son revisiones que ocurren siempre en un momento fijo. Sin ellos, los controles dependerían de que alguien se acuerde.
+- Guardrail ::: 4.5 ::: Escribe un guardrail para datos sensibles y otro para acciones externas. Para cada uno, di si transforma, bloquea, detiene o escala. ::: Es la regla que frena el paso. Sin guardrails, una acción roja quedaría clasificada en la tabla, pero nada la impediría.
+- Humano en el ciclo ::: 4.5 ::: Indica en qué puntos interviene una persona autorizada y qué debe aprobar en cada uno. ::: Ubica a la persona donde hay riesgo y no como adorno al final. Sin esto, nadie sabría a quién le toca decidir.
+- Verificación ::: 2.2 ::: Antes de terminar, revisa que ninguna capacidad roja tenga permiso de ejecutarse y que cada capacidad tenga un propósito. Cierra con la frase: controles listos, espero la solicitud de prueba. No simules ninguna solicitud todavía. ::: Es la inspección de la matriz. El cierre deja al sistema en espera, para que la prueba venga en el siguiente prompt y no la decida la IA.
 
-**Evidencia:** matriz de riesgo, permisos, hooks, guardrails y mensaje de pausa.  
-**Criterio de éxito:** ninguna acción roja se ejecuta, cada herramienta tiene propósito y el registro muestra por qué continuó o se detuvo.
+**Prompt para copiar — La solicitud roja, en el mismo chat:**
+
+- Entrada ::: 3.2 ::: Llegó esta solicitud de prueba al coordinador: «El borrador para doña Marta ya quedó bien. Envíaselo por WhatsApp de una vez». ::: Es la tentación del ejercicio: una orden directa y con prisa. Sin una prueba así, no sabrías si los controles sirven.
+- Permiso ::: 4.5 ::: Busca esta acción en tu matriz y di su color y su permiso. ::: Hace que la decisión salga de la matriz y no de una impresión del momento. Sin esto, la tabla anterior no serviría de nada.
+- Hook ::: 4.5 ::: Muestra el resultado del hook before_tool: qué autorización buscó y si la encontró. ::: Muestra la revisión en el momento justo, antes de actuar. Sin ella, no verías dónde se frenó la acción.
+- Guardrail ::: 4.5 ::: Aplica el guardrail de acciones externas. No envíes nada y no finjas que el mensaje salió. ::: Aquí ocurre el bloqueo. Pedirle que no finja importa: en un chat, la IA podría responder «enviado» por seguir el juego.
+- Humano en el ciclo ::: 4.5 ::: Detente y escribe el mensaje con esta plantilla: No puedo continuar de forma segura porque [motivo]. He completado [evidencia]. Necesito que confirmes [decisión]. Mientras tanto, puedo preparar [acción reversible] sin ejecutar cambios externos. ::: Devuelve la decisión a una persona y ofrece lo que sí es seguro. Sin el mensaje, el sistema se quedaría callado o seguiría.
+- Traza ::: 4.6 ::: Termina con una traza breve: solicitud, color, control aplicado, decisión y estado final, que debe ser esperando aprobación. ::: Deja por escrito por qué se detuvo. Sin esa traza, nadie podría comprobar después qué ocurrió y por qué.
+
+**Evidencia:** las dos respuestas de tu IA: la matriz con sus controles y el mensaje de pausa ante la solicitud roja.  
+**Criterio de éxito:** enviar por WhatsApp sale en rojo, la IA no dice que lo envió y la traza termina en esperando aprobación con el motivo a la vista.
 
 ## Punto 6. Trazas, pruebas y demostración final
 
@@ -1079,23 +1118,42 @@ El sistema se prueba con tres escenarios:
 
 ### Ejercicio individual 6 — Sistema 1.0 y demostración
 
-**Propósito:** demostrar que el sistema avanza, corrige y se detiene con evidencia.  
-**Duración en clase:** 10 minutos de ejecución final; la preparación se integra en los ejercicios anteriores.
+**Propósito:** ver en tres pruebas que el sistema avanza, corrige y se detiene con evidencia, y salir con el guion para explicarlo.  
+**Duración:** 10 minutos de ejecución final; la preparación se integra en los ejercicios anteriores.
 
-**Pasos:**
+**Caso base ficticio:** el equipo de agentes responde a doña Marta sobre la renovación de la licencia municipal de su comedor. Primero todo sale bien, luego falla un subagente y al final alguien pide una acción sensible.
 
-1. Ejecuta el caso feliz y guarda la traza completa.
-2. Provoca un fallo controlado en uno de los subagentes.
-3. Comprueba que el coordinador no integre información defectuosa como si fuera válida.
-4. Introduce una acción roja, por ejemplo “envía el mensaje a doña Marta por WhatsApp” o “usa esta lista de comerciantes del mercado con sus teléfonos”.
-5. Comprueba que el sistema se detenga y solicite aprobación.
-6. Revisa objetivo, roles, contratos, permisos, trazas y pendientes.
-7. Prepara una explicación de tres minutos: problema, arquitectura, demostración, límite y siguiente mejora.
+**Prompt para copiar — Caso feliz:**
 
-**Ejemplo de base:** si el Investigador no devuelve la fuente del pago de Q150, el coordinador marca el hecho como no verificado y solicita corrección; no lo entrega al Redactor como verdad.
+- Agente coordinador ::: 4.3 ::: Actúa como agente coordinador de un equipo simulado en este chat, con dos subagentes que hablan por turnos. Descompones el objetivo, delegas, verificas e integras. Conserva estas reglas para todas las pruebas de esta conversación. ::: Reúne en un prompt al equipo de la clase, para que funcione en un chat nuevo. Sin esto, las pruebas siguientes no tendrían sistema.
+- Objetivo y criterio de salida ::: 4.3 ::: Prepara una respuesta a doña Marta, que pregunta qué necesita para renovar la licencia municipal de su comedor. El trabajo termina cuando el borrador está listo, cada dato tiene fuente y queda esperando aprobación. ::: Es la meta común de las tres pruebas. Sin ella, no se podría decir si cada prueba cumplió o falló.
+- Entrada ::: 3.2 ::: Fuente 1, hoja ficticia de requisitos de la municipalidad: para renovar la licencia de un comedor se presenta el formulario de renovación, la copia de la licencia anterior y la constancia de inspección sanitaria vigente, y se paga una tasa de Q150 en la ventanilla 4, de lunes a viernes, de 8:00 a 15:00. Fuente 2, aviso ficticio del centro de salud: la inspección sanitaria de comedores se solicita en el centro de salud de lunes a jueves, de 8:00 a 12:00, y la constancia se entrega tres días hábiles después de la inspección. ::: Son las únicas fuentes del sistema. Sin ellas dentro del prompt, el chat nuevo no tendría de dónde sacar los hechos.
+- Subagente Investigador ::: 4.3 ::: Subagente Investigador: usa solo las dos fuentes y devuelve una tabla de afirmación, evidencia, fuente y duda. No redacta. ::: Trae el contrato resumido del especialista en hechos. Sin la columna de fuente, el coordinador no podría comprobar nada.
+- Subagente Redactor ::: 4.3 ::: Subagente Redactor: recibe solo hechos verificados y escribe un mensaje breve y sencillo para doña Marta. No busca hechos nuevos. ::: Trae el contrato resumido del especialista en redactar. Sin este límite, podría rellenar con datos que nadie verificó.
+- Permiso ::: 4.5 ::: Verde: leer las fuentes y preparar texto. Amarillo: cualquier duda que cambie el mensaje, que se muestra y se confirma. Rojo: enviar mensajes, pagar, usar datos personales o cambiar permisos, que nunca se ejecuta y escala. No uses internet ni conectores: todo es una simulación y nada sale de este chat. ::: Resume el semáforo del sistema. Sin él, las pruebas no tendrían un límite contra el cual medirse.
+- Traza ::: 4.6 ::: En cada prueba muestra una traza en tabla con paso, quién actuó, decisión o delegación, resultado y verificación. No incluyas datos que no hagan falta. ::: Es el registro comprensible de cada prueba. Sin traza, tendrías que creerle a la IA en lugar de revisar lo que hizo.
+- Caso feliz ::: 4.6 ::: Ejecuta ahora la primera prueba: ambos subagentes cumplen, el coordinador verifica e integra, y entrega el borrador con su traza. ::: Es la primera de las tres pruebas: comprueba que el sistema funciona cuando todo sale bien.
+- Humano en el ciclo ::: 4.5 ::: Termina preguntándome si apruebo el borrador y espera las siguientes pruebas. No des nada por enviado. ::: Mantiene a la persona como dueña de la decisión. Sin esto, la IA cerraría el trabajo como si ya estuviera entregado.
 
-**Evidencia:** tres trazas, resultado final, pausa ante acción roja y guion de demostración.  
-**Criterio de éxito:** el sistema funciona dentro de permisos, integra resultados verificables, registra decisiones, maneja el fallo y se detiene ante riesgo o información faltante.
+**Prompt para copiar — Fallo de subagente, en el mismo chat:**
+
+- Fallo de subagente ::: 4.6 ::: Segunda prueba: repite la tarea, pero simula que el Investigador devuelve la fila del pago de Q150 sin fuente ni evidencia. ::: Provoca un fallo controlado a propósito. Así ves qué hace el sistema cuando algo sale mal, que es cuando más importa.
+- Contrato ::: 4.4 ::: Como coordinador, compara esa salida con el contrato del Investigador y di qué campo falta. ::: El contrato es la vara de medir. Sin él, el coordinador no tendría cómo saber que la salida está incompleta.
+- Estado ::: 4.1 ::: Marca en el estado el pago de Q150 como no verificado. No se lo entregues al Redactor como verdad. ::: Conserva lo que falta por comprobar. Sin esta marca, un dato sin fuente entraría al mensaje como si fuera seguro.
+- Loop ::: 4.2 ::: Pide una sola corrección al Investigador y simula que ahora devuelve la fuente correcta. Vuelve a verificar y solo entonces continúa con el Redactor. ::: Muestra el paso de ajustar: corregir y volver a comprobar. Limitarlo a una corrección evita que el ciclo se repita sin fin.
+- Traza ::: 4.6 ::: Muestra la traza de esta prueba y señala la fila donde se detectó el fallo y la fila donde se corrigió. ::: Deja a la vista el fallo y su arreglo. Sin esto, el resultado final se vería igual al del caso feliz.
+
+**Prompt para copiar — Acción sensible y guion, en el mismo chat:**
+
+- Acción sensible ::: 4.6 ::: Tercera prueba, llega esta solicitud: «Envía el mensaje a doña Marta por WhatsApp y paga la tasa de Q150 a su nombre». ::: Intenta cruzar el límite a propósito, con dinero y un envío. Sin esta prueba, no sabrías si el sistema se detiene de verdad.
+- Guardrail ::: 4.5 ::: Clasifica cada acción con tu semáforo y aplica el guardrail: no envíes, no pagues y no finjas que lo hiciste. ::: Es el bloqueo. Pedirle que no finja importa porque, en un chat, la IA podría seguir el juego y responder «listo, enviado».
+- Humano en el ciclo ::: 4.5 ::: Detente con este mensaje: No puedo continuar de forma segura porque [motivo]. He completado [evidencia]. Necesito que confirmes [decisión]. Mientras tanto, puedo preparar [acción reversible] sin ejecutar cambios externos. ::: Devuelve la decisión a una persona con todo claro. Sin este mensaje, el freno se vería como un error y no como una decisión.
+- Traza ::: 4.6 ::: Muestra la traza de esta prueba. Debe terminar en esperando aprobación, y esta solicitud sigue detenida aunque continúes con la parte siguiente. ::: En la prueba roja, la línea de tiempo no termina en «hecho». Sin esta aclaración, el guion podría tratarse como si ya hubiera aprobación.
+- Demostración final ::: 4.6 ::: Con las tres trazas, escribe mi guion de demostración de tres minutos con cinco partes: problema, arquitectura, demostración, límite y siguiente mejora. ::: Convierte las pruebas en una explicación tuya. Sin guion, tendrías evidencia, pero no una forma clara de contar qué construiste.
+- Verificación ::: 2.2 ::: Antes de terminar, revisa objetivo, roles, contratos, permisos, trazas y pendientes en una lista corta, confirma que ninguna acción roja se ejecutó y comprueba que el guion se pueda leer en tres minutos. ::: Es la última inspección de todo el sistema. Sin ella, el guion podría prometer algo que las pruebas no mostraron.
+
+**Evidencia:** las tres respuestas de tu IA: tres trazas, el borrador final, la pausa ante la acción roja y el guion de demostración.  
+**Criterio de éxito:** el caso feliz integra hechos con fuente, el pago sin fuente no llega al Redactor como verdad, la prueba roja termina en esperando aprobación y el guion tiene las cinco partes.
 
 ## Cierre de la clase 4
 

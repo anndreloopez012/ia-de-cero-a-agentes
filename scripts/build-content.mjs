@@ -59,6 +59,18 @@ function parseTable(markdown) {
   return body.map((row) => Object.fromEntries(header.map((key, i) => [key, row[i] ?? ""])));
 }
 
+// Un prompt se escribe por partes: "- Parte ::: Punto ::: texto del prompt ::: qué hace esa parte".
+// La web une los textos para copiarlos y explica cada parte ligada a su tema.
+function parsePrompt(title, body) {
+  const parts = listItems(body).map((item) => {
+    const [tag = "", ref = "", text = "", why = ""] = item.split(" ::: ").map((cell) => cell.trim());
+    return { tag, ref, text, why };
+  }).filter((part) => part.text);
+  // Si una parte no cierra la frase, la siguiente la continúa en la misma línea.
+  const text = parts.map((part, i) => part.text + (i === parts.length - 1 ? "" : /[.:?!»”)]$/.test(part.text) ? "\n" : " ")).join("");
+  return { title, parts, text };
+}
+
 function parseExercise(heading, body) {
   const titleMatch = heading.match(/^Ejercicio individual (\d+)\s+—\s+(.+)$/);
   const exercise = {
@@ -68,6 +80,7 @@ function parseExercise(heading, body) {
     duration: "",
     minutes: null,
     context: [],
+    prompts: [],
     steps: [],
     stepsNote: "",
     examples: [],
@@ -83,6 +96,7 @@ function parseExercise(heading, body) {
       exercise.steps = listItems(block.body);
       exercise.stepsNote = clean(block.body.split("\n").filter((line) => !/^\s*(?:\d+\.|[-*])\s+/.test(line)).join("\n"));
     } else if (/^Ejemplo/i.test(label)) exercise.examples.push({ label, body: block.body });
+    else if (/^Prompt para copiar/i.test(label)) exercise.prompts.push(parsePrompt(label.split("—")[1]?.trim() ?? "", block.body));
     else if (/^Evidencia/i.test(label)) exercise.evidence = block.body;
     else if (/^Criterio de éxito/i.test(label)) exercise.success = block.body;
     else exercise.context.push({ label, body: block.body });
@@ -185,6 +199,6 @@ const payload = {
 fs.mkdirSync(outputDir, { recursive: true });
 fs.writeFileSync(outputPath, `window.COURSE_CONTENT = ${JSON.stringify(payload)};\n`, "utf8");
 const pointCount = classes.reduce((sum, c) => sum + c.points.length, 0);
-const exerciseCount = classes.reduce((sum, c) => sum + c.points.filter((p) => p.exercise?.steps.length).length, 0);
+const exerciseCount = classes.reduce((sum, c) => sum + c.points.filter((p) => p.exercise?.steps.length || p.exercise?.prompts.length).length, 0);
 console.log(`Contenido generado: ${path.relative(root, outputPath)}`);
-console.log(`${classes.length} clases · ${pointCount} puntos · ${exerciseCount} ejercicios con pasos · ${payload.extras.glossary.length} términos`);
+console.log(`${classes.length} clases · ${pointCount} puntos · ${exerciseCount} ejercicios · ${payload.extras.glossary.length} términos`);
