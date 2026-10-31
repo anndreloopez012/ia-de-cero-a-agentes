@@ -107,7 +107,7 @@ Problema 10 · Prompt y contexto 10 · Skill 10 · Loop 15 · Coordinación de s
 
 - **Vista filtrable** en la barra superior: *Todo*, *Solo teoría* o *Solo ejercicios* (teclas `1`, `2`, `3`).
 - **Videos "modo maestro":** pregunta → analogía → diagrama paso a paso con subtítulo → idea clave. El reproductor tiene capítulos y al lado muestra el texto de lo que explica.
-- **Hojas de trabajo:** material del caso, pasos que se marcan, temporizador con la duración del ejercicio, ejemplo copiable, qué se entrega y cómo saber si se logró. Se pueden imprimir.
+- **Hojas de trabajo:** en la clase 1 traen el material del caso, pasos que se marcan y un ejemplo para comparar. Desde la clase 2 se practica directo: copias el prompt, lo pegas en tu IA y ves qué hace cada parte, con su color y el tema del taller al que pertenece. Todas traen temporizador, qué se entrega y cómo saber si se logró, y se pueden imprimir.
 - **Modo presentación** (`P`) para proyectar: video a pantalla completa y ejercicio con pasos grandes y temporizador (`T`).
 - **Ruta de 240 minutos** de cada clase en una barra de teoría, práctica y pausas.
 - **Búsqueda** (`/`), **glosario** de 37 términos (`G`), **avance** guardado en el navegador, tema claro y oscuro y diseño para celular. `?` muestra todos los atajos.
