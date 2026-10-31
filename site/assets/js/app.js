@@ -339,7 +339,7 @@
       ${flowMarkup(ex)}
       ${ex.context.length ? `<div class="sheet-block"><h3>${ex.prompts.length ? "" : '<span class="flow-n">1</span>'}${icon("file")}El caso</h3>${ex.context.map((b) => /^Pega en la IA/i.test(b.label)
         ? `<div class="case-card paste-card"><h4>${icon("copy")}Pega esto en la IA</h4><button class="copy-btn paste-copy" type="button" data-copy-raw="${esc(b.body)}">${icon("copy")}Copiar</button><pre class="paste-text">${esc(b.body)}</pre></div>`
-        : `<div class="case-card">${b.label ? `<h4>${esc(b.label)}<span class="hint">${ex.prompts.length ? "Para ubicarte" : "Léelo · no lo pegues tal cual"}</span></h4>` : ""}<div class="md">${markdown(b.body)}</div></div>`).join("")}</div>` : ""}
+        : `<div class="case-card">${b.label ? `<h4>${esc(b.label)}<span class="hint">${ex.prompts.length ? "Para ubicarte" : "Léelo · no lo pegues tal cual"}</span></h4>` : ""}<div class="md">${markdown(cap(b.body))}</div></div>`).join("")}</div>` : ""}
       ${ex.prompts.length ? ex.prompts.map((pr, i) => promptMarkup(pr, i, ex.prompts.length)).join("") : ""}
       ${ex.steps.length ? `      <div class="sheet-block">
         <div class="steps-head"><h3><span class="flow-n">2</span>${icon("flag")}Pasos</h3><span class="steps-count"><span class="bar"><i style="width:${(checked.size / ex.steps.length) * 100}%"></i></span><span data-steps-count>${checked.size} de ${ex.steps.length}</span></span></div>

@@ -534,7 +534,7 @@ kbd { display: inline-grid; place-items: center; min-width: 22px; height: 22px; 
 .stage-parts { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .stage-parts li { padding: 6px 12px; border-radius: 10px; background: var(--pb); color: var(--pc); font-size: clamp(14px, 1vw, 18px); }
 .stage-parts li b { font-weight: 800; }
-@media (max-width: 820px) { .parts, .sheet-flow.three { grid-template-columns: 1fr; } }
+@media (max-width: 820px) { .parts, .sheet-flow.three { grid-template-columns: 1fr; } .paste-card .paste-copy { position: static; margin: 4px 0 8px; } .paste-text { padding-right: 0; } }
 .paste-card { position: relative; border: 2px solid #8b5cf6; background: #f7f3ff; }
 .paste-card h4 { display: flex; align-items: center; gap: 8px; }
 .paste-card h4 svg { font-size: 16px; }
